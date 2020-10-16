@@ -1,0 +1,10 @@
+*.swp
+*.out
+*.dSYM
+*.pyc
+
+out/*
+__pycache__/
+scrap_code/
+
+.DS_Store
