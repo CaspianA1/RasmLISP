@@ -5,7 +5,7 @@ LINK = $(LINK_WITH) -o out/$(OUT) tests/$(OUT).asm
 CFLAGS = -O0 -mstackrealign -masm=intel $(LINK)
 
 all:  # compiler + assembler
-	python3 src/compiler.py
+	python3 src/compiler.py test.lisp debug
 	make build  # must go after running the compiler
 build:  # assembler
 	$(CC) $(CFLAGS)

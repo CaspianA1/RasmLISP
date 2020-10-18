@@ -1,12 +1,10 @@
 	.global _main
 	.text
 _main:
-	push 12  # push argument to factorial
+	push 10  # push argument to factorial
 	call factorial
 	add rsp, 8  # discard 1 local argument
-	mov [result + rip], rax
-	mov rsi, [result + rip]
-	push rsi  # push variable
+	push rax  # result of factorial
 	call display
 	add rsp, 8  # discard 1 local argument
 	mov rdi, 0
@@ -44,5 +42,3 @@ factorial:
 	ret
 
 	.data
-result:
-	.quad 0

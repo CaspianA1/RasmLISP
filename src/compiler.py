@@ -1,12 +1,23 @@
 import parser
 from procedures import *
-import re
+from re import compile as regex
+from copy import copy
+from sys import argv
 
-special_forms = "define", "lambda", "if", "include"
+special_forms = "define", "macro", "lambda", "if", "include"
 builtin_procs = "display", "newline"
 branch_id = 0
+number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = []
-number_pattern = re.compile("^-?\d*(\.\d+)?$")
+macros = {}
+
+def expand_macro(macro, param_arg_map):
+	for index, item in enumerate(macro):
+		if isinstance(item, list):
+			macro[index] = expand_macro(item, param_arg_map)
+		elif item in param_arg_map:
+			macro[index] = param_arg_map[item]
+	return macro
 
 def check_for_unbound_vars(ast):
 	for node in ast[1:]:
@@ -64,6 +75,10 @@ def eval_special_form(sexpr, program, has_caller = False):
 		for sexpr in parser.tokenize_file("tests/" + sexpr[1]):
 			eval_lisp(parser.parse(sexpr), program, eval_proc = True)
 
+	elif form == "macro":
+		name, args, body = sexpr[1][0], sexpr[1][1:], sexpr[2]
+		macros[name] = args, body
+
 def define_proc(sexpr, program, has_caller = False):
 	name, params, body = sexpr
 	make_procedure(name, params)
@@ -90,6 +105,11 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 
 	if procedure in special_forms:
 		eval_special_form(sexpr, program, has_caller)
+		return
+
+	elif procedure in macros:
+		macro = macros[procedure]
+		eval_lisp(expand_macro(macro[1], dict(zip(macro[0], sexpr[1:]))), program, has_caller)
 		return
 
 	check_for_unbound_vars(sexpr)
@@ -124,7 +144,14 @@ def main(infile, outfile):
 	program.export(outfile)
 
 if __name__ == "__main__":
-	main("tests/test.lisp", "tests/test.asm")
+	try:
+		infile = argv[1]
+		outfile = infile.rstrip("lisp") + "asm"
+		if len(argv) >= 3 and argv[2] == "debug":
+			infile = "tests/" + infile; outfile = "tests/" + outfile
+		main(infile, outfile)
+	except IndexError:
+		print("Please provide a filename.")
 
 """
 Bugs:
@@ -138,8 +165,5 @@ pmatch
 cond
 case
 curses bindings
-
-Test:
-Recursion, specifically factorial
-Recursion works!!!
+I just added macros!
 """
