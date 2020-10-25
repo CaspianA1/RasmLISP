@@ -161,9 +161,9 @@ Next up: division
 Comparison operators: <, >, <=, >=
 
 One-day features:
+lists
 pmatch
 cond
 case
 curses bindings
-I just added macros!
 """

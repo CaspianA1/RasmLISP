@@ -1,22 +1,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	.global display, newline
 	.global plus, minus, multiply, equal
-	.global bool_and, bool_or, bool_not
+	.global bool_not, bool_and, bool_or
 	.extern _printf
+	.include "linked_lists.asm"  # add lib/ soon
 
 	.data
 format_number:
 	.asciz "%d"
+format_char:
+	.asciz "%c"
 newline_str:
 	.asciz "\n"
 
 	.text
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-display:
+.macro display_mac frm
 	push rbp
 	mov rbp, rsp
-	mov rsi, [rbp + 16]  # should be 25
-	lea rdi, format_number [rip]
+	mov rsi, [rbp + 16]
+	lea rdi, \frm [rip]
 	xor rax, rax
 	call _printf
 	mov rdi, 0
@@ -24,6 +27,34 @@ display:
 	mov rsp, rbp
 	pop rbp
 	ret
+.endm
+display: display_mac format_number
+display_c: display_mac format_char
+/*
+display_list:  # not working
+	push rbp
+	mov rbp, rsp
+	mov rsi, [rbp + 16]	
+	push 3  # see what rsi is here - 2 the first time
+	# always segfaults, no matter what argument
+	# try doing sub and add rsp 8, before and after
+	sub rsp, 8
+	call display
+	add rsp, 8 (do 16?)
+	recur_displaying_list:
+		mov rsi, [rsi + 8]
+		cmp rsi, '\0'
+		je end_displaying_list
+		sub rsp, 8
+		push 2
+		call display
+		add rsp, 8
+		jmp recur_displaying_list
+	end_displaying_list:
+		mov rsp, rbp
+		pop rbp
+		ret
+*/
 
 newline:
 	push rbp
@@ -119,5 +150,5 @@ bool_or:
 	or_end:
 		mov rsp, rbp
 		pop rbp
-		ret	
+		ret
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
