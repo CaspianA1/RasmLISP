@@ -31,16 +31,20 @@ prl:
 		mov rsp, rbp
 		pop rbp
 		ret
+# figure out how to integrate this function into the normal `display`. i.e making it polymorphic
+# unrelated sitenote: add the `null?` function, and base it on trying to make an empty list
+
 
 _main:
-	# odd args = error
-	mov r13, 4
+	mov r13, 6
+	push 6
+	push 5
 	push 4
 	push 3
 	push 2
 	push 1
 	call make_list
-	add rsp, 32
+	add rsp, 48
 
 	push r15
 	call prl
@@ -50,4 +54,3 @@ _main:
 	mov rdi, 0
 	mov rax, 0x2000001
 	syscall
-	# odd num args to make list = segfault bc of stack alignment
