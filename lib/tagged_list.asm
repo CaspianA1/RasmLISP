@@ -1,7 +1,6 @@
-	.global _main
+	.global _main, list_of, car, cdr
 	.extern _malloc
 	.text
-	.include "lib.asm"
 
 /*
 rbx = first iteration, true or false
@@ -10,8 +9,6 @@ r13 = argument count
 r14 = for saving tail address of previous
 r15 = accumulator for result
 */
-
-
 
 .macro argument_to_memory offset
 mov rsi, [rbp + r12]
@@ -57,52 +54,27 @@ list_of:
 			jmp recur_make_list
 
 	end_make_list:
-		mov qword ptr [rax + 16], '\0'
+		mov qword ptr [rax + 16], 0x00  # 0x00 = the new null!
 		mov [r14], rax
 		mov rax, r15
 		mov rsp, rbp
 		pop rbp
 		ret
 
-print_list:
-	push rbp
-	mov rbp, rsp
+.macro list_access offset
+push rbp
+mov rbp, rsp
+mov rax, [rbp + 16]  # first arg on stack
+mov rax, [rax + \offset]
+mov rsp, rbp
+pop rbp
+ret
+.endm
 
-	recur_print:
-	# do stuff here
+car: list_access 8
+cdr: list_access 16
 
-	end_print:
-		mov rsp, rbp
-		pop rbp
-		ret
-
-car:
-	push rbp
-	mov rbp, rsp
-	mov rsi, [rbp + 16]  # rsi = mem block
-	mov rax, [rax + 8]  # rax = data
-	mov rsp, rbp
-	pop rbp
-	ret
-
-cdr:
-	push rbp
-	mov rbp, rsp
-
-	mov rsi, [rbp + 16]  # rsi = mem block
-	mov rdi, [rsi + 16]
-	cmp rdi, '\0'  # can't be dereferenced
-	je cdr_end
-
-	lea rax, [rdi]
-
-	cdr_end:
-		mov rsp, rbp
-		pop rbp
-		ret
-
-# by seeing whether a type tag is 1 or 2, knowing what to print will be made clear
-
+/*
 _main:
 	mov r13, 2
 	push 40
@@ -128,6 +100,7 @@ _main:
 	mov rdi, [rsi + 8]
 	mov rax, 0x2000001
 	syscall
+*/
 
 /*
 nodes are 24 bytes: (&type, &elem, ptr_to_next)

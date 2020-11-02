@@ -4,9 +4,9 @@ from re import compile as regex
 from copy import copy
 from sys import argv
 
-special_forms = "define", "macro", "lambda", "if", "include"
+special_forms = "define", "define-macro", "lambda", "if", "include"
 builtin_procs = "display", "newline"
-branch_id = 0
+branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = []
 macros = {}
@@ -75,9 +75,31 @@ def eval_special_form(sexpr, program, has_caller = False):
 		for sexpr in parser.tokenize_file("tests/" + sexpr[1]):
 			eval_lisp(parser.parse(sexpr), program, eval_proc = True)
 
-	elif form == "macro":
+	elif form == "define-macro":
 		name, args, body = sexpr[1][0], sexpr[1][1:], sexpr[2]
 		macros[name] = args, body
+
+	elif form == "lambda":
+		global lambda_id
+		lambda_id += 1
+		its_id = lambda_id
+
+		program.emit(f"jmp after_lambda_{its_id}")
+		program.emit(f"lambda_{its_id}:")
+		program.emit("push rbp", "mov rbp, rsp")
+		w_offsets = params_as_offsets(sexpr[2], sexpr[1])
+		eval_lisp(w_offsets, program, has_caller)
+		program.emit("mov rbp, rsp", "pop rbp", "ret")
+		program.emit(f"after_lambda_{its_id}:", f"lea rax, [lambda_{its_id} + rip]")
+
+def params_as_offsets(sexpr, params):
+	for index, arg in enumerate(sexpr):
+		if isinstance(arg, list):
+			sexpr[index] = params_as_offsets(arg, params)
+		elif arg in params:
+			sexpr[index] = f"[rbp + {8 * (params.index(arg) + 1) + 8}]"
+	return sexpr
+
 
 def define_proc(sexpr, program, has_caller = False):
 	name, params, body = sexpr
@@ -87,21 +109,13 @@ def define_proc(sexpr, program, has_caller = False):
 	program.emit(f"{name}:", tab = False)
 	program.emit("push rbp", "mov rbp, rsp")
 
-	def params_as_offsets(sexpr):
-		for index, arg in enumerate(sexpr):
-			if isinstance(arg, list):
-				sexpr[index] = params_as_offsets(arg)
-			elif arg in params:
-				sexpr[index] = f"[rbp + {8 * (params.index(arg) + 1) + 8}]"
-		return sexpr
-
-	param_offsets = params_as_offsets(body)
+	param_offsets = params_as_offsets(body, params)
 	eval_lisp(param_offsets, program, eval_proc = True)
 	program.emit("mov rsp, rbp", "pop rbp", "ret")
 	program.defining_proc = False
 
 def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_if = False):
-	procedure, args = sexpr[0], sexpr[1:]
+	procedure, args = sexpr[0], sexpr[1:]  # eval proc if is a list
 
 	if procedure in special_forms:
 		eval_special_form(sexpr, program, has_caller)
@@ -114,9 +128,15 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 
 	check_for_unbound_vars(sexpr)
 
-	proc_obj = procedures[procedure]
-	if len(args) != len(proc_obj.arguments):
-		raise TypeError(f"Wrong argument count to procedure <{procedure}>")
+	anonymous_f = False
+
+	try:
+		proc_obj = procedures[procedure]
+		if len(args) != len(proc_obj.arguments) and proc_obj.name != "list_of":
+			raise TypeError(f"Wrong argument count to procedure <{procedure}>")
+	except KeyError:
+		anonymous_f = True
+	
 	for arg in args[::-1]:
 		if isinstance(arg, list):
 			eval_lisp(arg, program, True)
@@ -126,11 +146,26 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 			else:
 				program.emit(f"push {arg}  # push argument to {procedure}")
 
-	program.emit(f"call {proc_obj.name}")
+		if procedure == "list_of":
+			type_tag = 2 if isinstance(arg, list) else 1
+			program.emit(f"push {type_tag}  # type tag for list_of")
+
+	if procedure == "list_of":
+		program.emit(f"mov r13, {(l := len(args))}  # list of length {l}")
+
+	if anonymous_f:
+		to_call = procedure
+	else:
+		to_call = proc_obj.name
+
+	program.emit(f"call {to_call}")
 
 	if not eval_proc:
 		plural = "" if (l := len(args)) == 1 else "s"
-		program.emit(f"add rsp, {l * 8}  # discard {l} local argument{plural}")
+		discard_offset = l * 8
+		if procedure == "list_of":
+			discard_offset *= 2
+		program.emit(f"add rsp, {discard_offset}  # discard {l} local argument{plural}")
 
 	if has_caller and not compiling_if:
 		program.emit(f"push rax  # result of {procedure}")
@@ -154,11 +189,50 @@ if __name__ == "__main__":
 		print("Please provide a filename.")
 
 """
+Working on right now:
+Lists and lambda
+
 Bugs:
 
-Features:
-Next up: division
-Comparison operators: <, >, <=, >=
+
+Stops at the first list:
+(define test_list (list_of 7 (list_of 8 9) 10 11 12))
+(display_a_list test_list)
+
+Solution:
+Make a ending counter which starts at one.
+For each nested list, add one to this
+If its ending is null, subtract 1
+If the counter is zero, exit
+
+Segfault:
+(define test_list (list_of (list_of 1 2) 3))
+(display_a_list test_list)
+
+Solution:
+Figure out how to align the stack correctly (by using `and rsp, -16` in the right spot),
+So that this example doesn't crash, and the previous one doesn't crash as well
+
+(define x (list_of 1))
+(display_list x)
+
+(display_a_list (list_of 1 2 (list_of 3 4) 5 6))
+
+(define (x) (lambda (a b) (+ a b)))
+(define y (x))
+(display_num (y 2 3))
+
+Can't get car of a nested list:
+(define test_list (list_of (list_of 1 2) (list_of 2 3) 4))
+(display_a_list (car (car test_list)))
+
+Feasible features:
+division
+floating-point math
+list_of, car, cdr, lists in lists
+A garbage collector (use a collecting _malloc)
+The functions atom? and null?
+lambda
 
 One-day features:
 lists
@@ -166,4 +240,13 @@ pmatch
 cond
 case
 curses bindings
+symbols
+error reporting procedure
+
+Limitations:
+- Variables cannot be redefined, so their types are static and inferred
+- Only `list_of` makes lists, and it is the only variadic function
+- No anonymous functions
+- `display` is non-polymorphic between lists and atoms
+- (Note: if `atom?` can be made, then polymorphic behavior is possible)
 """

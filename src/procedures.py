@@ -27,8 +27,18 @@ procedures = {}
 def make_procedure(name, args):
 	procedures[name] = Procedure(name, args)
 
-make_procedure("display", ["x"])
+make_procedure("display_num", ["x"])
+make_procedure("display_char", ["x"])
+make_procedure("display_list", ["x"])
+make_procedure("display_a_list", ["x"])
+
 make_procedure("newline", [])
+make_procedure("list_of", [])
+make_procedure("car", ["l"])
+make_procedure("cdr", ["l"])
+
+make_procedure("add1", ["x"])
+make_procedure("sub1", ["x"])
 ##########
 def make_operator(lisp_name, asm_name):
 	procedures[lisp_name] = Procedure(asm_name, ["a", "b"])
@@ -40,4 +50,8 @@ make_operator("=", "equal")
 make_operator("and", "bool_and")
 make_operator("or", "bool_or")
 procedures["not"] = Procedure("bool_not", ["x"])
+make_operator(">", "greater")
+make_operator(">=", "greater_eq")
+make_operator("<", "smaller")
+make_operator("<=", "smaller_eq")
 ##########

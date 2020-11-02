@@ -1,8 +1,13 @@
+
 ## This is documentation for my Lisp compiler that targets the x86-64 architecture.
 
 ### Efficiency:
 - I have not had the chance to compare my output's speed compared to C.
 - However, I have noticed that for many examples, the line length of the output assembly code size produced is around half of Clang's. That may be a good sign!
+
+### Tools:
+- I am using the LLVM backend for assembling and debugging, specifically `clang` and `lldb`.
+- The outputted `.asm` file is in `x86-64` assembly, with `intel` syntax, and made for MacOS; but a few small changes should make it compatible with Linux as well.
 
 ### Special forms implemented so far:
 #### `define`
@@ -17,16 +22,19 @@
 ### `include`
 - Imports a file from the relative path of the importer.
 ### `macro`
-- Declares an unhygenic macro. Its form is parallel to `define`, like this: `macro (add a b c) (+ a b c))`
+- Declares an unhygenic macro. Its form is parallel to `define`, like this: `(macro (add a b c) (+ a b c))`
 
 ### Built-in procedures:
+#### List primitives:
+- `car`, `cdr`, `list_of`
+- `display_list` is a work in progress.
 #### Operators, two arguments:
-- `+`, `-`, `*`, `=`, `and`, `or`
+- `+`, `-`, `*`, `=`, `and`, `or`, `>`, `>=`, `<`, `<=`
 #### Operators, one argument:
 - `not`
+#### Impure procedures:
+- `display_num`, `display_list` `newline`
 #### Eventual features:
 - I'll get to division and floating-point arithmetic sometime soon.
 - The same goes for symbols and lists.
-- If I have time I would like to implement a pattern-matching system and an ability to call C functions.
-#### Impure procedures:
-- `display`, `newline`
+- If I have time I would like to implement anonymous functions, a pattern-matching system and an ability to call C functions.
