@@ -1,4 +1,8 @@
-; (define test_list (list_of (list_of 1 2) 3))
+; (define test_list (list_of 4 (list_of 5 6 (list_of 7 8)) 9))
+; (define test_list (list_of 4 (list_of 5 6) 8))
 ; (display_a_list test_list)
 
-(display_num (<= 4 3))
+(define nums (list_of 1 2))
+(define result (null? (cdr (cdr nums))))
+(display_num result)
+(newline)

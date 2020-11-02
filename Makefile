@@ -1,7 +1,7 @@
 CC = clang
 OUT = test
-LINK_WITH = lib/lib.asm
-CFLAGS = -masm=intel $(LINK_WITH) -o out/test tests/$(OUT).asm
+CFLAGS = -masm=intel lib/lib.asm -o out/test tests/$(OUT).asm
+DEBUGGER = lldb
 
 all: compile assemble
 compile:
@@ -10,8 +10,7 @@ assemble:
 	$(CC) $(CFLAGS)
 debug:
 	$(CC) -g $(CFLAGS)
-	lldb out/$(OUT) || echo "Please install LLDB before debugging."
-	# gdb -q out/$(OUT) || echo "Please install GDB before debugging."
+	$(DEBUGGER) out/$(OUT) || echo Please install $(DEBUGGER) before debugging.
 run:
 	./out/$(OUT)
 clean:

@@ -1,0 +1,1 @@
+(define (list? x) (not (atom? x)))

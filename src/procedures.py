@@ -27,6 +27,7 @@ procedures = {}
 def make_procedure(name, args):
 	procedures[name] = Procedure(name, args)
 
+# make to argument count number instead? if the strings aren't used anywhere else
 make_procedure("display_num", ["x"])
 make_procedure("display_char", ["x"])
 make_procedure("display_list", ["x"])
@@ -36,6 +37,10 @@ make_procedure("newline", [])
 make_procedure("list_of", [])
 make_procedure("car", ["l"])
 make_procedure("cdr", ["l"])
+
+make_procedure("atom?", ["x"])
+make_procedure("list?", ["x"])
+make_procedure("null?", ["x"])
 
 make_procedure("add1", ["x"])
 make_procedure("sub1", ["x"])

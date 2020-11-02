@@ -172,6 +172,7 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 
 def main(infile, outfile):
 	program = Program()
+	eval_lisp(["include", "../lib/lib.lisp"], program)
 	for index, sexpr in enumerate(parser.tokenize_file(infile)):
 		eval_lisp(parser.parse(sexpr), program)
 
@@ -193,7 +194,6 @@ Working on right now:
 Lists and lambda
 
 Bugs:
-
 
 Stops at the first list:
 (define test_list (list_of 7 (list_of 8 9) 10 11 12))
@@ -231,7 +231,7 @@ division
 floating-point math
 list_of, car, cdr, lists in lists
 A garbage collector (use a collecting _malloc)
-The functions atom? and null?
+The function null?
 lambda
 
 One-day features:

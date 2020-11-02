@@ -104,3 +104,115 @@ Remember to print a space
 		pop rbp
 		ret
 	*/
+
+	###############
+
+
+# print it iteratively?
+display_a_list:
+	push rbp
+	mov rbp, rsp
+	mov r12, [rbp + 16]
+
+	mov rdi, [r12]
+	cmp rdi, 1
+	je print_atom  # tag 1 = print atom, otherwise print list
+	jmp print_list
+
+	print_atom:
+		mov rsi, [r12 + 8]
+		lea rdi, format_number [rip]
+		xor rax, rax
+		and rsp, -16
+		call _printf  # align the stack here!
+		mov rdi, 0
+		call _fflush
+		jmp after_print_head
+
+	print_list:
+		push [r12 + 8]
+		call display_a_list
+		add rsp, 8
+
+	after_print_head:
+		mov rsi, [r12 + 16]  # mov or lea?
+		cmp rsi, 0x00
+		je end_print
+
+		push rsi
+		call display_a_list
+		add rsp, 8
+
+	end_print:
+		mov rsp, rbp
+		pop rbp  # https://stackoverflow.com/questions/36568642/using-call-ret-in-assembly-x86
+		ret  # the wrong return address is being returned to
+		# see how many times end_print is gone to
+		# the number of times is surprisingly perfect! Interesting.
+		# but values aren't always printed out
+		# see that print_atom is being gone to enough times (I expect 3).
+		# Then we will see what is going wrong.
+		# print_atom is only being reached twice.
+		# make an exit counter.	
+
+	########
+
+
+print_car:
+	push rbp
+	mov rbp, rsp
+	mov rsi, [rbp + 16]
+
+	mov rdi, [rsi]
+	cmp rdi, 2
+	je list_print
+	jmp atom_print
+	list_print:
+		inc r13
+		push [rsi + 8]
+		call display_a_list
+		add rsp, 8	
+		jmp end_print_elem
+	atom_print:
+		mov rsi, [rsi + 8]
+		lea rdi, format_number [rip]
+		xor rax, rax
+		and rsp, -16		
+		call _printf  # align the stack here!
+		mov rdi, 0
+		call _fflush
+	end_print_elem:
+		mov rsp, rbp
+		pop rbp
+		ret
+
+display_a_list:
+	push rbp
+	mov rbp, rsp
+	mov r12, [rbp + 16]
+
+	push r12
+	call print_car
+	add rsp, 8
+
+	mov rsi, [r12 + 16]
+	cmp rsi, 0x00
+	je check_for_end
+	jmp pr_tail
+
+	check_for_end:
+		dec r13
+		cmp r13, 0
+		je disp_end
+
+	pr_tail:
+		push rsi
+		call display_a_list
+		add rsp, 8
+
+	disp_end:
+		mov rsp, rbp
+		pop rbp
+		ret
+
+	####

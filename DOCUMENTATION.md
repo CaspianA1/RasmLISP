@@ -1,4 +1,3 @@
-
 ## This is documentation for my Lisp compiler that targets the x86-64 architecture.
 
 ### Efficiency:
@@ -31,10 +30,13 @@
 #### Operators, two arguments:
 - `+`, `-`, `*`, `=`, `and`, `or`, `>`, `>=`, `<`, `<=`
 #### Operators, one argument:
-- `not`
+- `not`, `atom?`, `list?`
 #### Impure procedures:
 - `display_num`, `display_list` `newline`
 #### Eventual features:
 - I'll get to division and floating-point arithmetic sometime soon.
 - The same goes for symbols and lists.
 - If I have time I would like to implement anonymous functions, a pattern-matching system and an ability to call C functions.
+
+### Miscellaneous:
+- The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.

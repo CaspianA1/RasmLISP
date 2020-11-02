@@ -3,9 +3,9 @@
 	.global plus, minus, multiply, add1, sub1, equal
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
+	.global atom?
 	.extern _printf
 	.include "lib/tagged_list.asm"
-	.include "lib/list_utilities.asm"
 	.include "lib/list_print_revision.asm"
 
 	.data
@@ -149,5 +149,17 @@ bool_or:
 		mov rax, 1
 		# will naturally go to or_end
 	or_end:
+		exit_frame
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+atom?:
+	enter_frame
+	mov rax, [rbp + 16]
+	cmp rax, 2147483647
+	jg is_ptr
+	mov rax, 1
+	jmp end_atom?
+	is_ptr:
+		mov rax, 0
+	end_atom?:
 		exit_frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -1,4 +1,4 @@
-	.global _main, list_of, car, cdr
+	.global _main, list_of, car, cdr, null?
 	.extern _malloc
 	.text
 
@@ -54,25 +54,55 @@ list_of:
 			jmp recur_make_list
 
 	end_make_list:
-		mov qword ptr [rax + 16], 0x00  # 0x00 = the new null!
+		mov qword ptr [rax + 16], '\0'  # reverted back to '\0', as 48 is less common than 0
 		mov [r14], rax
 		mov rax, r15
 		mov rsp, rbp
 		pop rbp
 		ret
 
-.macro list_access offset
-push rbp
-mov rbp, rsp
-mov rax, [rbp + 16]  # first arg on stack
-mov rax, [rax + \offset]
-mov rsp, rbp
-pop rbp
-ret
-.endm
+car:
+	push rbp
+	mov rbp, rsp
+	mov rax, [rbp + 16]  # first arg on stack
+	mov rax, [rax + 8]
+	mov rsp, rbp
+	pop rbp
+	ret
 
-car: list_access 8
-cdr: list_access 16
+cdr:
+	push rbp
+	mov rbp, rsp
+	mov rax, [rbp + 16]  # first arg on stack
+	cmp rax, '\0'
+	je cdr_is_null
+	jmp cdr_is_fine
+	cdr_is_null:
+		mov rax, '\0'
+		jmp cdr_end
+	cdr_is_fine:
+		mov rax, [rax + 16]
+	cdr_end:
+		mov rsp, rbp
+		pop rbp
+		ret
+
+null?:
+	push rbp
+	mov rbp, rsp
+	mov rax, [rbp + 16]
+	cmp rax, '\0'
+	je is_null
+	jmp is_not_null
+	is_null:
+		mov rax, 1
+		jmp null?_end
+	is_not_null:
+		mov rax, 0
+	null?_end:
+		mov rsp, rbp
+		pop rbp
+		ret
 
 /*
 _main:
