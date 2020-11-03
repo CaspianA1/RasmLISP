@@ -1,12 +1,7 @@
-(define (print_list lst)
+(define (display_lat lst)
 	(if (null? lst) 0
-		(if (list? (car lst))
-			(print_list (car lst))
-			(begin
-				(display_num (car lst))
-				(newline)
-				(print_list (cdr lst))
-		 )
+		(begin
+			(display_num (car lst))
+			(display_lat (cdr lst)))))
 
-		)
-	)
+(display_lat (list_of 4 5 6))

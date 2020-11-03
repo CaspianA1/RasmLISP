@@ -35,6 +35,7 @@ ret
 	mov rsi, [rbp + 16]
 	lea rdi, \frm [rip]
 	xor rax, rax
+	and rsp, -16  # recently added
 	call _printf
 	mov rdi, 0
 	call _fflush
