@@ -1,8 +1,12 @@
-; (define test_list (list_of 4 (list_of 5 6 (list_of 7 8)) 9))
-; (define test_list (list_of 4 (list_of 5 6) 8))
-; (display_a_list test_list)
+(define (print_list lst)
+	(if (null? lst) 0
+		(if (list? (car lst))
+			(print_list (car lst))
+			(begin
+				(display_num (car lst))
+				(newline)
+				(print_list (cdr lst))
+		 )
 
-(define nums (list_of 1 2))
-(define result (null? (cdr (cdr nums))))
-(display_num result)
-(newline)
+		)
+	)

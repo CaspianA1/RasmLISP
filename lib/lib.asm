@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	.global display_num, display_char, newline
-	.global plus, minus, multiply, add1, sub1, equal
+	.global plus, minus, multiply, id, add1, sub1, equal
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
 	.global atom?

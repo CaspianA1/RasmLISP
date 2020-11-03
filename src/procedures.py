@@ -30,7 +30,6 @@ def make_procedure(name, args):
 # make to argument count number instead? if the strings aren't used anywhere else
 make_procedure("display_num", ["x"])
 make_procedure("display_char", ["x"])
-make_procedure("display_list", ["x"])
 make_procedure("display_a_list", ["x"])
 
 make_procedure("newline", [])
