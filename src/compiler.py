@@ -85,7 +85,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 		name, args, body = sexpr[1][0], sexpr[1][1:], sexpr[2]
 		macros[name] = args, body
 
-	elif form == "lambda":
+	elif form == "lambda":  # not complete
 		global lambda_id
 		lambda_id += 1
 		its_id = lambda_id
@@ -204,26 +204,29 @@ if __name__ == "__main__":
 	try:
 		infile = argv[1]
 		outfile = infile.rstrip("lisp") + "asm"
-		if len(argv) >= 3 and argv[2] == "debug":
-			infile = "tests/" + infile; outfile = "tests/" + outfile
+		if len(argv) >= 3:
+			if argv[2] == "debug":
+				infile = "tests/" + infile; outfile = "tests/" + outfile
 	except IndexError:
 		print("Please provide a filename.")  # may be thrown by other cases as well
 	main(infile, outfile)
 
 """
 Working on right now:
-Lambda
 Find a good garbage collector
 Printing lists via a scheme function
-Write "lat"
-Quote
 
 Feasible features:
-division
-floating-point math
+Division
+Floating-point math
 A garbage collector (use a collecting malloc)
-lambda
+Lambda
 A variadic `display`
+Quote
+Comparing lists via equal?
+
+Linking plan:
+Make all symbols visible from helper_functions.asm
 
 One-day features:
 pmatch
@@ -234,9 +237,8 @@ symbols
 error reporting procedure
 
 Limitations:
-- Variables cannot be redefined, so their types are static and inferred
+- Variables cannot be redefined, so their types are static and treated as inferred
 - Only `list_of` makes lists, and it is the only variadic function
 - No anonymous functions
 - `display` is non-polymorphic between lists and atoms
-- (Note: if `atom?` can be made, then polymorphic behavior is possible)
 """

@@ -6,7 +6,6 @@
 	.global atom?
 	.extern _printf
 	.include "lib/tagged_list.asm"
-	.include "lib/list_print_revision.asm"
 
 	.data
 format_number:

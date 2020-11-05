@@ -1,8 +1,21 @@
 	.global _main
 	.text
 _main:
-	call newline
-	add rsp, 0  # discard 0 local arguments
+	push 4  # push argument to list_of
+	push 1  # type tag for list_of
+	push 3  # push argument to list_of
+	push 1  # type tag for list_of
+	push 2  # push argument to list_of
+	push 1  # type tag for list_of
+	mov r13, 3  # list of length 3
+	call list_of
+	add rsp, 48  # discard 3 local arguments
+	push rax  # result of list_of
+	call lat?
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of lat?
+	call display_num
+	add rsp, 8  # discard 1 local argument
 	mov rdi, 0
 	mov rax, 0x2000001
 	syscall
@@ -187,6 +200,45 @@ reduce:
 	add rsp, 16  # discard 2 local arguments
 	jmp end_15
 	end_15:
+	mov rsp, rbp
+	pop rbp
+	ret
+lat?:
+	push rbp
+	mov rbp, rsp
+	push [rbp + 16]  # push argument to null?
+	call null?
+	add rsp, 8  # discard 1 local argument
+	cmp rax, 1  # is true?
+	je true_16  # true branch
+	jmp false_17  # false branch
+	true_16:
+	mov rax, 1
+	jmp end_18
+	false_17:
+	push [rbp + 16]  # push argument to car
+	call car
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of car
+	call list?
+	add rsp, 8  # discard 1 local argument
+	cmp rax, 1  # is true?
+	je true_19  # true branch
+	jmp false_20  # false branch
+	true_19:
+	mov rax, 0
+	jmp end_21
+	false_20:
+	push [rbp + 16]  # push argument to cdr
+	call cdr
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of cdr
+	call lat?
+	add rsp, 8  # discard 1 local argument
+	jmp end_21
+	end_21:
+	jmp end_18
+	end_18:
 	mov rsp, rbp
 	pop rbp
 	ret

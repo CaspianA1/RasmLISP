@@ -7,6 +7,7 @@
 ### Tools:
 - I am using the LLVM backend for assembling and debugging, specifically `clang` and `lldb`.
 - The outputted `.asm` file is in `x86-64` assembly, with `intel` syntax, and made for MacOS; but a few small changes should make it compatible with Linux as well.
+- [This](https://en.wikipedia.org/wiki/Boehm_garbage_collector) garbage collector is used. Install it and the other dependencies via the `make` rule `install`.
 
 ### Special forms implemented so far:
 #### `define`
@@ -46,7 +47,7 @@
 #### Impure procedures:
 - `display_num`, `display_list`, `newline`
 #### Other:
-- `length`, `sum`, `max`
+- `length`, `sum`, `max`, `lat?`
 #### Eventual features:
 - I'll get to division and floating-point arithmetic sometime soon.
 - The same goes for symbols, printing lists, and higher-order functions.

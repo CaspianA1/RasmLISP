@@ -6,5 +6,6 @@
 out/*
 __pycache__/
 scrap_code/
+lib/GC/gc-8.0.4/
 
 .DS_Store

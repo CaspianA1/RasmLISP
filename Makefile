@@ -1,6 +1,6 @@
 CC = clang
 OUT = test
-CFLAGS = -masm=intel lib/lib.asm -o out/test tests/$(OUT).asm
+CFLAGS = -masm=intel lib/lib.asm -o out/$(OUT) tests/$(OUT).asm
 DEBUGGER = lldb
 
 all: compile assemble
@@ -15,3 +15,7 @@ run:
 	./out/$(OUT)
 clean:
 	rm -r out/$(OUT).dSYM
+install:
+	brew install python || echo Please install Homebrew first.
+	xcode-select --install  # clang + lldb
+	sh install_gc.sh

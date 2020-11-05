@@ -1,3 +1,4 @@
+; later, precompile this, call it `helper_functions.lisp`, and link it with `lib.asm
 ;;;;;
 (define (list? x) (not (atom? x)))
 ;;;;;
@@ -10,7 +11,7 @@
 				(display_num (car x)))
 			(display_list (cdr x)))))
 }
-
+         
 ;;;;;
 (define (_length lst counter)
 	(if (null? lst) counter
@@ -32,4 +33,8 @@
 	(if (null? lst) init
 		(proc (car lst) (reduce proc (cdr lst) init))))
 ;;;;;
-; later, precompile this, call it `helper_functions.lisp`, and link it with `lib.asm
+(define (lat? lst)
+	(if (null? lst) 1
+		(if (list? (car lst)) 0
+			(lat? (cdr lst)))))
+;;;;;

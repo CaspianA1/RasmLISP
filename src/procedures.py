@@ -3,8 +3,8 @@ class Program:
 	procedures = []
 	variables = ["\n\t.data"]
 	defining_proc = False
-	
-	def emit(self, *instructions, tab = True, word = False):
+
+	def emit(self, *instructions, tab = True, word = False):  # what is word here?
 		section = self.procedures if self.defining_proc else self.main
 		for i in instructions:
 			section.append("\t" * tab + i)
