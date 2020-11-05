@@ -192,11 +192,14 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 def main(infile, outfile):
 	program = Program()
 
+	program.emit("call _begin_gc", "and rsp, -16")
+
 	tokens = parser.tokenize(infile)
 	while (tree := parser.parse(tokens)) is not None:
 		eval_lisp(tree, program)
 
-	program.emit("mov rdi, 0", "mov rax, 0x2000001", "syscall")
+	program.emit("and rsp, -16", "call _end_gc")
+	program.emit("xor rdi, rdi", "mov rax, 0x2000001", "syscall")
 	program.export(outfile)
 
 if __name__ == "__main__":

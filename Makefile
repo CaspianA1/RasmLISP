@@ -18,4 +18,3 @@ clean:
 install:
 	brew install python || echo Please install Homebrew first.
 	xcode-select --install  # clang + lldb
-	sh install_gc.sh

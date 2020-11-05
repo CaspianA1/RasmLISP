@@ -1,5 +1,6 @@
 	.global _main, list_of, car, cdr, null?
-	.extern _malloc
+	.include "lib/GC/gc_wrapper.asm"
+	# .extern _malloc
 	.text
 
 /*
@@ -24,10 +25,16 @@ list_of:
 	mov rbx, 1  # 1 for first time
 
 	recur_make_list:
+		/*
 		mov rdi, 24
 		sub rsp, 8
 		call _malloc
 		add rsp, 8
+		*/
+		mov edi, 24
+		and rsp, -16
+		call _allocate
+
 		argument_to_memory 0
 		argument_to_memory 8
 		sub r13, 2

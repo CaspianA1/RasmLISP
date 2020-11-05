@@ -1,22 +1,35 @@
 	.global _main
 	.text
 _main:
+	call _begin_gc
+	and rsp, -16
+	push 5  # push argument to list_of
+	push 1  # type tag for list_of
 	push 4  # push argument to list_of
 	push 1  # type tag for list_of
 	push 3  # push argument to list_of
 	push 1  # type tag for list_of
 	push 2  # push argument to list_of
 	push 1  # type tag for list_of
-	mov r13, 3  # list of length 3
+	push 1  # push argument to list_of
+	push 1  # type tag for list_of
+	mov r13, 2  # list of length 2
 	call list_of
-	add rsp, 48  # discard 3 local arguments
+	add rsp, 32  # discard 2 local arguments
+	push rax  # result of list_of
+	push 2  # type tag for list_of
+	mov r13, 4  # list of length 4
+	call list_of
+	add rsp, 64  # discard 4 local arguments
 	push rax  # result of list_of
 	call lat?
 	add rsp, 8  # discard 1 local argument
 	push rax  # result of lat?
 	call display_num
 	add rsp, 8  # discard 1 local argument
-	mov rdi, 0
+	and rsp, -16
+	call _end_gc
+	xor rdi, rdi
 	mov rax, 0x2000001
 	syscall
 list?:

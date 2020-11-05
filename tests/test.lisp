@@ -3,4 +3,4 @@
 
 (include "lib/helper_functions.lisp")
 
-(display_num (lat? (list_of 2 3 4)))
+(display_num (lat? (list_of (list_of 1 2) 3 4 5)))

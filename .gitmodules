@@ -1,0 +1,3 @@
+[submodule "lib/GC/tgc"]
+	path = lib/GC/tgc
+	url = https://github.com/orangeduck/tgc
