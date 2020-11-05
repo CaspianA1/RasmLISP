@@ -1,6 +1,5 @@
 	.global _main, list_of, car, cdr, null?
 	.include "lib/GC/gc_wrapper.asm"
-	# .extern _malloc
 	.text
 
 /*

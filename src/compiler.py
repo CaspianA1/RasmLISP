@@ -222,7 +222,6 @@ Printing lists via a scheme function
 Feasible features:
 Division
 Floating-point math
-A garbage collector (use a collecting malloc)
 Lambda
 A variadic `display`
 Quote

@@ -6,8 +6,10 @@ DEBUGGER = lldb
 all: compile assemble
 compile:
 	python3 src/compiler.py test.lisp debug
-assemble:
+assemble: compile_gc
 	$(CC) $(CFLAGS)
+compile_gc:  # the garbage collector
+	$(CC) -S -O1 -masm=intel -o lib/GC/gc_wrapper.asm lib/GC/gc_wrapper.c
 debug:
 	$(CC) -g $(CFLAGS)
 	$(DEBUGGER) out/$(OUT) || echo Please install $(DEBUGGER) before debugging.

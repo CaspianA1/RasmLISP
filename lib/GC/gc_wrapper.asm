@@ -1147,35 +1147,19 @@ _end_gc:                                ## @end_gc
 	ret
 	.cfi_endproc
                                         ## -- End function
-	.globl	_calculation            ## -- Begin function calculation
-	.p2align	4, 0x90
-_calculation:                           ## @calculation
-	.cfi_startproc
-## %bb.0:
-	push	rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset rbp, -16
-	mov	rbp, rsp
-	.cfi_def_cfa_register rbp
-                                        ## kill: def $edi killed $edi def $rdi
-	lea	eax, [rdi + 2*rdi - 556]
-	pop	rbp
-	ret
-	.cfi_endproc
-                                        ## -- End function
 	.section	__TEXT,__literal16,16byte_literals
 	.p2align	4               ## -- Begin function tgc_ideal_size
-LCPI27_0:
+LCPI26_0:
 	.long	1127219200              ## 0x43300000
 	.long	1160773632              ## 0x45300000
 	.long	0                       ## 0x0
 	.long	0                       ## 0x0
-LCPI27_1:
+LCPI26_1:
 	.quad	4841369599423283200     ## double 4503599627370496
 	.quad	4985484787499139072     ## double 1.9342813113834067E+25
 	.section	__TEXT,__literal8,8byte_literals
 	.p2align	3
-LCPI27_2:
+LCPI26_2:
 	.quad	4890909195324358656     ## double 9.2233720368547758E+18
 	.section	__TEXT,__text,regular,pure_instructions
 	.p2align	4, 0x90
@@ -1189,13 +1173,13 @@ _tgc_ideal_size:                        ## @tgc_ideal_size
 	.cfi_def_cfa_register rbp
 	inc	rsi
 	movq	xmm0, rsi
-	punpckldq	xmm0, xmmword ptr [rip + LCPI27_0] ## xmm0 = xmm0[0],mem[0],xmm0[1],mem[1]
-	subpd	xmm0, xmmword ptr [rip + LCPI27_1]
+	punpckldq	xmm0, xmmword ptr [rip + LCPI26_0] ## xmm0 = xmm0[0],mem[0],xmm0[1],mem[1]
+	subpd	xmm0, xmmword ptr [rip + LCPI26_1]
 	movapd	xmm1, xmm0
 	unpckhpd	xmm1, xmm0      ## xmm1 = xmm1[1],xmm0[1]
 	addsd	xmm1, xmm0
 	divsd	xmm1, qword ptr [rdi + 48]
-	movsd	xmm0, qword ptr [rip + LCPI27_2] ## xmm0 = mem[0],zero
+	movsd	xmm0, qword ptr [rip + LCPI26_2] ## xmm0 = mem[0],zero
 	movapd	xmm2, xmm1
 	subsd	xmm2, xmm0
 	cvttsd2si	rax, xmm2
@@ -1207,22 +1191,22 @@ _tgc_ideal_size:                        ## @tgc_ideal_size
 	xor	edx, edx
 	lea	rsi, [rip + _tgc_primes]
 	.p2align	4, 0x90
-LBB27_1:                                ## =>This Inner Loop Header: Depth=1
+LBB26_1:                                ## =>This Inner Loop Header: Depth=1
 	mov	rax, qword ptr [rdx + rsi]
 	cmp	rax, rcx
-	jae	LBB27_5
-## %bb.2:                               ##   in Loop: Header=BB27_1 Depth=1
+	jae	LBB26_5
+## %bb.2:                               ##   in Loop: Header=BB26_1 Depth=1
 	add	rdx, 8
 	cmp	rdx, 192
-	jne	LBB27_1
+	jne	LBB26_1
 ## %bb.3:
 	mov	rax, -8800019
 	.p2align	4, 0x90
-LBB27_4:                                ## =>This Inner Loop Header: Depth=1
+LBB26_4:                                ## =>This Inner Loop Header: Depth=1
 	add	rax, 8800019
 	cmp	rax, rcx
-	jb	LBB27_4
-LBB27_5:
+	jb	LBB26_4
+LBB26_5:
 	pop	rbp
 	ret
 	.cfi_endproc
@@ -1254,39 +1238,39 @@ _tgc_rehash:                            ## @tgc_rehash
 	call	_calloc
 	mov	qword ptr [r15 + 32], rax
 	test	rax, rax
-	je	LBB28_8
+	je	LBB27_8
 ## %bb.1:
 	test	r12, r12
-	je	LBB28_6
+	je	LBB27_6
 ## %bb.2:
 	lea	rbx, [r14 + 32]
-	jmp	LBB28_3
+	jmp	LBB27_3
 	.p2align	4, 0x90
-LBB28_5:                                ##   in Loop: Header=BB28_3 Depth=1
+LBB27_5:                                ##   in Loop: Header=BB27_3 Depth=1
 	add	rbx, 40
 	dec	r12
-	je	LBB28_6
-LBB28_3:                                ## =>This Inner Loop Header: Depth=1
+	je	LBB27_6
+LBB27_3:                                ## =>This Inner Loop Header: Depth=1
 	cmp	qword ptr [rbx - 8], 0
-	je	LBB28_5
-## %bb.4:                               ##   in Loop: Header=BB28_3 Depth=1
+	je	LBB27_5
+## %bb.4:                               ##   in Loop: Header=BB27_3 Depth=1
 	mov	rsi, qword ptr [rbx - 32]
 	mov	rdx, qword ptr [rbx - 16]
 	mov	ecx, dword ptr [rbx - 24]
 	mov	r8, qword ptr [rbx]
 	mov	rdi, r15
 	call	_tgc_add_ptr
-	jmp	LBB28_5
-LBB28_6:
+	jmp	LBB27_5
+LBB27_6:
 	mov	rdi, r14
 	call	_free
 	mov	eax, 1
-	jmp	LBB28_7
-LBB28_8:
+	jmp	LBB27_7
+LBB27_8:
 	mov	qword ptr [r15 + 72], r12
 	mov	qword ptr [r15 + 32], r14
 	xor	eax, eax
-LBB28_7:
+LBB27_7:
 	pop	rbx
 	pop	r12
 	pop	r14
@@ -1334,15 +1318,15 @@ _tgc_add_ptr:                           ## @tgc_add_ptr
 	lea	rdx, [r12 + 8*rax + 24]
 	mov	r15, qword ptr [r12 + 8*rax + 24]
 	test	r15, r15
-	je	LBB29_1
+	je	LBB28_1
 ## %bb.4:
 	xor	r13d, r13d
                                         ## implicit-def: $eax
                                         ## kill: killed $eax
 	mov	qword ptr [rbp - 80], rdi ## 8-byte Spill
-	jmp	LBB29_5
+	jmp	LBB28_5
 	.p2align	4, 0x90
-LBB29_8:                                ##   in Loop: Header=BB29_5 Depth=1
+LBB28_8:                                ##   in Loop: Header=BB28_5 Depth=1
 	lea	rcx, [rbx + 4*rbx]
 	mov	r9d, dword ptr [r12 + 8*rcx + 8]
 	mov	rsi, qword ptr [rbp - 88] ## 8-byte Reload
@@ -1369,7 +1353,7 @@ LBB29_8:                                ##   in Loop: Header=BB29_5 Depth=1
 	mov	rcx, qword ptr [rbp - 104] ## 8-byte Reload
 	mov	r14, rcx
 	mov	qword ptr [rbp - 56], r15 ## 8-byte Spill
-LBB29_9:                                ##   in Loop: Header=BB29_5 Depth=1
+LBB28_9:                                ##   in Loop: Header=BB28_5 Depth=1
 	mov	rdi, qword ptr [rbp - 80] ## 8-byte Reload
 	inc	rbx
 	mov	rax, rbx
@@ -1383,12 +1367,12 @@ LBB29_9:                                ##   in Loop: Header=BB29_5 Depth=1
 	lea	rdx, [r12 + 8*rax + 24]
 	mov	r15, qword ptr [r12 + 8*rax + 24]
 	test	r15, r15
-	je	LBB29_2
-LBB29_5:                                ## =>This Inner Loop Header: Depth=1
+	je	LBB28_2
+LBB28_5:                                ## =>This Inner Loop Header: Depth=1
 	mov	rax, qword ptr [rsi]
 	cmp	rax, r14
-	je	LBB29_3
-## %bb.6:                               ##   in Loop: Header=BB29_5 Depth=1
+	je	LBB28_3
+## %bb.6:                               ##   in Loop: Header=BB28_5 Depth=1
 	mov	qword ptr [rbp - 88], rsi ## 8-byte Spill
 	mov	qword ptr [rbp - 96], rdx ## 8-byte Spill
 	mov	qword ptr [rbp - 104], rax ## 8-byte Spill
@@ -1396,15 +1380,15 @@ LBB29_5:                                ## =>This Inner Loop Header: Depth=1
 	mov	rdx, r15
 	call	_tgc_probe
 	cmp	r13, rax
-	jae	LBB29_8
-## %bb.7:                               ##   in Loop: Header=BB29_5 Depth=1
+	jae	LBB28_8
+## %bb.7:                               ##   in Loop: Header=BB28_5 Depth=1
 	mov	rcx, r14
-	jmp	LBB29_9
-LBB29_1:
+	jmp	LBB28_9
+LBB28_1:
                                         ## implicit-def: $eax
                                         ## kill: killed $eax
 	mov	rcx, r14
-LBB29_2:
+LBB28_2:
 	mov	qword ptr [rsi], rcx
 	lea	rax, [rbx + 4*rbx]
 	mov	ecx, dword ptr [rbp - 44] ## 4-byte Reload
@@ -1417,7 +1401,7 @@ LBB29_2:
 	mov	qword ptr [rdx], rcx
 	mov	rcx, qword ptr [rbp - 72] ## 8-byte Reload
 	mov	qword ptr [r12 + 8*rax + 32], rcx
-LBB29_3:
+LBB28_3:
 	add	rsp, 72
 	pop	rbx
 	pop	r12
@@ -1464,32 +1448,32 @@ _tgc_mark_stack:                        ## @tgc_mark_stack
 	mov	r15, qword ptr [rdi]
 	lea	r12, [rbp - 40]
 	cmp	r15, r12
-	je	LBB31_6
+	je	LBB30_6
 ## %bb.1:
 	mov	r14, rdi
-	jae	LBB31_4
+	jae	LBB30_4
 ## %bb.2:
 	lea	rbx, [rbp - 40]
 	.p2align	4, 0x90
-LBB31_3:                                ## =>This Inner Loop Header: Depth=1
+LBB30_3:                                ## =>This Inner Loop Header: Depth=1
 	mov	rsi, qword ptr [rbx]
 	mov	rdi, r14
 	call	_tgc_mark_ptr
 	add	rbx, -8
 	cmp	rbx, r15
-	jae	LBB31_3
-LBB31_4:
+	jae	LBB30_3
+LBB30_4:
 	cmp	r15, r12
-	jbe	LBB31_6
+	jbe	LBB30_6
 	.p2align	4, 0x90
-LBB31_5:                                ## =>This Inner Loop Header: Depth=1
+LBB30_5:                                ## =>This Inner Loop Header: Depth=1
 	mov	rsi, qword ptr [r12]
 	mov	rdi, r14
 	call	_tgc_mark_ptr
 	add	r12, 8
 	cmp	r12, r15
-	jbe	LBB31_5
-LBB31_6:
+	jbe	LBB30_5
+LBB30_6:
 	add	rsp, 16
 	pop	rbx
 	pop	r12
@@ -1520,12 +1504,12 @@ _tgc_mark_ptr:                          ## @tgc_mark_ptr
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
 	cmp	qword ptr [rdi + 16], rsi
-	ja	LBB32_12
+	ja	LBB31_12
 ## %bb.1:
 	mov	r14, rsi
 	mov	r15, rdi
 	cmp	qword ptr [rdi + 24], rsi
-	jb	LBB32_12
+	jb	LBB31_12
 ## %bb.2:
 	mov	rdi, r14
 	call	_tgc_hash
@@ -1538,22 +1522,22 @@ _tgc_mark_ptr:                          ## @tgc_mark_ptr
 	lea	rax, [rdx + 4*rdx]
 	mov	rdx, qword ptr [r13 + 8*rax + 24]
 	test	rdx, rdx
-	je	LBB32_12
+	je	LBB31_12
 ## %bb.3:
 	mov	r12, -1
 	.p2align	4, 0x90
-LBB32_4:                                ## =>This Inner Loop Header: Depth=1
+LBB31_4:                                ## =>This Inner Loop Header: Depth=1
 	mov	rdi, r15
 	mov	rsi, rbx
 	call	_tgc_probe
 	inc	r12
 	cmp	r12, rax
-	ja	LBB32_12
-## %bb.5:                               ##   in Loop: Header=BB32_4 Depth=1
+	ja	LBB31_12
+## %bb.5:                               ##   in Loop: Header=BB31_4 Depth=1
 	lea	rcx, [rbx + 4*rbx]
 	cmp	qword ptr [r13 + 8*rcx], r14
-	je	LBB32_6
-## %bb.11:                              ##   in Loop: Header=BB32_4 Depth=1
+	je	LBB31_6
+## %bb.11:                              ##   in Loop: Header=BB31_4 Depth=1
 	inc	rbx
 	mov	rax, rbx
 	xor	edx, edx
@@ -1563,29 +1547,29 @@ LBB32_4:                                ## =>This Inner Loop Header: Depth=1
 	lea	rax, [rdx + 4*rdx]
 	mov	rdx, qword ptr [r13 + 8*rax + 24]
 	test	rdx, rdx
-	jne	LBB32_4
-	jmp	LBB32_12
-LBB32_6:
+	jne	LBB31_4
+	jmp	LBB31_12
+LBB31_6:
 	mov	eax, dword ptr [r13 + 8*rcx + 8]
 	test	al, 1
-	jne	LBB32_12
+	jne	LBB31_12
 ## %bb.7:
 	lea	rdx, [r13 + 8*rcx + 8]
 	mov	esi, eax
 	or	esi, 1
 	mov	dword ptr [rdx], esi
 	test	al, 4
-	jne	LBB32_12
+	jne	LBB31_12
 ## %bb.8:
 	mov	rax, qword ptr [r15 + 32]
 	cmp	qword ptr [rax + 8*rcx + 16], 8
-	jb	LBB32_12
+	jb	LBB31_12
 ## %bb.9:
 	xor	r14d, r14d
 	shl	rbx, 3
 	lea	rbx, [rbx + 4*rbx]
 	.p2align	4, 0x90
-LBB32_10:                               ## =>This Inner Loop Header: Depth=1
+LBB31_10:                               ## =>This Inner Loop Header: Depth=1
 	mov	rax, qword ptr [rax + rbx]
 	mov	rsi, qword ptr [rax + 8*r14]
 	mov	rdi, r15
@@ -1595,8 +1579,8 @@ LBB32_10:                               ## =>This Inner Loop Header: Depth=1
 	mov	rcx, qword ptr [rax + rbx + 16]
 	shr	rcx, 3
 	cmp	r14, rcx
-	jb	LBB32_10
-LBB32_12:
+	jb	LBB31_10
+LBB31_12:
 	add	rsp, 8
 	pop	rbx
 	pop	r12
@@ -1628,30 +1612,30 @@ _tgc_rem_ptr:                           ## @tgc_rem_ptr
 	.cfi_offset r14, -32
 	.cfi_offset r15, -24
 	cmp	qword ptr [rdi + 64], 0
-	je	LBB33_16
+	je	LBB32_16
 ## %bb.1:
 	mov	r15, rsi
 	mov	r14, rdi
 	mov	rax, qword ptr [rdi + 88]
 	test	rax, rax
-	je	LBB33_6
+	je	LBB32_6
 ## %bb.2:
 	mov	rcx, qword ptr [r14 + 40]
 	xor	edx, edx
-	jmp	LBB33_3
+	jmp	LBB32_3
 	.p2align	4, 0x90
-LBB33_5:                                ##   in Loop: Header=BB33_3 Depth=1
+LBB32_5:                                ##   in Loop: Header=BB32_3 Depth=1
 	inc	rdx
 	add	rcx, 40
 	cmp	rdx, rax
-	jae	LBB33_6
-LBB33_3:                                ## =>This Inner Loop Header: Depth=1
+	jae	LBB32_6
+LBB32_3:                                ## =>This Inner Loop Header: Depth=1
 	cmp	qword ptr [rcx], r15
-	jne	LBB33_5
-## %bb.4:                               ##   in Loop: Header=BB33_3 Depth=1
+	jne	LBB32_5
+## %bb.4:                               ##   in Loop: Header=BB32_3 Depth=1
 	mov	qword ptr [rcx], 0
-	jmp	LBB33_5
-LBB33_6:
+	jmp	LBB32_5
+LBB32_6:
 	mov	rdi, r15
 	call	_tgc_hash
 	mov	r13, qword ptr [r14 + 32]
@@ -1663,22 +1647,22 @@ LBB33_6:
 	lea	rax, [rdx + 4*rdx]
 	mov	rdx, qword ptr [r13 + 8*rax + 24]
 	test	rdx, rdx
-	je	LBB33_16
+	je	LBB32_16
 ## %bb.7:
 	mov	r12, -1
 	.p2align	4, 0x90
-LBB33_8:                                ## =>This Inner Loop Header: Depth=1
+LBB32_8:                                ## =>This Inner Loop Header: Depth=1
 	mov	rdi, r14
 	mov	rsi, rbx
 	call	_tgc_probe
 	inc	r12
 	cmp	r12, rax
-	ja	LBB33_16
-## %bb.9:                               ##   in Loop: Header=BB33_8 Depth=1
+	ja	LBB32_16
+## %bb.9:                               ##   in Loop: Header=BB32_8 Depth=1
 	lea	rax, [rbx + 4*rbx]
 	cmp	qword ptr [r13 + 8*rax], r15
-	je	LBB33_10
-## %bb.15:                              ##   in Loop: Header=BB33_8 Depth=1
+	je	LBB32_10
+## %bb.15:                              ##   in Loop: Header=BB32_8 Depth=1
 	inc	rbx
 	mov	rax, rbx
 	xor	edx, edx
@@ -1688,9 +1672,9 @@ LBB33_8:                                ## =>This Inner Loop Header: Depth=1
 	lea	rax, [rdx + 4*rdx]
 	mov	rdx, qword ptr [r13 + 8*rax + 24]
 	test	rdx, rdx
-	jne	LBB33_8
-	jmp	LBB33_16
-LBB33_10:
+	jne	LBB32_8
+	jmp	LBB32_16
+LBB32_10:
 	lea	rax, [r13 + 8*rax]
 	mov	qword ptr [rax + 32], 0
 	mov	qword ptr [rax + 24], 0
@@ -1704,17 +1688,17 @@ LBB33_10:
 	lea	rax, [rdx + 4*rdx]
 	mov	rax, qword ptr [r12 + 8*rax + 24]
 	test	rax, rax
-	je	LBB33_14
+	je	LBB32_14
 	.p2align	4, 0x90
-LBB33_12:                               ## =>This Inner Loop Header: Depth=1
+LBB32_12:                               ## =>This Inner Loop Header: Depth=1
 	mov	r15, rdx
 	mov	rdi, r14
 	mov	rsi, rdx
 	mov	rdx, rax
 	call	_tgc_probe
 	test	rax, rax
-	je	LBB33_14
-## %bb.13:                              ##   in Loop: Header=BB33_12 Depth=1
+	je	LBB32_14
+## %bb.13:                              ##   in Loop: Header=BB32_12 Depth=1
 	lea	rax, [rbx + 4*rbx]
 	lea	rcx, [8*r15]
 	lea	rcx, [rcx + 4*rcx]
@@ -1742,10 +1726,10 @@ LBB33_12:                               ## =>This Inner Loop Header: Depth=1
 	mov	rax, qword ptr [r12 + 8*rax + 24]
 	mov	rbx, r15
 	test	rax, rax
-	jne	LBB33_12
-LBB33_14:
+	jne	LBB32_12
+LBB32_14:
 	dec	qword ptr [r14 + 64]
-LBB33_16:
+LBB32_16:
 	add	rsp, 8
 	pop	rbx
 	pop	r12
@@ -1773,13 +1757,13 @@ _tgc_resize_more:                       ## @tgc_resize_more
 	call	_tgc_ideal_size
 	mov	ecx, 1
 	cmp	rax, qword ptr [rbx + 72]
-	jbe	LBB34_2
+	jbe	LBB33_2
 ## %bb.1:
 	mov	rdi, rbx
 	mov	rsi, rax
 	call	_tgc_rehash
 	mov	ecx, eax
-LBB34_2:
+LBB33_2:
 	mov	eax, ecx
 	add	rsp, 8
 	pop	rbx
