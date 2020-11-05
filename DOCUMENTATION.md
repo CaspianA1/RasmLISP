@@ -54,3 +54,4 @@
 
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.
+- Multi-line comments are done with curly braces.

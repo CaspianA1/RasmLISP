@@ -1,7 +1,3 @@
-(define (display_lat lst)
-	(if (null? lst) 0
-		(begin
-			(display_num (car lst))
-			(display_lat (cdr lst)))))
-
-(display_lat (list_of 4 5 6))
+(include "lib/helper_functions.lisp")
+; (display_list (list_of (list_of 4 (list_of 5 6)) 7 8))
+(newline); segfault

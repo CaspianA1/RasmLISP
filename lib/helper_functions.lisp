@@ -1,6 +1,17 @@
 ;;;;;
 (define (list? x) (not (atom? x)))
 ;;;;;
+{
+(define (display_list x)
+	(if (null? x) 0
+		(begin
+			(if (list? (car x))
+				(display_list (car x))
+				(display_num (car x)))
+			(display_list (cdr x)))))
+}
+
+;;;;;
 (define (_length lst counter)
 	(if (null? lst) counter
 		(_length (cdr lst) (add1 counter))))
@@ -21,6 +32,4 @@
 	(if (null? lst) init
 		(proc (car lst) (reduce proc (cdr lst) init))))
 ;;;;;
-
-; need `begin` to print lists
 ; later, precompile this, call it `helper_functions.lisp`, and link it with `lib.asm

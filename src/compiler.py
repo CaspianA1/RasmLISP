@@ -4,7 +4,7 @@ from re import compile as regex
 from copy import copy
 from sys import argv
 
-special_forms = "define", "define_macro", "lambda", "if", "include", "begin"
+special_forms = "define", "define_macro", "lambda", "if", "include", "begin", "quote"
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = []
@@ -22,7 +22,7 @@ def check_for_unbound_vars(ast: list):
 	for node in ast[1:]:
 		if isinstance(node, list):
 			check_for_unbound_vars(node)
-		elif not number_pattern.match(node) and node[0] != "[":
+		elif not number_pattern.match(node) and node[0] not in ("[", "'"):
 			if node not in global_vars and node not in procedures:
 				raise NameError(f"Unbound symbol {node}")
 
@@ -75,9 +75,11 @@ def eval_special_form(sexpr, program, has_caller = False):
 		program.emit(f"end_{end_if}:")
 
 	elif form == "include":
+		# why is infile accessible from here?
 		to_include = sexpr[1].replace("\"", "").replace("'", "")
-		for sexpr in parser.tokenize_file("tests/" + to_include):
-			eval_lisp(parser.parse(sexpr), program, eval_proc = True)
+		tokens = parser.tokenize(to_include)
+		while (tree := parser.parse(tokens)) is not None:
+			eval_lisp(tree, program, eval_proc = True)
 
 	elif form == "define_macro":
 		name, args, body = sexpr[1][0], sexpr[1][1:], sexpr[2]
@@ -189,34 +191,38 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 
 def main(infile, outfile):
 	program = Program()
-	for index, sexpr in enumerate(parser.tokenize_file(infile)):
-		eval_lisp(parser.parse(sexpr), program)
+
+	tokens = parser.tokenize(infile)
+	while (tree := parser.parse(tokens)) is not None:
+		eval_lisp(tree, program)
 
 	program.emit("mov rdi, 0", "mov rax, 0x2000001", "syscall")
 	program.export(outfile)
 
 if __name__ == "__main__":
+	infile, outfile = "", ""
 	try:
 		infile = argv[1]
 		outfile = infile.rstrip("lisp") + "asm"
 		if len(argv) >= 3 and argv[2] == "debug":
 			infile = "tests/" + infile; outfile = "tests/" + outfile
-		main(infile, outfile)
 	except IndexError:
-		print("Please provide a filename.")
+		print("Please provide a filename.")  # may be thrown by other cases as well
+	main(infile, outfile)
 
 """
 Working on right now:
 Lambda
 Find a good garbage collector
 Printing lists via a scheme function
+Write "lat"
+Quote
 
 Feasible features:
 division
 floating-point math
 A garbage collector (use a collecting malloc)
 lambda
-the `begin` special form
 A variadic `display`
 
 One-day features:

@@ -1,39 +1,56 @@
-def split_into_rows(code):
-	def remove_comment(line):
-		for char in line:
-			if char != ";": yield char
-			else: return
+# what about quoted comments?
+def remove_comments(chars):
+	def single_line(chars):
+		removing_comments = False
+		for char in chars:
+			if char == ";":
+				removing_comments = True
+			elif not removing_comments:
+				yield char
+			if char == "\n":
+				removing_comments = False
 
-	for row in code:
-		if (new_row := "".join(remove_comment(row))) != "":
-			yield new_row
+	def multiline(chars):
+		removing_comments = False
+		for char in chars:
+			if char == "{":
+				removing_comments = True
+			elif char == "}":
+				removing_comments = False
+			elif not removing_comments:
+				yield char
 
-def split_into_exprs(code):
-	expr_buf = ""
-	l_parens, r_parens = 0, 0
+	return "".join(single_line(multiline(chars)))
 
-	for char in " ".join(code):
-		if char == "(":
-			l_parens += 1
-		elif char == ")":
-			r_parens += 1
+def report_errors(rows):
+	wout_chars = "".join(rows).replace("'('", "").replace("')'", "")
+	if wout_chars.count("(") != wout_chars.count(")"):
+		raise SyntaxError("Unmatched parentheses")
 
-		expr_buf += char
+def rejoin_parens(tokens: list):
+	new_tokens = []
+	skip_amt = 0
+	for index, token in enumerate(tokens):
+		if skip_amt > 0:
+			skip_amt -= 1
+			continue
+		elif token == "'":
+			new_tokens.append("".join(tokens[index: index + 3]))
+			skip_amt = 2
+		else:
+			new_tokens.append(token)
 
-		if l_parens == r_parens and l_parens != 0:
-			yield expr_buf
-			expr_buf = ""
-			l_parens, r_parens = 0, 0
+	return new_tokens
 
-def tokenize_file(filename):
+
+def tokenize(filename):
 	with open(filename, "r") as file:
-		str_contents = file.read()
-		if str_contents.count("(") != str_contents.count(")"):
-			raise SyntaxError("Unmatched parentheses")
-		contents = str_contents.split("\n")
-
-	for expr in split_into_exprs(split_into_rows(contents)):
-		yield expr.replace("(", " ( ").replace(")", " ) ").split()
+		comment_free = remove_comments(chars := file.read())
+		report_errors(comment_free)
+		return rejoin_parens(comment_free
+					.replace("(", " ( ")
+					.replace(")", " ) ")
+					.split())
 
 def parse(tokens):
 	if not tokens: return
@@ -41,7 +58,5 @@ def parse(tokens):
 		ast = []
 		while tokens[0] != ")":
 			ast.append(parse(tokens))
-		tokens.pop(0)
-		return ast
-	else:
-		return curr
+		tokens.pop(0); return ast
+	else: return curr

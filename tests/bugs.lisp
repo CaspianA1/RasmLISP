@@ -1,21 +1,5 @@
 ; Bugs:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Segfault:
-(define (list? x) (not (atom? x)))
-
-(define (print_list lst)
-	(if (null? lst) 0
-		(if (list? (car lst))
-			(print_list (car lst))
-			(begin
-				(display_num (car lst))
-				(newline)
-				(print_list (cdr lst))
-		 )
-
-		)
-	))
-
 (define numbers (list_of 1 2 3))
 (print_list numbers)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -57,16 +41,4 @@
 		(list_of (add1 (car lst)) (map_add1 (cdr lst)))))
 (display_a_list (map_add1 (list_of 7 8)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Segfault:
-(define (list? x) (not (atom? x)))
-
-(define (display_lat lst)
-	(if (null? lst) 0
-		(begin
-			(display_num (car lst))
-			(display_lat (cdr lst))
-			)
-		))
-
-(display_lat (list_of 4 5 6))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
