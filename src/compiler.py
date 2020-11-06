@@ -4,7 +4,7 @@ from re import compile as regex
 from copy import copy
 from sys import argv
 
-special_forms = "define", "define_macro", "lambda", "if", "include", "begin", "quote"
+special_forms = "define", "define_macro", "include", "if", "lambda", "begin"
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = []
@@ -19,12 +19,13 @@ def expand_macro(macro, param_arg_map):
 	return macro
 
 def check_for_unbound_vars(ast: list):
-	for node in ast[1:]:
-		if isinstance(node, list):
-			check_for_unbound_vars(node)
-		elif not number_pattern.match(node) and node[0] not in ("[", "'"):
-			if node not in global_vars and node not in procedures:
-				raise NameError(f"Unbound symbol {node}")
+	if ast[0] != "lambda":
+		for node in ast[1:]:
+			if isinstance(node, list):
+				check_for_unbound_vars(node)
+			elif not number_pattern.match(node) and node[0] not in ("[", "'"):
+				if node not in global_vars and node not in procedures:
+					raise NameError(f"Unbound symbol {node}")
 
 def push_atomic_result(atom: str, program: Program, has_caller: bool):
 	if atom in global_vars:
@@ -85,7 +86,9 @@ def eval_special_form(sexpr, program, has_caller = False):
 		name, args, body = sexpr[1][0], sexpr[1][1:], sexpr[2]
 		macros[name] = args, body
 
-	elif form == "lambda":  # not complete
+	elif form == "lambda":
+		print("Handling a lambda expression")
+
 		global lambda_id
 		lambda_id += 1
 		its_id = lambda_id
@@ -97,6 +100,10 @@ def eval_special_form(sexpr, program, has_caller = False):
 		eval_lisp(w_offsets, program, has_caller)
 		program.emit("mov rbp, rsp", "pop rbp", "ret")
 		program.emit(f"after_lambda_{its_id}:", f"lea rax, [lambda_{its_id} + rip]")
+
+		# check for no double-pushes of functions
+		if has_caller: program.emit("push rax")  # may be volatile
+		# once lambda functions work, try to reduce the present code footprint
 
 	elif form == "begin":
 		to_return = sexpr.pop()
@@ -154,7 +161,9 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 		anonymous_f = True
 	
 	for arg in args[::-1]:
+		print("Argument:", arg)
 		if isinstance(arg, list):
+			print("Argument is a list")
 			eval_lisp(arg, program, True)
 		else:
 			if arg in global_vars:
@@ -173,7 +182,11 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 		program.emit(f"mov r13, {(l := len(args))}  # list of length {l}")
 
 	if anonymous_f:
-		to_call = procedure
+		if procedure[0] == "[":
+			program.emit(f"mov rsi, {procedure}")
+			to_call = "rsi"
+		else:
+			to_call = f"[{procedure} + rip]"
 	else:
 		to_call = proc_obj.name
 
@@ -192,13 +205,13 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 def main(infile, outfile):
 	program = Program()
 
-	program.emit("call _begin_gc", "and rsp, -16")
+	program.emit("call _begin_gc", "and rsp, -16  # begin garbage collector")
 
 	tokens = parser.tokenize(infile)
 	while (tree := parser.parse(tokens)) is not None:
 		eval_lisp(tree, program)
 
-	program.emit("and rsp, -16", "call _end_gc")
+	program.emit("and rsp, -16", "call _end_gc  # end garbage collector")
 	program.emit("xor rdi, rdi", "mov rax, 0x2000001", "syscall")
 	program.export(outfile)
 
@@ -216,19 +229,15 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-Find a good garbage collector
-Printing lists via a scheme function
+Lambda
 
 Feasible features:
 Division
 Floating-point math
-Lambda
-A variadic `display`
-Quote
+-- Printing lists via a Lisp function
+-- A variadic `display`
+-- Quote
 Comparing lists via equal?
-
-Linking plan:
-Make all symbols visible from helper_functions.asm
 
 One-day features:
 pmatch
@@ -243,4 +252,7 @@ Limitations:
 - Only `list_of` makes lists, and it is the only variadic function
 - No anonymous functions
 - `display` is non-polymorphic between lists and atoms
+
+Compiler name:
+RasmusLisp
 """
