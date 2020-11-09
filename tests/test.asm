@@ -3,22 +3,6 @@
 _main:
 	call _begin_gc
 	and rsp, -16  # begin garbage collector
-	push 2  # push argument to list_of
-	push 1  # push argument to list_of
-	mov r13, 2  # list of length 2
-	call list_of
-	add rsp, 32  # discard 2 local arguments
-	mov [x + rip], rax
-	push [x + rip]  # push global variable
-	push 4  # push argument to list_of
-	push 3  # push argument to list_of
-	mov r13, 3  # list of length 3
-	call list_of
-	add rsp, 48  # discard 3 local arguments
-	mov [y + rip], rax
-	push [y + rip]  # push global variable
-	call display_list
-	add rsp, 8  # discard 1 local argument
 	and rsp, -16
 	call _end_gc  # end garbage collector
 	xor rdi, rdi
@@ -324,7 +308,3 @@ display:
 	ret
 
 	.data
-x:
-	.quad 0
-y:
-	.quad 0

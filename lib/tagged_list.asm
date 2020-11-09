@@ -29,9 +29,10 @@ list_of:
 
 		mov [r8], rax
 		mov rsi, [rbp + r12]
-		add r12, 8
 		mov [r8 + 8], rsi
 		mov rax, r8
+
+		add r12, 8
 
 		dec r13
 

@@ -212,8 +212,6 @@ def eval_lisp(sexpr, program,
 	if not eval_proc:
 		plural = "" if (l := len(args)) == 1 else "s"
 		discard_offset = l * 8
-		if procedure == "list_of":
-			discard_offset *= 2
 		program.emit(f"add rsp, {discard_offset}  # discard {l} local argument{plural}")
 
 	if has_caller and not compiling_if:
@@ -246,11 +244,7 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-1. Correct type tags for list_of:
-	Infer the input types of the list arguments within list_of?
-	Before starting on that, make a backup copy of list_of
-
-2. Print list function
+Print list function
 
 Feasible features:
 Division
