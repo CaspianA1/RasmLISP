@@ -22,6 +22,7 @@ def expand_macro(macro, param_arg_map):
 		return macro
 
 def check_for_unbound_vars(ast: list):
+	print("AST:", ast)
 	if ast[0] not in special_forms:
 		for node in ast[1:]:
 			if isinstance(node, list):
@@ -227,9 +228,9 @@ def main(infile, outfile):
 
 	program.emit("call _begin_gc", "and rsp, -16  # begin garbage collector")
 
-	tokens = parser.tokenize(infile)
+	tokens = list(parser.tokenize(infile))
 	while (tree := parser.parse(tokens)) is not None:
-		eval_lisp(tree, program)
+		eval_lisp(parser.replace_chars(tree), program)
 
 	program.emit("and rsp, -16", "call _end_gc  # end garbage collector")
 	program.emit("xor rdi, rdi", "mov rax, 0x2000001", "syscall")
@@ -249,14 +250,15 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-Broken list printing
+Proper character support
 Print list function
 
 Feasible features:
 Division
 Floating-point math
+-- Working lists
 -- Printing lists via a Lisp function
--- Quote
+-- Custom syntax highlighting
 Comparing lists via equal?
 
 One-day features:

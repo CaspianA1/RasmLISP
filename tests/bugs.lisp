@@ -17,15 +17,10 @@
 	(if (null? lst) lst
 		(list_of (add1 (car lst)) (map_add1 (cdr lst)))))
 (display_a_list (map_add1 (list_of 7 8)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Lots of 4's and a segfault:
-(include "lib/lib.lisp")
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Lots of 4's:
 (display (list_of 1 (list_of 2 3) (list_of 4 5) 6)); okay
 (display (list_of 1 (list_of 2 3) 4 (list_of 5 6))); 4 printing
-
-(define x (list_of 1 (list_of 2 3) (list_of 4 5)))
-(display x); segfault
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Segfault:
-(include "lib/lib.lisp")
-(define_macro (seq) (list_of))
-(seq 1 2 3)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; A segfault:
+(define x (list_of (list_of 2 3) (list_of 4 5)))
+(display x)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

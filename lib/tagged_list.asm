@@ -18,9 +18,8 @@ list_of:
 
 	recur_make_list:
 		mov edi, 24
-		and rsp, -16
 		call _allocate
-		mov r8, rax
+		mov r8, rax  # save r8 for when rax is overwritten by `atom?`
 
 		push [rbp + r12]
 		call atom?
@@ -33,7 +32,6 @@ list_of:
 		mov rax, r8
 
 		add r12, 8
-
 		dec r13
 
 		cmp r13, 0

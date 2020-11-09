@@ -1,3 +1,5 @@
+import re
+
 # what about quoted comments?
 def remove_comments(chars):
 	def single_line(chars):
@@ -22,35 +24,23 @@ def remove_comments(chars):
 
 	return "".join(single_line(multiline(chars)))
 
-def report_errors(rows):
-	wout_chars = "".join(rows).replace("'('", "").replace("')'", "")
-	if wout_chars.count("(") != wout_chars.count(")"):
-		raise SyntaxError("Unmatched parentheses")
-
-def rejoin_parens(tokens: list):
-	new_tokens = []
-	skip_amt = 0
-	for index, token in enumerate(tokens):
-		if skip_amt > 0:
-			skip_amt -= 1
-			continue
-		elif token == "'":
-			new_tokens.append("".join(tokens[index: index + 3]))
-			skip_amt = 2
-		else:
-			new_tokens.append(token)
-
-	return new_tokens
-
-
 def tokenize(filename):
 	with open(filename, "r") as file:
 		comment_free = remove_comments(file.read())
-		report_errors(comment_free)
-		return rejoin_parens(comment_free
-					.replace("(", " ( ")
-					.replace(")", " ) ")
-					.split())
+	tokens = comment_free.replace("(", " ( ").replace(")", " ) ").split()
+
+	next_skip = False
+	for index, token in enumerate(tokens):
+		if next_skip:
+			next_skip = False
+			continue
+		elif token == "#\\":
+			if (paren_char := tokens[index + 1]) in "()":
+				yield token + paren_char
+				next_skip = True
+		else:
+			yield token
+
 
 def parse(tokens):
 	if not tokens: return
@@ -60,3 +50,13 @@ def parse(tokens):
 			ast.append(parse(tokens))
 		tokens.pop(0); return ast
 	else: return curr
+
+def replace_chars(ast):
+	for index, node in enumerate(ast):
+		if isinstance(node, list):
+			ast[index] = substitute_char_names(node)
+		elif node.startswith("#\\"):
+			subst = node[2:]  # substitute
+			ast[index] = {"newline": "'\n'", "space": "' '"}.get(subst, f"'{subst}'")
+
+	return ast
