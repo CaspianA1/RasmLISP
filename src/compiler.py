@@ -11,12 +11,15 @@ global_vars = []
 macros = {}
 
 def expand_macro(macro, param_arg_map):
-	for index, item in enumerate(macro):
-		if isinstance(item, list):
-			macro[index] = expand_macro(item, param_arg_map)
-		elif item in param_arg_map:
-			macro[index] = param_arg_map[item]
-	return macro
+	if isinstance(macro, str):
+		return macro
+	else:
+		for index, item in enumerate(macro):
+			if isinstance(item, list):
+				macro[index] = expand_macro(item, param_arg_map)
+			elif item in param_arg_map:
+				macro[index] = param_arg_map[item]
+		return macro
 
 def check_for_unbound_vars(ast: list):
 	if ast[0] not in special_forms:
@@ -83,8 +86,9 @@ def eval_special_form(sexpr, program, has_caller = False):
 			eval_lisp(tree, program, eval_proc = True)
 
 	elif form == "define_macro":
-		name, args, body = sexpr[1][0], sexpr[1][1:], sexpr[2]
-		macros[name] = args, body
+		if isinstance(sexpr[1], str): name, args = sexpr[1], []
+		else: name, args = sexpr[1][0], sexpr[1][1:]
+		macros[name] = args, sexpr[2]
 
 	elif form == "lambda":
 		global lambda_id
@@ -98,7 +102,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 		eval_lisp(w_offsets, program, False)
 		program.emit("mov rbp, rsp", "pop rbp", "ret")
 		program.emit(f"after_anonymous_{its_id}:", f"lea rax, [anonymous_{its_id} + rip]")
-		if has_caller: program.emit("push rax")  # may be volatile
+		if has_caller: program.emit("push rax")
 
 	elif form == "quote":
 		p, m = 61, pow(10, 9) + 9
@@ -112,7 +116,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 		if has_caller:
 			program.emit(f"push {its_hash}")
 		else:
-			program.emit(f"mov rax, {accum % m}")
+			program.emit(f"mov rax, {its_hash}")
 
 	elif form == "begin":
 		to_return = sexpr.pop()
@@ -123,7 +127,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 		if not isinstance(to_return, list):
 			push_atomic_result(to_return, program, has_caller)
 		else:
-			eval_lisp(to_return, program, has_caller = True)
+			eval_lisp(to_return, program, True)
 
 def params_as_offsets(sexpr, params):
 	for index, arg in enumerate(sexpr):
@@ -163,7 +167,12 @@ def eval_lisp(sexpr, program,
 
 	elif procedure in macros:
 		macro = macros[procedure]
-		eval_lisp(expand_macro(macro[1], dict(zip(macro[0], sexpr[1:]))), program, has_caller)
+		expanded = expand_macro(macro[1], dict(zip(macro[0], sexpr[1:])))
+
+		if isinstance(expanded, str):
+			eval_lisp([expanded] + args, program, has_caller)
+		else:
+			eval_lisp(expanded, program, has_caller)
 		return
 
 	check_for_unbound_vars(sexpr)
@@ -187,10 +196,6 @@ def eval_lisp(sexpr, program,
 				program.emit(f"lea rsi, [{arg} + rip]  # address of procedure {arg}", "push rsi")
 			else:
 				program.emit(f"push {arg}  # push argument to {procedure}")
-
-		# if procedure == "list_of":  # infer types correctly (with atom?)
-			# type_tag = 2 if isinstance(arg, list) else 1
-			# program.emit(f"push {type_tag}  # type tag for list_of")
 
 	if procedure == "list_of":
 		program.emit(f"mov r13, {(l := len(args))}  # list of length {l}")
@@ -239,11 +244,12 @@ if __name__ == "__main__":
 			if argv[2] == "debug":
 				infile = "tests/" + infile; outfile = "tests/" + outfile
 	except IndexError:
-		print("Please provide a filename.")  # may be thrown by other cases as well
+		print("Please provide a filename.")
 	main(infile, outfile)
 
 """
 Working on right now:
+Broken list printing
 Print list function
 
 Feasible features:

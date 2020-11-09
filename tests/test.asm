@@ -3,6 +3,15 @@
 _main:
 	call _begin_gc
 	and rsp, -16  # begin garbage collector
+	push 3  # push argument to list_of
+	push 32  # push argument to list_of
+	push 1  # push argument to list_of
+	mov r13, 3  # list of length 3
+	call list_of
+	add rsp, 24  # discard 3 local arguments
+	push rax  # result of list_of
+	call display
+	add rsp, 8  # discard 1 local argument
 	and rsp, -16
 	call _end_gc  # end garbage collector
 	xor rdi, rdi
