@@ -98,8 +98,6 @@ def eval_special_form(sexpr, program, has_caller = False):
 		eval_lisp(w_offsets, program, False)
 		program.emit("mov rbp, rsp", "pop rbp", "ret")
 		program.emit(f"after_anonymous_{its_id}:", f"lea rax, [anonymous_{its_id} + rip]")
-
-		print("Has caller:", has_caller)
 		if has_caller: program.emit("push rax")  # may be volatile
 
 	elif form == "quote":
@@ -148,10 +146,18 @@ def define_proc(sexpr, program, has_caller = False):
 	program.emit("mov rsp, rbp", "pop rbp", "ret")
 	program.defining_proc = False
 
-def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_if = False):
-	procedure, args = sexpr[0], sexpr[1:]  # eval proc if is a list
+def eval_lisp(sexpr, program,
+			has_caller = False, eval_proc = False,
+			compiling_if = False, register_call = False):
 
-	if procedure in special_forms:
+	procedure, args = sexpr[0], sexpr[1:]
+
+	if isinstance(procedure, list):
+		eval_lisp(procedure, program)
+		eval_lisp(["rax"] + args, program, has_caller, register_call = True)
+		return
+
+	elif procedure in special_forms:
 		eval_special_form(sexpr, program, has_caller)
 		return
 
@@ -176,28 +182,30 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 			eval_lisp(arg, program, True)
 		else:
 			if arg in global_vars:
-				# program.emit(f"mov rsi, [{arg} + rip]", "push rsi  # push variable")
-				program.emit(f"push [{arg} + rip]")
+				program.emit(f"push [{arg} + rip]  # push global variable")
 			elif arg in procedures:
 				program.emit(f"lea rsi, [{arg} + rip]  # address of procedure {arg}", "push rsi")
 			else:
 				program.emit(f"push {arg}  # push argument to {procedure}")
 
-		if procedure == "list_of":
-			type_tag = 2 if isinstance(arg, list) else 1
-			program.emit(f"push {type_tag}  # type tag for list_of")
+		# if procedure == "list_of":  # infer types correctly (with atom?)
+			# type_tag = 2 if isinstance(arg, list) else 1
+			# program.emit(f"push {type_tag}  # type tag for list_of")
 
 	if procedure == "list_of":
 		program.emit(f"mov r13, {(l := len(args))}  # list of length {l}")
 
-	if anonymous_f:
-		if procedure[0] == "[":
-			program.emit(f"mov rsi, {procedure}")
-			to_call = "rsi"
-		else:
-			to_call = f"[{procedure} + rip]"
+	if register_call:
+		to_call = procedure
 	else:
-		to_call = proc_obj.name
+		if anonymous_f:
+			if procedure[0] == "[":
+				program.emit(f"mov rsi, {procedure}")
+				to_call = "rsi"
+			else:
+				to_call = f"[{procedure} + rip]"
+		else:
+			to_call = proc_obj.name
 
 	program.emit(f"call {to_call}")
 
@@ -238,7 +246,11 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-Print list function
+1. Correct type tags for list_of:
+	Infer the input types of the list arguments within list_of?
+	Before starting on that, make a backup copy of list_of
+
+2. Print list function
 
 Feasible features:
 Division
@@ -263,4 +275,8 @@ Limitations:
 
 Compiler name:
 RasmusLisp or rASMlisp
+
+Lambda example works now:
+(define (higher_order f a) (f a))
+(display_num (higher_order (lambda (x) (+ x 1)) 99))
 """
