@@ -2,7 +2,6 @@
 ;;;;;
 (define (list? x) (not (atom? x)))
 ;;;;;
-{
 (define (display_list x)
 	(if (null? x) 0
 		(begin
@@ -10,7 +9,6 @@
 				(display_list (car x))
 				(display_num (car x)))
 			(display_list (cdr x)))))
-}
          
 ;;;;;
 (define (_length lst counter)
@@ -37,4 +35,9 @@
 	(if (null? lst) 1
 		(if (list? (car lst)) 0
 			(lat? (cdr lst)))))
+;;;;;
+(define (display var)
+	(if (atom? var)
+		(display_num var)
+		(display_list var)))
 ;;;;;

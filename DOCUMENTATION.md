@@ -1,4 +1,4 @@
-## This is documentation for my Lisp compiler that targets the x86-64 architecture.
+## This is documentation for the RasmLISP compiler (targeting x86_64).
 
 ### Efficiency:
 - I have not had the chance to compare my output's speed compared to C.
@@ -26,16 +26,17 @@
 #### `begin`
 - `begin` acts a little bit like a monad. It allows you to chain impure computations together in a single block, with the last s-expression's value being returned. Here's an example:
 #### `lambda`
-- `lambda` will be done soon.
+- Constructs an anonymous function with two parts: a parameter list and a body. Here's an example: `(lambda (x y) (+ x y))`
 
-```
+#### `quote`
+- Converts a string into a compile-time constant hash that can be used for quick comparisons via `eq?`. The resulting symbol is uninterned and has no print name.
+
+```scheme
 (display_num
 	(begin
 		(newline)
 		(display_num 25)
-		(+ 3 2)
-		)
-	)
+		(+ 3 2)))
 ```
 
 ### Built-in procedures:
@@ -43,7 +44,7 @@
 - `car`, `cdr`, `list_of`
 - `display_list` is a work in progress.
 #### Operators, two arguments:
-- `+`, `-`, `*`, `=`, `and`, `or`, `>`, `>=`, `<`, `<=`
+- `+`, `-`, `*`, `eq?`, `id`, `and`, `or`, `>`, `>=`, `<`, `<=`
 #### Operators, one argument:
 - `not`, `atom?`, `list?`, `null?`, `add1`, `sub1`
 #### Impure procedures:
@@ -53,7 +54,7 @@
 #### Eventual features:
 - I'll get to division and floating-point arithmetic sometime soon.
 - The same goes for symbols, printing lists, and higher-order functions.
-- If I have time I would like to implement anonymous functions, a pattern-matching system and an ability to call C functions.
+- If I have time I would like to implement a pattern-matching system and an ability to call C functions.
 
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.

@@ -45,7 +45,7 @@ def rejoin_parens(tokens: list):
 
 def tokenize(filename):
 	with open(filename, "r") as file:
-		comment_free = remove_comments(chars := file.read())
+		comment_free = remove_comments(file.read())
 		report_errors(comment_free)
 		return rejoin_parens(comment_free
 					.replace("(", " ( ")

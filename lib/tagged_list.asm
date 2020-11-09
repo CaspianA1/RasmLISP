@@ -1,4 +1,4 @@
-	.global _main, list_of, car, cdr, null?
+	.global list_of, car, cdr, null?
 	.include "lib/GC/gc_wrapper.asm"
 	.text
 

@@ -4,7 +4,7 @@ from re import compile as regex
 from copy import copy
 from sys import argv
 
-special_forms = "define", "define_macro", "include", "if", "lambda", "begin"
+special_forms = "define", "define_macro", "quote", "include", "if", "lambda", "begin"
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = []
@@ -19,7 +19,7 @@ def expand_macro(macro, param_arg_map):
 	return macro
 
 def check_for_unbound_vars(ast: list):
-	if ast[0] != "lambda":
+	if ast[0] not in special_forms:
 		for node in ast[1:]:
 			if isinstance(node, list):
 				check_for_unbound_vars(node)
@@ -87,23 +87,34 @@ def eval_special_form(sexpr, program, has_caller = False):
 		macros[name] = args, body
 
 	elif form == "lambda":
-		print("Handling a lambda expression")
-
 		global lambda_id
 		lambda_id += 1
 		its_id = lambda_id
 
-		program.emit(f"jmp after_lambda_{its_id}")
-		program.emit(f"lambda_{its_id}:")
+		program.emit(f"jmp after_anonymous_{its_id}")
+		program.emit(f"anonymous_{its_id}:")
 		program.emit("push rbp", "mov rbp, rsp")
 		w_offsets = params_as_offsets(sexpr[2], sexpr[1])
-		eval_lisp(w_offsets, program, has_caller)
+		eval_lisp(w_offsets, program, False)
 		program.emit("mov rbp, rsp", "pop rbp", "ret")
-		program.emit(f"after_lambda_{its_id}:", f"lea rax, [lambda_{its_id} + rip]")
+		program.emit(f"after_anonymous_{its_id}:", f"lea rax, [anonymous_{its_id} + rip]")
 
-		# check for no double-pushes of functions
+		print("Has caller:", has_caller)
 		if has_caller: program.emit("push rax")  # may be volatile
-		# once lambda functions work, try to reduce the present code footprint
+
+	elif form == "quote":
+		p, m = 61, pow(10, 9) + 9
+		accum = 0
+
+		for index, char in enumerate(sexpr[1]):
+			accum += ord(char) * pow(p, index)
+
+		its_hash = accum % m
+
+		if has_caller:
+			program.emit(f"push {its_hash}")
+		else:
+			program.emit(f"mov rax, {accum % m}")
 
 	elif form == "begin":
 		to_return = sexpr.pop()
@@ -161,9 +172,7 @@ def eval_lisp(sexpr, program, has_caller = False, eval_proc = False, compiling_i
 		anonymous_f = True
 	
 	for arg in args[::-1]:
-		print("Argument:", arg)
 		if isinstance(arg, list):
-			print("Argument is a list")
 			eval_lisp(arg, program, True)
 		else:
 			if arg in global_vars:
@@ -229,13 +238,12 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-Lambda
+Print list function
 
 Feasible features:
 Division
 Floating-point math
 -- Printing lists via a Lisp function
--- A variadic `display`
 -- Quote
 Comparing lists via equal?
 
@@ -254,5 +262,5 @@ Limitations:
 - `display` is non-polymorphic between lists and atoms
 
 Compiler name:
-RasmusLisp
+RasmusLisp or rASMlisp
 """

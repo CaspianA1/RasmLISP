@@ -1,9 +1,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	.global display_num, display_char, newline
-	.global plus, minus, multiply, add1, sub1, equal
+	.global plus, minus, multiply, add1, sub1, id, atom?, eq?
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
-	.global atom?
 	.extern _printf
 	.include "lib/tagged_list.asm"
 
@@ -73,18 +72,22 @@ sub1:
 	dec rax
 	exit_frame
 
-equal:
+eq?:
 	enter_frame
 	mov rsi, [rbp + 16]
 	cmp rsi, [rbp + 24]  # qword ptr before
-	je equal_true
+	je eq?_true
 	mov rax, 0
-	jmp equal_end
-	equal_true:
+	jmp eq?_end
+	eq?_true:
 		mov rax, 1
-		jmp equal_end
-	equal_end:
+	eq?_end:
 		exit_frame
+
+id:
+	enter_frame
+	mov rax, [rbp + 16]
+	exit_frame
 
 .macro compare comparator cmp_t cmp_f cmp_end
 enter_frame
