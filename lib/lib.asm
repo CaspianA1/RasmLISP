@@ -4,7 +4,7 @@
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
 	.extern _printf
-	.include "lib/linked_list.asm"
+	.include "lib/cons_cells.asm"
 
 	.data
 format_number:
@@ -13,6 +13,12 @@ format_char:
 	.asciz "%c"
 newline_str:
 	.asciz "\n"
+general_exception_msg:
+	.asciz "General exception thrown\n"
+type_exception_msg:
+	.asciz "Type exception thrown\n"
+value_exception_msg:
+	.asciz "Value exception thrown\n"
 
 	.text
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -166,4 +172,41 @@ atom?:
 		mov rax, 0
 	end_atom?:
 		exit_frame
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+.macro exception_template msg error_code
+lea rdi, [\msg + rip]
+xor rax, rax
+and rsp, -16
+call _printf
+xor rdi, rdi
+call _fflush
+mov rdi, \error_code
+mov rax, 0x2000001
+syscall
+.endm
+
+exception_template:
+	push rbp
+	mov rsp, rsp
+	lea rdi, [rbp + 16]
+	xor rax, rax
+	and rsp, -16
+	call _printf
+	xor rdi, rdi
+	call _fflush
+	mov rdi, [rbp + 24]
+	mov rax, 0x2000001
+	syscall
+
+.macro exception error_code msg
+enter_frame
+push \error_code
+push [\msg + rip]
+call exception_template
+.endm
+
+# test these
+general_exception: exception 1, general_exception_msg
+type_exception: exception 2, type_exception_msg
+value_exception: exception 3, value_exception_msg
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

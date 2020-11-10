@@ -1,5 +1,3 @@
-import re
-
 # what about quoted comments?
 def remove_comments(chars):
 	def single_line(chars):
@@ -56,6 +54,7 @@ def replace_chars(ast):
 			ast[index] = replace_chars(node)
 		elif node.startswith("#\\"):
 			substitute = node[2:]  # substitute
+
 			replacements = {"newline": "'\n'", "space": "' '", "backspace": "'\b'"}
 			ast[index] = replacements.get(substitute, f"'{substitute}'")
 

@@ -1,3 +1,6 @@
 (include "lib/lib.lisp")
-(display_list (list_of 1 (list_of 2 3) (list_of 4 5)))
-(display_list (list_of 6 (list_of 7 8) (list_of 9 10)))
+
+(define pair (cons (cons 7 75) (cons 6 5)))
+(display pair)
+(newline)
+(display (lat? (cons (cons 1 2) 2)))

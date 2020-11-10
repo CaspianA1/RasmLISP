@@ -139,7 +139,7 @@ def params_as_offsets(sexpr, params):
 
 def define_proc(sexpr, program, has_caller = False):
 	name, params, body = sexpr
-	make_procedure(name, params)
+	make_procedure(name, len(params))
 
 	program.defining_proc = True
 	program.emit(f"{name}:", tab = False)
@@ -181,7 +181,7 @@ def eval_lisp(sexpr, program,
 
 	try:
 		proc_obj = procedures[procedure]
-		if len(args) != len(proc_obj.arguments) and proc_obj.name != "list_of":
+		if len(args) != proc_obj.arg_length and proc_obj.name != "list_of":
 			raise TypeError(f"Wrong argument count to procedure <{procedure}>")
 	except KeyError:
 		anonymous_f = True
@@ -249,13 +249,16 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-fixing list_of, and its inconsistent infinite printing
+- cons
+- redefine procedure objects by only their length of arguments
 
 Feasible features:
 Division
 Floating-point math
 -- Working lists
--- Custom syntax highlighting
+-- Error reporting procedure
+-- Print names for symbols
+Custom syntax highlighting
 Comparing lists via equal?
 
 One-day features:
@@ -263,8 +266,13 @@ pmatch
 cond
 case
 curses bindings
-symbols
-error reporting procedure
+user-level empty lists
+set!
+
+error reporting procedure (no strings for this, just 3 diff procs)
+- general exception
+- invalid type exception
+- invalid value exception
 
 Limitations:
 - Variables cannot be redefined, so their types are static and treated as inferred

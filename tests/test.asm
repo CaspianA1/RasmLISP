@@ -3,43 +3,37 @@
 _main:
 	call _begin_gc
 	and rsp, -16  # begin garbage collector
-	push 5  # push argument to list_of
-	push 4  # push argument to list_of
-	mov r13, 2  # list of length 2
-	call list_of
+	push 5  # push argument to cons
+	push 6  # push argument to cons
+	call cons
 	add rsp, 16  # discard 2 local arguments
-	push rax  # result of list_of
-	push 3  # push argument to list_of
-	push 2  # push argument to list_of
-	mov r13, 2  # list of length 2
-	call list_of
+	push rax  # result of cons
+	push 75  # push argument to cons
+	push 7  # push argument to cons
+	call cons
 	add rsp, 16  # discard 2 local arguments
-	push rax  # result of list_of
-	push 1  # push argument to list_of
-	mov r13, 3  # list of length 3
-	call list_of
-	add rsp, 24  # discard 3 local arguments
-	push rax  # result of list_of
-	call display_list
+	push rax  # result of cons
+	call cons
+	add rsp, 16  # discard 2 local arguments
+	mov [pair + rip], rax
+	push [pair + rip]  # push global variable
+	call display
 	add rsp, 8  # discard 1 local argument
-	push 10  # push argument to list_of
-	push 9  # push argument to list_of
-	mov r13, 2  # list of length 2
-	call list_of
+	call newline
+	add rsp, 0  # discard 0 local arguments
+	push 2  # push argument to cons
+	push 2  # push argument to cons
+	push 1  # push argument to cons
+	call cons
 	add rsp, 16  # discard 2 local arguments
-	push rax  # result of list_of
-	push 8  # push argument to list_of
-	push 7  # push argument to list_of
-	mov r13, 2  # list of length 2
-	call list_of
+	push rax  # result of cons
+	call cons
 	add rsp, 16  # discard 2 local arguments
-	push rax  # result of list_of
-	push 6  # push argument to list_of
-	mov r13, 3  # list of length 3
-	call list_of
-	add rsp, 24  # discard 3 local arguments
-	push rax  # result of list_of
-	call display_list
+	push rax  # result of cons
+	call lat?
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of lat?
+	call display
 	add rsp, 8  # discard 1 local argument
 	and rsp, -16
 	call _end_gc  # end garbage collector
@@ -372,3 +366,5 @@ display:
 	ret
 
 	.data
+pair:
+	.quad 0

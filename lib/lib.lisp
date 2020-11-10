@@ -1,7 +1,7 @@
-; later, precompile this, call it `helper_functions.lisp`, and link it with `lib.asm
 ;;;;;
 (define (list? x) (not (atom? x)))
 ;;;;;
+
 (define (_display_list x)
 	(if (null? x) (begin (display_char #\backspace) (display_char #\)) 0)
 		(begin

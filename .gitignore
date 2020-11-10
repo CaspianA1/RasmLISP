@@ -6,5 +6,6 @@
 out/*
 __pycache__/
 scrap_code/
+lib/unused
 
 .DS_Store

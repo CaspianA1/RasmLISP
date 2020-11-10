@@ -17,16 +17,6 @@
 	(if (null? lst) lst
 		(list_of (add1 (car lst)) (map_add1 (cdr lst)))))
 (display_a_list (map_add1 (list_of 7 8)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Infinite print:
-(display_list (list_of 1 (list_of 2 3) (list_of 4 5)))
-(display_list (list_of 1 (list_of 2 3) (list_of 4 5)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Half of the time buggy:
-(display_list (list_of 1 (list_of 2 3) (list_of 4 5)))
-(display (list_of 1 (list_of 2 3) 4 (list_of 5 6)))
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; But why does this work then:
-(display (list_of (list_of 2 3) (list_of 4 5)))
-(display (list_of 1 (list_of 2 3) (list_of 4 5) 6))
-(display (list_of 1 2 3))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Only prints 1 paren:
 (define_macro (display_list x)
 	(begin

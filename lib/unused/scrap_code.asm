@@ -245,3 +245,104 @@ load_list:
 */
 
 ########################
+
+/*
+1 byte for type tag
+tag: 1 = list, 2 = atom, 3 = nil
+8 bytes for element (max size = 8 bytes, a ptr)
+total: 18 bytes
+try no type tags
+*/
+
+# if the second element is atomic, make it a pointer to (second_elem nil)
+
+/*
+cons:
+	push rbp
+	mov rbp, rsp
+	and rsp, -16
+
+	mov rdi, 18
+	call _malloc
+	mov r12, rax
+
+	mov r13, [rbp + 16]
+	push r13
+	call atom?
+	add rsp, 8
+	inc rax
+	mov [r12], rax
+	mov [r12 + 1], r13
+
+	mov r13, [rbp + 24]
+	push r13
+	call atom?
+	add rsp, 8
+	inc rax
+
+	cmp rax, 2
+	je null_list
+	jmp normal_list
+
+	null_list:
+		mov qword ptr [r12 + 9], 3  # tag 3 means that the following is the last element
+		mov qword ptr [r12 + 10], r13
+		jmp cons_end
+
+	normal_list:
+		mov qword ptr [r12 + 9], rax
+		mov qword ptr [r12 + 10], r13
+
+	cons_end:
+		mov rax, r12
+		mov rsp, rbp
+		pop rbp
+		ret
+*/
+
+####################################
+
+/*
+car:
+	push rbp
+	mov rbp, rsp
+	mov rax, [rbp + 16]
+	mov rax, [rax + 1]
+	rax_check_1:
+	mov rsp, rbp
+	pop rbp
+	ret
+
+cdr:
+	push rbp
+	mov rbp, rsp
+	mov rax, [rbp + 16]
+	mov rax, [rax + 10]
+	rax_check_2:
+	mov rsp, rbp
+	pop rbp
+	ret
+
+null?:
+	push rbp
+	mov rbp, rsp
+	mov rax, [rbp + 16]
+	rax_check_3:
+
+	#
+	mov rax, [rax ]
+	cmp rax, 3
+	je is_null?
+	xor rax, rax
+	jmp end_null?
+	is_null?:
+		mov rax, 1
+	end_null?:
+	#
+		# xor rax, rax
+		mov rsp, rbp
+		pop rbp
+		ret
+*/
+
+####################################
