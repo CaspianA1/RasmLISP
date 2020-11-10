@@ -41,7 +41,6 @@ def tokenize(filename):
 		else:
 			yield token
 
-
 def parse(tokens):
 	if not tokens: return
 	if (curr := tokens.pop(0)) == "(":
@@ -54,9 +53,10 @@ def parse(tokens):
 def replace_chars(ast):
 	for index, node in enumerate(ast):
 		if isinstance(node, list):
-			ast[index] = substitute_char_names(node)
+			ast[index] = replace_chars(node)
 		elif node.startswith("#\\"):
-			subst = node[2:]  # substitute
-			ast[index] = {"newline": "'\n'", "space": "' '"}.get(subst, f"'{subst}'")
+			substitute = node[2:]  # substitute
+			replacements = {"newline": "'\n'", "space": "' '", "backspace": "'\b'"}
+			ast[index] = replacements.get(substitute, f"'{substitute}'")
 
 	return ast

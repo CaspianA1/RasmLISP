@@ -216,3 +216,32 @@ display_a_list:
 		ret
 
 	####
+
+########################
+
+/*
+r12 = num args
+r13 = loop index
+*/
+
+/*
+load_list:
+	push rbp
+	mov rbp, rsp
+	xor r13, r13
+	imul rdi, r12, 8
+	call _malloc
+	recur_load_list:
+		mov rsi, [rbp + (r13 * 8) + 16]
+		mov [rax + r13 * 8], rsi
+		inc r13
+		cmp r12, r13
+		je end_load_list
+		jmp recur_load_list
+	end_load_list:
+		mov rsp, rbp
+		pop rbp
+		ret
+*/
+
+########################

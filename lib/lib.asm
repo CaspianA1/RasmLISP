@@ -4,7 +4,7 @@
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
 	.extern _printf
-	.include "lib/tagged_list.asm"
+	.include "lib/linked_list.asm"
 
 	.data
 format_number:

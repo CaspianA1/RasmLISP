@@ -25,11 +25,6 @@
 - Declares an unhygenic macro. Its form is parallel to `define`, like this: `(define_macro (add a b c) (+ a b c))`
 #### `begin`
 - `begin` acts a little bit like a monad. It allows you to chain impure computations together in a single block, with the last s-expression's value being returned. Here's an example:
-#### `lambda`
-- Constructs an anonymous function with two parts: a parameter list and a body. Here's an example: `(lambda (x y) (+ x y))`
-
-#### `quote`
-- Converts a string into a compile-time constant hash that can be used for quick comparisons via `eq?`. The resulting symbol is uninterned and has no print name.
 
 ```scheme
 (display_num
@@ -39,16 +34,21 @@
 		(+ 3 2)))
 ```
 
+#### `lambda`
+- Constructs an anonymous function with two parts: a parameter list and a body. Here's an example: `(lambda (x y) (+ x y))`
+
+#### `quote`
+- Converts a string into a compile-time constant hash that can be used for quick comparisons via `eq?`. The resulting symbol is uninterned and has no print name.
+
 ### Built-in procedures:
 #### List primitives:
 - `car`, `cdr`, `list_of`
-- `display_list` is a work in progress.
 #### Operators, two arguments:
-- `+`, `-`, `*`, `eq?`, `id`, `and`, `or`, `>`, `>=`, `<`, `<=`
+- `+`, `-`, `*`, `eq?`, `and`, `or`, `>`, `>=`, `<`, `<=`
 #### Operators, one argument:
-- `not`, `atom?`, `list?`, `null?`, `add1`, `sub1`
+- `not`, `atom?`, `list?`, `null?`, `add1`, `sub1`, `id`
 #### Impure procedures:
-- `display_num`, `display_list`, `newline`
+- `display` (type-independent, excluding characters), `display_num`, `display_char`, `display_list`, `newline`
 #### Other:
 - `length`, `sum`, `max`, `lat?`
 #### Eventual features:
@@ -59,3 +59,4 @@
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.
 - Multi-line comments are done with curly braces.
+- Characters are a bit different in Lisp. Instead of `a` looking like `'a'`, it would look like `#\a`. Special characters, like `'\n'`, look like this: `#\newline`.

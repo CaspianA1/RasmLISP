@@ -22,7 +22,6 @@ def expand_macro(macro, param_arg_map):
 		return macro
 
 def check_for_unbound_vars(ast: list):
-	print("AST:", ast)
 	if ast[0] not in special_forms:
 		for node in ast[1:]:
 			if isinstance(node, list):
@@ -82,9 +81,9 @@ def eval_special_form(sexpr, program, has_caller = False):
 	elif form == "include":
 		# why is infile accessible from here?
 		to_include = sexpr[1].replace("\"", "").replace("'", "")
-		tokens = parser.tokenize(to_include)
+		tokens = list(parser.tokenize(to_include))
 		while (tree := parser.parse(tokens)) is not None:
-			eval_lisp(tree, program, eval_proc = True)
+			eval_lisp(parser.replace_chars(tree), program, eval_proc = True)
 
 	elif form == "define_macro":
 		if isinstance(sexpr[1], str): name, args = sexpr[1], []
@@ -250,14 +249,12 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-Proper character support
-Print list function
+fixing list_of, and its inconsistent infinite printing
 
 Feasible features:
 Division
 Floating-point math
 -- Working lists
--- Printing lists via a Lisp function
 -- Custom syntax highlighting
 Comparing lists via equal?
 
@@ -272,8 +269,6 @@ error reporting procedure
 Limitations:
 - Variables cannot be redefined, so their types are static and treated as inferred
 - Only `list_of` makes lists, and it is the only variadic function
-- No anonymous functions
-- `display` is non-polymorphic between lists and atoms
 
 Compiler name:
 RasmusLisp or rASMlisp

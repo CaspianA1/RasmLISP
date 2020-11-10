@@ -1,30 +1,21 @@
 ; later, precompile this, call it `helper_functions.lisp`, and link it with `lib.asm
 ;;;;;
-; (define (list? x) (not (atom? x)))
+(define (list? x) (not (atom? x)))
 ;;;;;
-
-{
-(define (display_list x)
-	(if (null? x) 0
+(define (_display_list x)
+	(if (null? x) (begin (display_char #\backspace) (display_char #\)) 0)
 		(begin
 			(if (list? (car x))
-				(display_list (car x))
+				(begin (display_char #\() (_display_list (car x)))
 				(display_num (car x)))
-			(display_list (cdr x)))))
-}
+			(display_char #\space)
+			(_display_list (cdr x)))))
 
-{
 (define (display_list x)
-	(if (null? x) (begin (display_char '\b') (display_char ')') 0)
-		(begin
-			(if (list? (car x))
-				(begin (display_char '(') (display_list (car x)))
-				(display_num (car x)))
-			(display_char ' ')
-			(display_list (cdr x)))))
-}
+	(begin
+		(display_char #\()
+		(_display_list x)))
 
-{
 ;;;;;
 (define (_length lst counter)
 	(if (null? lst) counter
@@ -56,4 +47,3 @@
 		(display_num var)
 		(display_list var)))
 ;;;;;
-}

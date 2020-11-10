@@ -1,4 +1,3 @@
-; later, precompile this, call it `helper_functions.lisp`, and link it with `lib.asm
 ;;;;;
 (define (list? x) (not (atom? x)))
 ;;;;;

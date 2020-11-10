@@ -1,6 +1,3 @@
-; (include "lib/lib.lisp")
-; (define x (list_of (list_of 2 3) (list_of 4 5)))
-; (display_list x)
-
-(display_char #\space)
-(display_char #\h)
+(include "lib/lib.lisp")
+(display_list (list_of 1 (list_of 2 3) (list_of 4 5)))
+(display_list (list_of 6 (list_of 7 8) (list_of 9 10)))
