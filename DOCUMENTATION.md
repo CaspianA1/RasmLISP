@@ -54,8 +54,7 @@
 #### Other:
 - `length`, `sum`, `max`, `lat?`
 #### Eventual features:
-- I'll get to division and floating-point arithmetic sometime soon.
-- The same goes for symbols, printing lists, and higher-order functions.
+- I'll get to division and floating-point arithmetic, and symbol print names sometime soon.
 - If I have time I would like to implement a pattern-matching system and an ability to call C functions.
 
 ### Miscellaneous:

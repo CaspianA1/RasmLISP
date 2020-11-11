@@ -15,7 +15,6 @@
 	(begin
 		(display_char #\()
 		(_display_list x)))
-
 ;;;;;
 (define (_length lst counter)
 	(if (null? lst) counter
