@@ -50,10 +50,7 @@
 #### Impure procedures:
 - `display` (type-independent, excluding characters), `display_num`, `display_char`, `display_list`, `newline`
 #### Error handling:
-- You can throw an error by calling `type_exception` or `value_exception`. Pass either function a unique number to help you find out who threw the rror.
-
-type_exception
-value_exception:
+- You can throw an error by calling `type_exception` or `value_exception`. Pass either function a unique number to help you find out who threw the error.
 #### Other:
 - `length`, `sum`, `max`, `lat?`
 #### Eventual features:
@@ -63,5 +60,5 @@ value_exception:
 
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.
-- Multi-line comments are done with these lines: `|`
+- Multi-line comments are done with these: `|`
 - Characters are a bit different in Lisp. Instead of `a` looking like `'a'`, it would look like `#\a`. Special characters, like `'\n'`, look like this: `#\newline`.

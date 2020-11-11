@@ -252,12 +252,10 @@ Working on right now:
 - bug testing with higher-order functions like map, filter, and reduce
 - note: get those higher-orders to work before list
 - list
-- Error reporting procedure only prints out part of message
 
 Feasible features:
 Division
 Floating-point math
--- Error reporting procedure
 -- Print names for symbols
 Custom syntax highlighting
 Comparing lists via equal?
@@ -269,14 +267,6 @@ case
 curses bindings
 user-level empty lists
 set!
-
-error reporting procedure (no strings for this, just 3 diff procs)
-- general exception
-- invalid type exception
-- invalid value exception
-
-Limitation:
-- Variables cannot be redefined, so their types are static and treated as inferred
 
 Compiler name:
 RasmusLisp or rASMlisp

@@ -16,7 +16,7 @@ debug:
 run:
 	./out/$(OUT)
 clean:
-	rm -r out/$(OUT).dSYM
+	rm -r out/*
 install:
 	brew install python || echo Please install Homebrew first.
 	xcode-select --install  # clang + lldb
