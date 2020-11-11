@@ -3,7 +3,7 @@
 	.global plus, minus, multiply, add1, sub1, id, atom?, eq?
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
-	.global type_exception, value_exception, a_test
+	.global type_exception, value_exception
 	.extern _printf, _fflush
 	.include "lib/cons_cells.asm"
 
