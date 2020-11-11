@@ -3,12 +3,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Segfault:
 (define x (list_of 1))
 (display_list x)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Segfault:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Doesn't work yet:
 (define (map f lst)
 	(if (null? lst) lst
-		(list_of (f (car lst)) (map f (cdr lst)))))
-(define (add_x_y x y) (+ x y))
-(display_list (map add_x_y (list_of 3 4 5)))
+		(cons
+			(f (car lst))
+			(map f (cdr lst)))))
+(define new (map add1 (list 1 2 3 4 5))) ;(cons 1 (cons 2 (cons 3 (cons 4 5))))))
+(display new)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Can't assign a function to another one:
 (define subtract -)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Map_add1:

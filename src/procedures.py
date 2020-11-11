@@ -27,40 +27,16 @@ procedures = {}
 def make_procedure(name, args):
 	procedures[name] = Procedure(name, args)
 
-make_procedure("newline", 0)
+for zero_arg_proc in ("newline", "list"):
+	make_procedure(zero_arg_proc, 0)
 
 for one_arg_proc in ("display", "display_num", "display_list", "display_char",
-	"car", "cdr", "atom?", "list?", "null?", "id", "add1", "sub1"
-	):
+	"car", "cdr", "atom?", "list?", "null?", "id", "add1", "sub1",
+	"type_exception", "value_exception"):
 	make_procedure(one_arg_proc, 1)
 
 for two_arg_proc in ("cons", "eq?"):
 	make_procedure(two_arg_proc, 2)
-
-# make to argument count number instead? if the strings aren't used anywhere else
-
-"""
-make_procedure("display", ["x"])
-make_procedure("display_num", ["x"])
-make_procedure("display_char", ["x"])
-make_procedure("display_list", ["x"])
-"""
-# make_procedure("newline", [])
-
-# make_procedure("cons", ["a", "b"])
-# make_procedure("car", ["l"])
-# make_procedure("cdr", ["l"])
-
-"""
-make_procedure("atom?", ["x"])
-make_procedure("list?", ["x"])
-make_procedure("null?", ["x"])
-make_procedure("eq?", ["a", "b"])
-make_procedure("id", ["x"])
-
-make_procedure("add1", ["x"])
-make_procedure("sub1", ["x"])
-"""
 ##########
 def make_operator(lisp_name, asm_name):
 	procedures[lisp_name] = Procedure(asm_name, 2)

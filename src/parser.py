@@ -13,10 +13,8 @@ def remove_comments(chars):
 	def multiline(chars):
 		removing_comments = False
 		for char in chars:
-			if char == "{":
-				removing_comments = True
-			elif char == "}":
-				removing_comments = False
+			if char == "|":
+				removing_comments = not removing_comments
 			elif not removing_comments:
 				yield char
 

@@ -3,7 +3,8 @@
 	.global plus, minus, multiply, add1, sub1, id, atom?, eq?
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
-	.extern _printf
+	.global type_exception, value_exception, a_test
+	.extern _printf, _fflush
 	.include "lib/cons_cells.asm"
 
 	.data
@@ -13,12 +14,11 @@ format_char:
 	.asciz "%c"
 newline_str:
 	.asciz "\n"
-general_exception_msg:
-	.asciz "General exception thrown\n"
 type_exception_msg:
-	.asciz "Type exception thrown\n"
+	# numbers to keep track of who threw the error
+	.asciz "Type exception thrown: %d\n" 
 value_exception_msg:
-	.asciz "Value exception thrown\n"
+	.asciz "Value exception thrown: %d\n"
 
 	.text
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -49,7 +49,7 @@ display_num: display_mac format_number
 display_char: display_mac format_char
 newline:
 	enter_frame
-	lea rdi, newline_str [rip]
+	lea rdi, [newline_str + rip]
 	xor rax, rax
 	and rsp, -16
 	call _printf
@@ -173,40 +173,18 @@ atom?:
 	end_atom?:
 		exit_frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-.macro exception_template msg error_code
-lea rdi, [\msg + rip]
+.macro exception_template message
+enter_frame
+mov rsi, [rbp + 16]
+lea rdi, [\message + rip]
 xor rax, rax
 and rsp, -16
 call _printf
 xor rdi, rdi
-call _fflush
-mov rdi, \error_code
 mov rax, 0x2000001
 syscall
 .endm
 
-exception_template:
-	push rbp
-	mov rsp, rsp
-	lea rdi, [rbp + 16]
-	xor rax, rax
-	and rsp, -16
-	call _printf
-	xor rdi, rdi
-	call _fflush
-	mov rdi, [rbp + 24]
-	mov rax, 0x2000001
-	syscall
-
-.macro exception error_code msg
-enter_frame
-push \error_code
-push [\msg + rip]
-call exception_template
-.endm
-
-# test these
-general_exception: exception 1, general_exception_msg
-type_exception: exception 2, type_exception_msg
-value_exception: exception 3, value_exception_msg
+type_exception: exception_template type_exception_msg
+value_exception: exception_template value_exception_msg
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

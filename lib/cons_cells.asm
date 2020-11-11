@@ -1,4 +1,4 @@
-	.global cons, car, cdr, null?
+	.global cons, car, cdr, null?, list
 	.include "lib/GC/gc_wrapper.asm"
 	.text
 
@@ -63,6 +63,25 @@ null?:
 	null_true:
 		mov rax, 1
 	null_end:
+		mov rsp, rbp
+		pop rbp
+		ret
+
+list:
+	push rbp
+	mov rbp, rsp
+	xor r14, r14
+
+	# rbx, r14 and 15 are safe to use
+	# r14 = argument amount
+	# r15 = index
+	# rbx = result
+	# need one more for current memory block
+
+	# hm, this is tricky	
+
+	end_list:
+		mov rax, rbx
 		mov rsp, rbp
 		pop rbp
 		ret

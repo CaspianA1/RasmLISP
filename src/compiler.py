@@ -181,7 +181,7 @@ def eval_lisp(sexpr, program,
 
 	try:
 		proc_obj = procedures[procedure]
-		if len(args) != proc_obj.arg_length and proc_obj.name != "list_of":
+		if len(args) != proc_obj.arg_length and proc_obj.name != "list":
 			raise TypeError(f"Wrong argument count to procedure <{procedure}>")
 	except KeyError:
 		anonymous_f = True
@@ -197,8 +197,8 @@ def eval_lisp(sexpr, program,
 			else:
 				program.emit(f"push {arg}  # push argument to {procedure}")
 
-	if procedure == "list_of":
-		program.emit(f"mov r13, {(l := len(args))}  # list of length {l}")
+	if procedure == "list":
+		program.emit(f"mov r14, {(l := len(args))}  # list of length {l}")
 
 	if register_call:
 		to_call = procedure
@@ -249,13 +249,14 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-- cons
-- redefine procedure objects by only their length of arguments
+- bug testing with higher-order functions like map, filter, and reduce
+- note: get those higher-orders to work before list
+- list
+- Error reporting procedure only prints out part of message
 
 Feasible features:
 Division
 Floating-point math
--- Working lists
 -- Error reporting procedure
 -- Print names for symbols
 Custom syntax highlighting
@@ -274,9 +275,8 @@ error reporting procedure (no strings for this, just 3 diff procs)
 - invalid type exception
 - invalid value exception
 
-Limitations:
+Limitation:
 - Variables cannot be redefined, so their types are static and treated as inferred
-- Only `list_of` makes lists, and it is the only variadic function
 
 Compiler name:
 RasmusLisp or rASMlisp
