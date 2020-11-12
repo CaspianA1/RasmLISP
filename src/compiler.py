@@ -249,20 +249,22 @@ if __name__ == "__main__":
 
 """
 Working on right now:
+- seeing that map, filter, and reduce work somewhat
 - bug testing with higher-order functions like map, filter, and reduce
 - note: get those higher-orders to work before list
-- list
+- list equality
 
 Feasible features:
 Division
 Floating-point math
 -- Print names for symbols
 Custom syntax highlighting
-Comparing lists via equal?
+-- Comparing lists via equal?
+-- cond
+-- list function
 
 One-day features:
 pmatch
-cond
 case
 curses bindings
 user-level empty lists
