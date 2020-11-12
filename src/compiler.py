@@ -100,7 +100,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 		program.emit("push rbp", "mov rbp, rsp")
 		w_offsets = params_as_offsets(sexpr[2], sexpr[1])
 		eval_lisp(w_offsets, program, False)
-		program.emit("mov rbp, rsp", "pop rbp", "ret")
+		program.emit("mov rsp, rbp", "pop rbp", "ret")
 		program.emit(f"after_anonymous_{its_id}:", f"lea rax, [anonymous_{its_id} + rip]")
 		if has_caller: program.emit("push rax")
 
@@ -273,7 +273,6 @@ set!
 Compiler name:
 RasmusLisp or rASMlisp
 
-Lambda example works now:
-(define (higher_order f a) (f a))
-(display_num (higher_order (lambda (x) (+ x 1)) 99))
+- Reduce works!
+- But the other ones don't...
 """

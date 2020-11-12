@@ -37,7 +37,7 @@ ret
 .macro display_mac frm
 	enter_frame
 	mov rsi, [rbp + 16]
-	lea rdi, \frm [rip]
+	lea rdi, [\frm + rip]
 	xor rax, rax
 	and rsp, -16  # recently added
 	call _printf

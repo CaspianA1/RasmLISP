@@ -51,7 +51,7 @@ def replace_chars(ast):
 		if isinstance(node, list):
 			ast[index] = replace_chars(node)
 		elif node.startswith("#\\"):
-			substitute = node[2:]  # substitute
+			substitute = node[2:]
 
 			replacements = {"newline": "'\n'", "space": "' '", "backspace": "'\b'"}
 			ast[index] = replacements.get(substitute, f"'{substitute}'")

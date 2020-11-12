@@ -9,9 +9,9 @@
 			(cons (car lst) (filter f (cdr lst)))
 			(filter f (cdr lst)))))
 
-(define (reduce f lst init)
-	(if (null? lst) init
-		(f (car lst) (reduce f (cdr lst) init))))
+(define (reduce f lst seed)
+	(if (null? lst) seed
+		(f (car lst) (reduce f (cdr lst) seed))))
 ;;;;;;;;;;
 (define (_display_list x)
 	(if (null? x) (begin (display_char #\backspace) (display_char #\)) 0)
