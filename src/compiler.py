@@ -80,8 +80,6 @@ def eval_special_form(sexpr, program, has_caller = False):
 		program.emit(f"end_{end_if}:")
 
 	elif form == "cond":
-		after_cond = make_branch_id()
-
 		cond_body = sexpr[1:]
 
 		if isinstance(else_stmt := sexpr[-1], list) and else_stmt[0] == "else":
@@ -269,7 +267,6 @@ if __name__ == "__main__":
 Working on right now:
 - seeing that map, filter, and reduce work somewhat
 - bug testing with higher-order functions like map, filter, and reduce
-- cond
 
 Feasible features:
 Division
@@ -277,7 +274,6 @@ Floating-point math
 -- Print names for symbols
 Custom syntax highlighting
 -- Comparing lists via equal?
--- cond
 -- list function
 
 One-day features:

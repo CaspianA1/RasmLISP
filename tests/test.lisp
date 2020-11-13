@@ -1,4 +1,3 @@
-|
 (define (map f lst)
 	(if (null? lst) lst
 		(cons (f (car lst)) (map f (cdr lst)))))
@@ -23,9 +22,8 @@
 (define sequence (cons 1 (cons 2 (cons 3 4))))
 (display_list (map (lambda (x) (* x 3)) (cons 7 (cons 8 (cons 9 10)))))
 (newline)
-; Sequence is not remotely involved! Why is it mutated?
+; Sequence is not even remotely involved! Why is it mutated?
 (display_list sequence)
-|
 
 |
 Before, I used allocate and malloc inconsistently, which was a problem
