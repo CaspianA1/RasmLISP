@@ -4,7 +4,7 @@ from re import compile as regex
 from copy import copy
 from sys import argv
 
-special_forms = "define", "define_macro", "quote", "include", "if", "lambda", "begin"
+special_forms = "define", "define_macro", "quote", "include", "if", "cond", "lambda", "begin"
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = []
@@ -39,6 +39,13 @@ def push_atomic_result(atom: str, program: Program, has_caller: bool):
 		else: program.emit(f"mov rax, {atom}")
 
 def eval_special_form(sexpr, program, has_caller = False):
+	# mutable state!
+	def make_branch_id():
+		global branch_id
+		branch_id += 1
+		return branch_id
+
+
 	form, args = sexpr[0], sexpr[1:]
 
 	if form == "define":
@@ -55,12 +62,6 @@ def eval_special_form(sexpr, program, has_caller = False):
 				program.declare_var(name, value)  # constant value
 			
 	elif form == "if":
-		# mutable state!
-		def make_branch_id():
-			global branch_id
-			branch_id += 1
-			return branch_id
-
 		eval_lisp(sexpr[1], program, has_caller, compiling_if = True)
 		program.emit("cmp rax, 1  # is true?")
 		is_true, is_false, end_if = make_branch_id(), make_branch_id(), make_branch_id()
@@ -77,6 +78,23 @@ def eval_special_form(sexpr, program, has_caller = False):
 		make_branch(sexpr[2], "true", is_true)
 		make_branch(sexpr[3], "false", is_false)
 		program.emit(f"end_{end_if}:")
+
+	elif form == "cond":
+		after_cond = make_branch_id()
+
+		cond_body = sexpr[1:]
+
+		if isinstance(else_stmt := sexpr[-1], list) and else_stmt[0] == "else":
+			cond_body[-1] = else_stmt[1]
+
+		def cond_to_if(cond_body):
+			curr = cond_body[0]
+			if len(cond_body) == 1:
+				return curr
+
+			return ["if", curr[0], curr[1], cond_to_if(cond_body[1:])]
+
+		eval_lisp(cond_to_if(cond_body), program, has_caller)
 
 	elif form == "include":
 		# why is infile accessible from here?
@@ -251,8 +269,7 @@ if __name__ == "__main__":
 Working on right now:
 - seeing that map, filter, and reduce work somewhat
 - bug testing with higher-order functions like map, filter, and reduce
-- note: get those higher-orders to work before list
-- list equality
+- cond
 
 Feasible features:
 Division

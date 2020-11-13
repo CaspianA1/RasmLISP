@@ -1340,14 +1340,27 @@ _begin_gc:                              ## @begin_gc
 	mov	rbp, rsp
 	.cfi_def_cfa_register rbp
 	sub	rsp, 16
-	mov	dword ptr [rbp - 4], 0
-	lea	rax, [rbp - 4]
+	lea	rax, [rbp - 16]
+	mov	rcx, qword ptr [rip + ___stack_chk_guard@GOTPCREL]
+	mov	rcx, qword ptr [rcx]
+	mov	qword ptr [rbp - 8], rcx
+	mov	rcx, qword ptr [rip + L___const.begin_gc.stack_var]
+	mov	qword ptr [rbp - 16], rcx
 	lea	rdi, [rip + _gc]
 	mov	rsi, rax
 	call	_tgc_start
+	mov	rax, qword ptr [rip + ___stack_chk_guard@GOTPCREL]
+	mov	rax, qword ptr [rax]
+	mov	rcx, qword ptr [rbp - 8]
+	cmp	rax, rcx
+	jne	LBB23_2
+## %bb.1:
 	add	rsp, 16
 	pop	rbp
 	ret
+LBB23_2:
+	call	___stack_chk_fail
+	ud2
 	.cfi_endproc
                                         ## -- End function
 	.globl	_allocate               ## -- Begin function allocate
@@ -2138,6 +2151,12 @@ LBB33_3:
 	ret
 	.cfi_endproc
                                         ## -- End function
+	.section	__TEXT,__literal8,8byte_literals
+	.p2align	2               ## @__const.begin_gc.stack_var
+L___const.begin_gc.stack_var:
+	.long	1                       ## 0x1
+	.long	2                       ## 0x2
+
 .zerofill __DATA,__bss,_gc,96,3         ## @gc
 	.section	__TEXT,__const
 	.p2align	4               ## @tgc_primes

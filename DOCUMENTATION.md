@@ -19,6 +19,20 @@
 #### `if`
 - `if` statements can be nested and sequential.
 - It may be hard to follow the flow control looking at the outputted `.asm` file (as assembly flow control is essentially glorified `goto`s) but it has been tested exhaustively. Do not worry!)
+
+#### `cond`
+- If `if` statements are if-else, `cond` statements are if-elif-else. Here's an example:
+
+```scheme
+> (define x (* 2 3))
+> (display
+	(cond
+		((eq? x 5) 1)
+		((eq? x 6) 2)
+		(else 3))); else here is just syntactic sugar - it isn't necessary
+2
+```
+
 #### `include`
 - Imports a file from the relative path of the importer.
 #### `define_macro`

@@ -23,7 +23,7 @@ cons:  # r12 = pair, r13 = tail
 
 	tail_null:
 		mov rdi, 16
-		call _malloc
+		call _allocate
 		mov [rax], r13
 		mov qword ptr [rax + 8], '\0'
 		mov [r12 + 8], rax
@@ -73,12 +73,12 @@ list:
 	xor r14, r14
 
 	# rbx, r14 and 15 are safe to use
-	# r14 = argument amount
+	# r14 = argument count
 	# r15 = index
 	# rbx = result
 	# need one more for current memory block
 
-	# hm, this is tricky	
+	# hm, this is tricky
 
 	end_list:
 		mov rax, rbx
