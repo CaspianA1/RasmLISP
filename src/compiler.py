@@ -267,6 +267,7 @@ if __name__ == "__main__":
 Working on right now:
 - seeing that map, filter, and reduce work somewhat
 - bug testing with higher-order functions like map, filter, and reduce
+- finding a new GC or providing other flags to make it behave differently?
 
 Feasible features:
 Division

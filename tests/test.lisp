@@ -1,6 +1,4 @@
-(define (map f lst)
-	(if (null? lst) lst
-		(cons (f (car lst)) (map f (cdr lst)))))
+(define (list? x) (not (atom? x)))
 
 (define (_display_list x)
 	(if (null? x) (begin (display_char #\backspace) (display_char #\)) 0)
@@ -16,34 +14,14 @@
 		(display_char #\()
 		(_display_list x)))
 
-(define (list? x) (not (atom? x)))
+(define (map f lst)
+	(if (null? lst) lst; '\0'
+		(cons (f (car lst)) (map f (cdr lst)))))
 
-; Problem 1:
-(define sequence (cons 1 (cons 2 (cons 3 4))))
-(display_list (map (lambda (x) (* x 3)) (cons 7 (cons 8 (cons 9 10)))))
+(display_num (quote nil))
 (newline)
-; Sequence is not even remotely involved! Why is it mutated?
-(display_list sequence)
 
-|
-Before, I used allocate and malloc inconsistently, which was a problem
-
-Just _malloc:
-Input list:
-(1 2 3 4)
-Output list:
-(3 6 9 12 48)
-Input list mutated to:
-(1 2 3 4)
-
-Just _allocate:
-Input list:
-(1 2 3 4)
-Output list:
-(27 6 9 12 48)
-Input list mutated to:
-(9 12 48)
-
-1. Find out why the output list's first element is 27
-2. Find out why the input list is mutated
-|
+(define sequence (cons 1 (cons 2 (cons 3 4))))
+(display_list (map add1 (cons 7 (cons 8 (cons 9 10))))); 1st element = incorrect
+(newline)
+(display_list sequence); sequence is changed

@@ -11,7 +11,7 @@
 ; (define sequence (cons 1 2)); no mutation
 ; (define sequence (cons 1 (cons 2 3))); no mutation
 (define sequence (cons 1 (cons 2 (cons 3 4)))); other problems
-(define tripled (map (lambda (x) (* x 3)) sequence))
+(define incremented (map add1 sequence))
 (display_list tripled); this works half of the time (except for fhe first element)
 ; (newline)
 ; (display_list sequence)

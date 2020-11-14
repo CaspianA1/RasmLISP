@@ -1,12 +1,14 @@
-	.global cons, car, cdr, null?, list
+	.global cons, car, cdr, null?, nil, list
 	.include "lib/GC/gc_wrapper.asm"
 	.text
+
+#define nil 408383
 
 cons:  # r12 = pair, r13 = tail
 	push rbp
 	mov rbp, rsp
-	mov rdi, 16
-	call _allocate
+	mov rdi, 16  # check that this is for the number of bytes (and that it is passed correctly)
+	call _malloc  # (does the way to pass the byte count change with the optimization level?)
 	mov r12, rax
 
 	mov rsi, [rbp + 16]
@@ -23,9 +25,9 @@ cons:  # r12 = pair, r13 = tail
 
 	tail_null:
 		mov rdi, 16
-		call _allocate
+		call _malloc
 		mov [rax], r13
-		mov qword ptr [rax + 8], '\0'
+		mov qword ptr [rax + 8], 408383  # nil
 		mov [r12 + 8], rax
 
 	cons_end:
@@ -56,7 +58,7 @@ null?:
 	push rbp
 	mov rbp, rsp
 	mov rax, [rbp + 16]
-	cmp rax, '\0'
+	cmp rax, 408383  # nil (should this be what nil is?)
 	je null_true
 	xor rax, rax
 	jmp null_end

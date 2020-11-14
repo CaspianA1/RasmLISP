@@ -1,4 +1,6 @@
 ;;;;;;;;;;
+(define nil (quote nil))
+;;;;;;;;;;
 (define (map f lst)
 	(if (null? lst) lst; what indicates an ending?
 		(cons (f (car lst)) (map f (cdr lst)))))
