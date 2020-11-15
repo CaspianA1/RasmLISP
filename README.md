@@ -1,7 +1,8 @@
 ![RasmLISP Logo](RasmLISP_Logo.png)
 
 ## RasmLISP is a Lisp compiler for x86_64 on MacOS.
-### There is exhaustive documentation for the standard library in `DOCUMENTATION.md`.
+### There is exhaustive documentation for the standard library in _DOCUMENTATION.md_.
+#### Any questions are welcome at  _rasmlisp@gmail.com_.
 
 Here is how to try out RasmLISP (when using the build system that provides easy linking with the standard library):
 
