@@ -303,7 +303,4 @@ set!
 
 Compiler name:
 RasmusLisp or rASMlisp
-
-- Reduce works!
-- But the other ones don't...
 """
