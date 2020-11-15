@@ -42,8 +42,11 @@ for one_arg_proc in ("display", "display_num", "display_list", "display_char",
 	"type_exception", "value_exception", "length", "sum", "max", "reverse", "flatten"):
 	make_procedure(one_arg_proc, 1)
 
-for two_arg_proc in ("cons", "eq?", "map", "filter", "reduce", "append"):
+for two_arg_proc in ("cons", "eq?", "map", "filter", "append"):
 	make_procedure(two_arg_proc, 2)
+
+make_procedure("reduce", 3)
+
 ##########
 def make_operator(lisp_name, asm_name):
 	procedures[lisp_name] = Procedure(asm_name, 2)

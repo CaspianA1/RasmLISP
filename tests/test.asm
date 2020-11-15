@@ -23,11 +23,12 @@ _main:
 	add rsp, 16  # discard 2 local arguments
 	mov [nums + rip], rax
 	.global result  # external symbol for proper linkage
+	push 1  # push argument to reduce
 	push [nums + rip]  # push global variable
 	lea rsi, [mul2 + rip]  # address of procedure mul2
 	push rsi
 	call reduce
-	add rsp, 16  # discard 2 local arguments
+	add rsp, 24  # discard 3 local arguments
 	mov [result + rip], rax
 	push [result + rip]  # push global variable
 	call display
