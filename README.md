@@ -1,4 +1,6 @@
-## This is a Lisp compiler for x86_64 on MacOS.
+![RasmLISP Logo](RasmLISP_Logo.png)
+
+## RasmLISP is a Lisp compiler for x86_64 on MacOS.
 ### There is exhaustive documentation for the standard library in `DOCUMENTATION.md`.
 
 Here is how RasmLISP works (when using the build system that provides easy linking with the standard library):
