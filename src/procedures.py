@@ -38,11 +38,11 @@ for zero_arg_proc in ("newline", "list"):
 	make_procedure(zero_arg_proc, 0)
 
 for one_arg_proc in ("display", "display_num", "display_list", "display_char",
-	"car", "cdr", "atom?", "list?", "null?", "id", "add1", "sub1",
-	"type_exception", "value_exception", "length", "sum", "max"):
+	"car", "cdr", "atom?", "list?", "null?", "lat?", "id", "add1", "sub1",
+	"type_exception", "value_exception", "length", "sum", "max", "reverse"):
 	make_procedure(one_arg_proc, 1)
 
-for two_arg_proc in ("cons", "eq?", "map", "filter", "reduce"):
+for two_arg_proc in ("cons", "eq?", "map", "filter", "reduce", "append"):
 	make_procedure(two_arg_proc, 2)
 ##########
 def make_operator(lisp_name, asm_name):

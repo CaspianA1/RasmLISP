@@ -4,6 +4,7 @@
 (define (list? x) (not (atom? x)))
 
 (define (lat? lst)
-	(if (null? lst) 1
-		(if (list? (car lst)) 0
-			(lat? (cdr lst)))))
+	(cond
+		((null? lst) 1)
+		((list? (car lst)) 0)
+		(else (lat? (cdr lst)))))

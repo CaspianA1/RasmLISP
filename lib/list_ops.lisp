@@ -1,6 +1,6 @@
 ;;;;;;;;;;
 (define (map f lst)
-	(if (null? lst) lst; what indicates an ending?
+	(if (null? lst) lst
 		(cons (f (car lst)) (map f (cdr lst)))))
 
 (define (filter f lst)
@@ -45,8 +45,13 @@
 
 (define (max lst) (_max lst (car lst)))
 ;;;;;;;;;;
-
 (define (_reverse lst buf)
 	(if (null? lst) buf
 		(_reverse (cdr lst) (cons (car lst) buf))))
-(define (reverse lst) (_reverse lst 0)); what is buf?
+(define (reverse lst) (_reverse lst #\\0))
+;;;;;;;;;;
+; make flatten and append (but need append first)
+(define (append lst1 lst2)
+	(if (null? lst1) lst2
+		(cons (car lst1) (append (cdr lst1) lst2))))
+;;;;;;;;;;
