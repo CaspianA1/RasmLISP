@@ -50,8 +50,14 @@
 		(_reverse (cdr lst) (cons (car lst) buf))))
 (define (reverse lst) (_reverse lst #\\0))
 ;;;;;;;;;;
-; make flatten and append (but need append first)
 (define (append lst1 lst2)
 	(if (null? lst1) lst2
 		(cons (car lst1) (append (cdr lst1) lst2))))
 ;;;;;;;;;;
+; append:
+(define (flatten lst)
+	(cond
+		((null? lst) lst)
+		((list? (car lst))
+			(flatten (append (car lst) (flatten (cdr lst)))))
+		(else (cons (car lst) (flatten (cdr lst))))))

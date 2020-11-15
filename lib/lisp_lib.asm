@@ -15,6 +15,7 @@
 	.global max  # external symbol for proper linkage
 	.global reverse  # external symbol for proper linkage
 	.global append  # external symbol for proper linkage
+	.global flatten  # external symbol for proper linkage
 	.global display  # external symbol for proper linkage
 	and rsp, -16
 	call _end_gc  # end garbage collector
@@ -505,6 +506,67 @@ append:
 	mov rsp, rbp
 	pop rbp
 	ret
+flatten:
+	push rbp
+	mov rbp, rsp
+	push [rbp + 16]  # push argument to null?
+	call null?
+	add rsp, 8  # discard 1 local argument
+	cmp rax, 1  # is true?
+	je true_43  # true branch
+	jmp false_44  # false branch
+	true_43:
+	mov rax, [rbp + 16]
+	jmp end_45
+	false_44:
+	push [rbp + 16]  # push argument to car
+	call car
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of car
+	call list?
+	add rsp, 8  # discard 1 local argument
+	cmp rax, 1  # is true?
+	je true_46  # true branch
+	jmp false_47  # false branch
+	true_46:
+	push [rbp + 16]  # push argument to cdr
+	call cdr
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of cdr
+	call flatten
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of flatten
+	push [rbp + 16]  # push argument to car
+	call car
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of car
+	call append
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of append
+	call flatten
+	add rsp, 8  # discard 1 local argument
+	jmp end_48
+	false_47:
+	push [rbp + 16]  # push argument to cdr
+	call cdr
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of cdr
+	call flatten
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of flatten
+	push [rbp + 16]  # push argument to car
+	call car
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of car
+	call cons
+	add rsp, 16  # discard 2 local arguments
+	jmp end_48
+	end_48:
+	jmp end_45
+	end_45:
+	mov rsp, rbp
+	pop rbp
+	ret
 display:
 	push rbp
 	mov rbp, rsp
@@ -512,19 +574,19 @@ display:
 	call atom?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_43  # true branch
-	jmp false_44  # false branch
-	true_43:
+	je true_49  # true branch
+	jmp false_50  # false branch
+	true_49:
 	push [rbp + 16]  # push argument to display_num
 	call display_num
 	add rsp, 8  # discard 1 local argument
-	jmp end_45
-	false_44:
+	jmp end_51
+	false_50:
 	push [rbp + 16]  # push argument to display_list
 	call display_list
 	add rsp, 8  # discard 1 local argument
-	jmp end_45
-	end_45:
+	jmp end_51
+	end_51:
 	mov rsp, rbp
 	pop rbp
 	ret
