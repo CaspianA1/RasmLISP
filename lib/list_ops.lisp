@@ -54,7 +54,6 @@
 	(if (null? lst1) lst2
 		(cons (car lst1) (append (cdr lst1) lst2))))
 ;;;;;;;;;;
-; append:
 (define (flatten lst)
 	(cond
 		((null? lst) lst)
