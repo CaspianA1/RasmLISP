@@ -27,4 +27,16 @@
 ; filters correctly, but has an extra null ending
 ; destroys nums
 (define filter_test (filter (lambda (x) (> x 3)) nums)); this destroys nums
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Segfault:
+
+(define (_reverse lst buf)
+	(if (null? lst) buf
+		(_reverse (cdr lst) (cons (car lst) buf))))
+(define (reverse lst) (_reverse lst (cons 1 2))); what is buf?
+
+(define (reverse lst) (_reverse lst (cons 1 2))); what is buf?
+
+(define l (cons 1 (cons 2 (cons 3 (cons 4 5)))))
+(define rl (reverse l)); segfault here (failed somewhere at car, hm (why? fix it))
+(display_list rl)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

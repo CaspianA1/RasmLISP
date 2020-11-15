@@ -1,8 +1,16 @@
 class Program:
-	main = ["\t.global _main\n\t.text\n_main:"]
 	procedures = []
 	variables = ["\n\t.data"]
 	defining_proc = False
+
+	def __init__(self, external_prog):
+		self.external_prog = external_prog
+
+		if self.external_prog:
+			print("Yes, external prog")
+			self.main = ["\t.text"]
+		else:
+			self.main = ["\t.global _main\n\t.text\n_main:"]
 
 	def emit(self, *instructions, tab = True, word = False):  # what is word here?
 		section = self.procedures if self.defining_proc else self.main

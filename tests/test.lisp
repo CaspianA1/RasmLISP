@@ -1,3 +1,10 @@
+; (include "lib/lib.lisp")
+
+(define x 5)
+(display x)
+
+;;;;;;;;;;
+|
 (define (list? x) (not (atom? x)))
 
 (define (_display_list x)
@@ -25,3 +32,4 @@
 (display_list (map add1 (cons 7 (cons 8 (cons 9 10))))); 1st element = incorrect
 (newline)
 (display_list sequence); sequence is changed
+|

@@ -50,9 +50,13 @@ def eval_special_form(sexpr, program, has_caller = False):
 
 	if form == "define":
 		name, value = sexpr[1:]
+
 		if isinstance(name, list):  # is a procedure
-			define_proc([sexpr[1][0], sexpr[1][1:], sexpr[2]], program, has_caller)
+			name = sexpr[1][0]
+			program.emit(f".global {name}")
+			define_proc([name, sexpr[1][1:], sexpr[2]], program, has_caller)
 		else:
+			program.emit(f".global {name}")
 			global_vars.append(name)
 			if isinstance(value, list):  # sexpr-defined value
 				program.declare_var(name, 0)
@@ -238,8 +242,8 @@ def eval_lisp(sexpr, program,
 	if has_caller and not compiling_if:
 		program.emit(f"push rax  # result of {procedure}")
 
-def main(infile, outfile):
-	program = Program()
+def main(infile, outfile, link_with):
+	program = Program(link_with)
 
 	program.emit("call _begin_gc", "and rsp, -16  # begin garbage collector")
 
@@ -252,22 +256,27 @@ def main(infile, outfile):
 	program.export(outfile)
 
 if __name__ == "__main__":
-	infile, outfile = "", ""
+	infile, outfile, link_with = "", "", False
 	try:
 		infile = argv[1]
 		outfile = infile.rstrip("lisp") + "asm"
 		if len(argv) >= 3:
-			if argv[2] == "debug":
+			option = argv[2]
+
+			if option == "debug":
 				infile = "tests/" + infile; outfile = "tests/" + outfile
+			elif option == "extern":
+				link_with = True
 	except IndexError:
 		print("Please provide a filename.")
-	main(infile, outfile)
+	main(infile, outfile, link_with)
 
 """
 Working on right now:
 - seeing that map, filter, and reduce work somewhat
 - bug testing with higher-order functions like map, filter, and reduce
 - finding a new GC or providing other flags to make it behave differently?
+- segfault from reverse
 
 Feasible features:
 Division

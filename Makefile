@@ -10,6 +10,8 @@ assemble: compile_gc
 	$(CC) $(CFLAGS)
 compile_gc:  # the garbage collector
 	$(CC) -O0 -S -masm=intel -o lib/GC/gc_wrapper.asm lib/GC/gc_wrapper.c
+compile_lisp_lib:
+	python3 src/compiler.py lib/lisp_lib.lisp extern
 debug:
 	$(CC) -g $(CFLAGS)
 	$(DEBUGGER) out/$(OUT) || echo Please install $(DEBUGGER) before debugging.

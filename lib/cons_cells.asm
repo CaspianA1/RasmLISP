@@ -1,8 +1,6 @@
-	.global cons, car, cdr, null?, nil, list
+	.global cons, car, cdr, null?, list
 	.include "lib/GC/gc_wrapper.asm"
 	.text
-
-#define nil 408383
 
 cons:  # r12 = pair, r13 = tail
 	push rbp
@@ -27,7 +25,7 @@ cons:  # r12 = pair, r13 = tail
 		mov rdi, 16
 		call _malloc
 		mov [rax], r13
-		mov qword ptr [rax + 8], 408383  # nil
+		mov qword ptr [rax + 8], '\0'
 		mov [r12 + 8], rax
 
 	cons_end:
