@@ -6,6 +6,8 @@ cons:  # r12 = pair, r13 = tail
 	push rbp
 	mov rbp, rsp
 	mov rdi, 16  # check that this is for the number of bytes (and that it is passed correctly)
+
+	and rsp, -16
 	call _malloc  # (does the way to pass the byte count change with the optimization level?)
 	mov r12, rax
 
@@ -23,6 +25,7 @@ cons:  # r12 = pair, r13 = tail
 
 	tail_null:
 		mov rdi, 16
+		and rsp, -16
 		call _malloc
 		mov [rax], r13
 		mov qword ptr [rax + 8], '\0'

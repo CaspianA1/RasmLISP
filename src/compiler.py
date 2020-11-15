@@ -278,7 +278,7 @@ if __name__ == "__main__":
 Working on right now:
 - exploring empty list ideas
 - finding a new GC or providing other flags to make it behave differently?
-- segfault from reverse and reduce
+- segfault from reduce
 - flatten list and append to the end of a list
 - empty list as a constant, which is nil (not quoting an empty list, quoting lists isn't implemented)
 - printing nill from display_list
