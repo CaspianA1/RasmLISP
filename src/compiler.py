@@ -208,14 +208,16 @@ def eval_lisp(sexpr, program,
 			raise TypeError(f"Wrong argument count to procedure <{procedure}>")
 	except KeyError:
 		anonymous_f = True
-	
+
 	for arg in args[::-1]:
 		if isinstance(arg, list):
 			eval_lisp(arg, program, True)
 		else:
+
 			if arg in global_vars:
 				program.emit(f"push [{arg} + rip]  # push global variable")
 			elif arg in procedures:
+				arg = procedures[arg].name
 				program.emit(f"lea rsi, [{arg} + rip]  # address of procedure {arg}", "push rsi")
 			else:
 				program.emit(f"push {arg}  # push argument to {procedure}")
@@ -276,12 +278,10 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-- exploring empty list ideas
 - finding a new GC or providing other flags to make it behave differently?
-- segfault from reduce
-- empty list as a constant, which is nil (not quoting an empty list, quoting lists isn't implemented)
 - printing nil from display_list
 
+Function val error:
 (define nums (cons 1 (cons 2 3)))
 (define x (reduce + nums))
 (display nums)

@@ -9,3 +9,4 @@ scrap_code/
 lib/unused/*
 
 .DS_Store
+quick_push.sh
