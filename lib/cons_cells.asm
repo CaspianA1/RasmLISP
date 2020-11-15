@@ -1,4 +1,4 @@
-	.global cons, car, cdr, null?, list
+	.global cons, car, cdr, list
 	.include "lib/GC/gc_wrapper.asm"
 	.text
 
@@ -55,6 +55,7 @@ cdr:
 	pop rbp
 	ret
 
+/*
 null?:
 	push rbp
 	mov rbp, rsp
@@ -69,6 +70,7 @@ null?:
 		mov rsp, rbp
 		pop rbp
 		ret
+*/
 
 list:
 	push rbp

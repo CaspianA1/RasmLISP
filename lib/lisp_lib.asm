@@ -3,6 +3,7 @@
 	and rsp, -16  # begin garbage collector
 	.global MAX_NUM  # external symbol for proper linkage
 	.global nil  # external symbol for proper linkage
+	.global null?  # external symbol for proper linkage
 	.global atom?  # external symbol for proper linkage
 	.global list?  # external symbol for proper linkage
 	.global lat?  # external symbol for proper linkage
@@ -22,14 +23,22 @@
 	xor rdi, rdi
 	mov rax, 0x2000001
 	syscall
-atom?:
+null?:
 	push rbp
 	mov rbp, rsp
 	push [nil + rip]  # push global variable
 	push [rbp + 16]  # push argument to eq?
 	call eq?
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of eq?
+	mov rsp, rbp
+	pop rbp
+	ret
+atom?:
+	push rbp
+	mov rbp, rsp
+	push [rbp + 16]  # push argument to null?
+	call null?
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of null?
 	call bool_not
 	add rsp, 8  # discard 1 local argument
 	push rax  # result of not
