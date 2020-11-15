@@ -4,10 +4,10 @@
 		(cons (f (car lst)) (map f (cdr lst)))))
 
 (define (filter f lst)
-	(if (null? lst) lst
-		(if (f (car lst))
-			(cons (car lst) (filter f (cdr lst)))
-			(filter f (cdr lst)))))
+	(cond
+		((null? lst) lst)
+		((f (car lst)) (cons (car lst) (filter f (cdr lst))))
+		(else (filter f (cdr lst)))))
 
 (define (reduce f lst seed)
 	(if (null? lst) seed
@@ -38,9 +38,11 @@
 (define (sum lst) (_sum lst 0))
 ;;;;;;;;;;
 (define (_max lst curr)
-	(if (null? lst) curr
-		(if (> (car lst) curr) (_max (cdr lst) (car lst))
-			(_max (cdr lst) curr))))
+	(cond
+		((null? lst) curr)
+		((> (car lst) curr) (_max (cdr lst) (car lst)))
+		(else (_max (cdr lst) curr))))
+
 (define (max lst) (_max lst (car lst)))
 ;;;;;;;;;;
 

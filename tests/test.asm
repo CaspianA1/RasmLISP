@@ -10,18 +10,28 @@ _main:
 	call cons
 	add rsp, 16  # discard 2 local arguments
 	push rax  # result of cons
-	push 1  # push argument to cons
+	push 5  # push argument to cons
 	call cons
 	add rsp, 16  # discard 2 local arguments
 	mov [nums + rip], rax
-	.global x  # external symbol for proper linkage
 	push [nums + rip]  # push global variable
-	lea rsi, [plusplus + rip]  # address of procedure plusplus
-	push rsi
-	call reduce
+	jmp after_anonymous_1
+	anonymous_1:
+	push rbp
+	mov rbp, rsp
+	push 2  # push argument to >
+	push [rbp + 16]  # push argument to >
+	call greater
 	add rsp, 16  # discard 2 local arguments
-	mov [x + rip], rax
-	push [x + rip]  # push global variable
+	mov rsp, rbp
+	pop rbp
+	ret
+	after_anonymous_1:
+	lea rax, [anonymous_1 + rip]
+	push rax
+	call filter
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of filter
 	call display
 	add rsp, 8  # discard 1 local argument
 	and rsp, -16
@@ -41,6 +51,4 @@ plusplus:
 
 	.data
 nums:
-	.quad 0
-x:
 	.quad 0
