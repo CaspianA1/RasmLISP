@@ -1,23 +1,23 @@
 	.text
 	call _begin_gc
 	and rsp, -16  # begin garbage collector
-	.global MAX_NUM
-	.global nil
-	.global atom?
-	.global list?
-	.global lat?
-	.global map
-	.global filter
-	.global reduce
-	.global _display_list
-	.global display_list
-	.global _length
-	.global length
-	.global _sum
-	.global sum
-	.global _max
-	.global max
-	.global display
+	.global MAX_NUM  # external symbol for proper linkage
+	.global nil  # external symbol for proper linkage
+	.global atom?  # external symbol for proper linkage
+	.global list?  # external symbol for proper linkage
+	.global lat?  # external symbol for proper linkage
+	.global map  # external symbol for proper linkage
+	.global filter  # external symbol for proper linkage
+	.global reduce  # external symbol for proper linkage
+	.global _display_list  # external symbol for proper linkage
+	.global display_list  # external symbol for proper linkage
+	.global _length  # external symbol for proper linkage
+	.global length  # external symbol for proper linkage
+	.global _sum  # external symbol for proper linkage
+	.global sum  # external symbol for proper linkage
+	.global _max  # external symbol for proper linkage
+	.global max  # external symbol for proper linkage
+	.global display  # external symbol for proper linkage
 	and rsp, -16
 	call _end_gc  # end garbage collector
 	xor rdi, rdi

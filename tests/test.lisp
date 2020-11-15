@@ -1,8 +1,5 @@
 ; (include "lib/lib.lisp")
 
-(define x 5)
-(display x)
-
 ;;;;;;;;;;
 |
 (define (list? x) (not (atom? x)))

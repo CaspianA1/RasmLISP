@@ -28,7 +28,7 @@ def check_for_unbound_vars(ast: list):
 				check_for_unbound_vars(node)
 			elif not number_pattern.match(node) and node[0] not in ("[", "'"):
 				if node not in global_vars and node not in procedures:
-					raise NameError(f"Unbound symbol {node}")
+					raise NameError(f"Unbound symbol {node}: {ast}")
 
 def push_atomic_result(atom: str, program: Program, has_caller: bool):
 	if atom in global_vars:
@@ -45,18 +45,19 @@ def eval_special_form(sexpr, program, has_caller = False):
 		branch_id += 1
 		return branch_id
 
-
 	form, args = sexpr[0], sexpr[1:]
+
+	extern_sym = lambda name: program.emit(f".global {name}  # external symbol for proper linkage")
 
 	if form == "define":
 		name, value = sexpr[1:]
 
 		if isinstance(name, list):  # is a procedure
 			name = sexpr[1][0]
-			program.emit(f".global {name}")
+			extern_sym(name)
 			define_proc([name, sexpr[1][1:], sexpr[2]], program, has_caller)
 		else:
-			program.emit(f".global {name}")
+			extern_sym(name)
 			global_vars.append(name)
 			if isinstance(value, list):  # sexpr-defined value
 				program.declare_var(name, 0)

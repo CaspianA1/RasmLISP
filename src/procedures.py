@@ -3,11 +3,10 @@ class Program:
 	variables = ["\n\t.data"]
 	defining_proc = False
 
-	def __init__(self, external_prog):
+	def __init__(self, external_prog = False):
 		self.external_prog = external_prog
 
 		if self.external_prog:
-			print("Yes, external prog")
 			self.main = ["\t.text"]
 		else:
 			self.main = ["\t.global _main\n\t.text\n_main:"]
