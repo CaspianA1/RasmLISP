@@ -39,4 +39,6 @@
 (define l (cons 1 (cons 2 (cons 3 (cons 4 5)))))
 (define rl (reverse l)); segfault here (failed somewhere at car, hm (why? fix it))
 (display_list rl)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; New segfault (damnit):
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

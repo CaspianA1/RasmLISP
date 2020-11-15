@@ -47,7 +47,9 @@ def eval_special_form(sexpr, program, has_caller = False):
 
 	form, args = sexpr[0], sexpr[1:]
 
-	extern_sym = lambda name: program.emit(f".global {name}  # external symbol for proper linkage")
+	def extern_sym(name):
+		if name[0] != "_":
+			program.emit(f".global {name}  # external symbol for proper linkage")
 
 	if form == "define":
 		name, value = sexpr[1:]

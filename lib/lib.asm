@@ -162,7 +162,6 @@ bool_or:
 	or_end:
 		exit_frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-/*
 atom?:
 	enter_frame
 	mov rax, [rbp + 16]
@@ -174,30 +173,6 @@ atom?:
 		mov rax, 0
 	end_atom?:
 		exit_frame
-*/
-
-/*
-atom?:
-	push rbp
-	mov rbp, rsp
-	push [nil + rip]  # push global variable
-	push [rbp + 16]  # push argument to eq?
-	call eq?
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of eq?
-	call bool_not
-	add rsp, 8  # discard 1 local argument
-	push rax  # result of not
-	push [MAX_NUM + rip]  # push global variable
-	push [rbp + 16]  # push argument to <=
-	call smaller_eq
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of <=
-	call bool_and
-	mov rsp, rbp
-	pop rbp
-	ret
-*/
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 .macro exception_template message
 enter_frame

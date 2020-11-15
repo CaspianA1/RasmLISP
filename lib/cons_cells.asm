@@ -56,7 +56,7 @@ null?:
 	push rbp
 	mov rbp, rsp
 	mov rax, [rbp + 16]
-	cmp rax, 408383  # nil (should this be what nil is?)
+	cmp rax, '\0'
 	je null_true
 	xor rax, rax
 	jmp null_end

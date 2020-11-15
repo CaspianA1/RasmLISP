@@ -1,6 +1,7 @@
 (include "lib/constants.lisp")
 
-(define (atom? x) (and (<= x MAX_NUM) (not (eq? x nil))))
+; (define (atom? x) (and (<= x MAX_NUM) (not (eq? x nil))))
+; (define (atom? x) (<= x MAX_NUM))
 
 (define (list? x) (not (atom? x)))
 
