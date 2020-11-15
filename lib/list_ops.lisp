@@ -44,9 +44,7 @@
 (define (max lst) (_max lst (car lst)))
 ;;;;;;;;;;
 
-| Not working:
 (define (_reverse lst buf)
 	(if (null? lst) buf
 		(_reverse (cdr lst) (cons (car lst) buf))))
-(define (reverse lst) (_reverse lst (cons 1 2))); what is buf?
-|
+(define (reverse lst) (_reverse lst 0)); what is buf?

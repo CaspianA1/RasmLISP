@@ -162,6 +162,7 @@ bool_or:
 	or_end:
 		exit_frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+/*
 atom?:
 	enter_frame
 	mov rax, [rbp + 16]
@@ -173,6 +174,7 @@ atom?:
 		mov rax, 0
 	end_atom?:
 		exit_frame
+*/
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 .macro exception_template message
 enter_frame

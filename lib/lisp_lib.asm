@@ -3,6 +3,7 @@
 	and rsp, -16  # begin garbage collector
 	.global MAX_NUM  # external symbol for proper linkage
 	.global nil  # external symbol for proper linkage
+	.global atom?  # external symbol for proper linkage
 	.global list?  # external symbol for proper linkage
 	.global lat?  # external symbol for proper linkage
 	.global map  # external symbol for proper linkage
@@ -12,12 +13,33 @@
 	.global length  # external symbol for proper linkage
 	.global sum  # external symbol for proper linkage
 	.global max  # external symbol for proper linkage
+	.global reverse  # external symbol for proper linkage
 	.global display  # external symbol for proper linkage
 	and rsp, -16
 	call _end_gc  # end garbage collector
 	xor rdi, rdi
 	mov rax, 0x2000001
 	syscall
+atom?:
+	push rbp
+	mov rbp, rsp
+	push [nil + rip]  # push global variable
+	push [rbp + 16]  # push argument to eq?
+	call eq?
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of eq?
+	call bool_not
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of not
+	push [MAX_NUM + rip]  # push global variable
+	push [rbp + 16]  # push argument to <=
+	call smaller_eq
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of <=
+	call bool_and
+	mov rsp, rbp
+	pop rbp
+	ret
 list?:
 	push rbp
 	mov rbp, rsp
@@ -409,6 +431,47 @@ max:
 	mov rsp, rbp
 	pop rbp
 	ret
+_reverse:
+	push rbp
+	mov rbp, rsp
+	push [rbp + 16]  # push argument to null?
+	call null?
+	add rsp, 8  # discard 1 local argument
+	cmp rax, 1  # is true?
+	je true_37  # true branch
+	jmp false_38  # false branch
+	true_37:
+	mov rax, [rbp + 24]
+	jmp end_39
+	false_38:
+	push [rbp + 24]  # push argument to cons
+	push [rbp + 16]  # push argument to car
+	call car
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of car
+	call cons
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of cons
+	push [rbp + 16]  # push argument to cdr
+	call cdr
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of cdr
+	call _reverse
+	add rsp, 16  # discard 2 local arguments
+	jmp end_39
+	end_39:
+	mov rsp, rbp
+	pop rbp
+	ret
+reverse:
+	push rbp
+	mov rbp, rsp
+	push 0  # push argument to _reverse
+	push [rbp + 16]  # push argument to _reverse
+	call _reverse
+	mov rsp, rbp
+	pop rbp
+	ret
 display:
 	push rbp
 	mov rbp, rsp
@@ -416,19 +479,19 @@ display:
 	call atom?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_37  # true branch
-	jmp false_38  # false branch
-	true_37:
+	je true_40  # true branch
+	jmp false_41  # false branch
+	true_40:
 	push [rbp + 16]  # push argument to display_num
 	call display_num
 	add rsp, 8  # discard 1 local argument
-	jmp end_39
-	false_38:
+	jmp end_42
+	false_41:
 	push [rbp + 16]  # push argument to display_list
 	call display_list
 	add rsp, 8  # discard 1 local argument
-	jmp end_39
-	end_39:
+	jmp end_42
+	end_42:
 	mov rsp, rbp
 	pop rbp
 	ret

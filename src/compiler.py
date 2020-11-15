@@ -245,8 +245,8 @@ def eval_lisp(sexpr, program,
 	if has_caller and not compiling_if:
 		program.emit(f"push rax  # result of {procedure}")
 
-def main(infile, outfile, link_with):
-	program = Program(link_with)
+def main(infile, outfile, extern):
+	program = Program(extern)
 
 	program.emit("call _begin_gc", "and rsp, -16  # begin garbage collector")
 
@@ -259,7 +259,7 @@ def main(infile, outfile, link_with):
 	program.export(outfile)
 
 if __name__ == "__main__":
-	infile, outfile, link_with = "", "", False
+	infile, outfile, extern = "", "", False
 	try:
 		infile = argv[1]
 		outfile = infile.rstrip("lisp") + "asm"
@@ -269,17 +269,20 @@ if __name__ == "__main__":
 			if option == "debug":
 				infile = "tests/" + infile; outfile = "tests/" + outfile
 			elif option == "extern":
-				link_with = True
+				extern = True
 	except IndexError:
 		print("Please provide a filename.")
-	main(infile, outfile, link_with)
+	main(infile, outfile, extern)
 
 """
 Working on right now:
-- seeing that map, filter, and reduce work somewhat
-- bug testing with higher-order functions like map, filter, and reduce
+- exploring empty list ideas
 - finding a new GC or providing other flags to make it behave differently?
-- segfault from reverse
+- segfault from reverse and reduce
+
+(define nums (cons 1 (cons 2 3)))
+(define x (reduce + nums))
+(display nums)
 
 Feasible features:
 Division
