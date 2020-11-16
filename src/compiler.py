@@ -285,7 +285,7 @@ if __name__ == "__main__":
 Working on right now:
 - finding a new GC or providing other flags to make it behave differently?
 - printing nil from display_list
-- let bindings?
+- let bindings
 
 Function val error:
 (define nums (cons 1 (cons 2 3)))

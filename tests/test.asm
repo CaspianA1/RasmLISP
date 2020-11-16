@@ -22,11 +22,7 @@ f:
 	anonymous_1:
 	push rbp
 	mov rbp, rsp
-	push [rbp + 24]  # push argument to *
 	push [rbp + 16]  # push argument to *
-	call multiply
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of *
 	push [rbp + 16]  # push argument to *
 	call multiply
 	add rsp, 16  # discard 2 local arguments
@@ -35,10 +31,9 @@ f:
 	ret
 	after_anonymous_1:
 	lea rax, [anonymous_1 + rip]
-	push 4  # push argument to rax
 	push 3  # push argument to rax
 	call rax
-	add rsp, 16  # discard 2 local arguments
+	add rsp, 8  # discard 1 local argument
 	mov rsp, rbp
 	pop rbp
 	ret

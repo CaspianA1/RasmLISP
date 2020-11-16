@@ -51,6 +51,9 @@
 #### `lambda`
 - Constructs an anonymous function with two parts: a parameter list and a body. Here's an example: `(lambda (x y) (+ x y))`
 
+#### `let`
+- These are a work in progress.
+
 #### `quote`
 - Converts a string into a compile-time constant hash that can be used for quick comparisons via `eq?`. The resulting symbol is uninterned and has no print name.
 
