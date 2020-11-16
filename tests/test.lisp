@@ -1,15 +1,17 @@
-(define x 6)
-(set! x 3)
-(display x)
+(start_curses)
 
-|
-(define (g a) (let ((b 3)) (* a b)))
-(display (g 2))
-(newline)
+(init_color 1 2 3)
+(init_color 2 5 5)
 
-(define (f a) ((lambda (b) (* a b)) 3))
-(display (f 2)); Weird! Both are wrong. Both are 9 when they should be 6.
-; For this to work, that lambda has to be able to capture its surrounding environment.
-; 1. How would it do that?
-; 2. What is making it behave not as expected right now? (or why is it squaring the first argument?)
-|
+(activate_color 2)
+
+(define response (readch))
+(print_char 2 3 response)
+
+(refresh)
+
+(deactivate_color 2)
+
+(readch)
+
+(end_curses)

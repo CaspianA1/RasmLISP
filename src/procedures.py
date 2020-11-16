@@ -62,3 +62,15 @@ make_operator(">=", "greater_eq")
 make_operator("<", "smaller")
 make_operator("<=", "smaller_eq")
 ##########
+make_procedure("start_curses", 0)
+
+for curses_no_args in ("clear", "refresh"):
+	procedures[curses_no_args] = Procedure(f"_{curses_no_args}", 0)
+
+make_procedure("print_char", 3)
+make_procedure("init_color", 3)
+make_procedure("activate_color", 1)
+make_procedure("deactivate_color", 1)
+procedures["readch"] = Procedure("_getch", 0)
+procedures["end_curses"] = Procedure("_endwin", 0)
+##########

@@ -7,6 +7,7 @@
 	.extern _printf, _fflush
 	.include "lib/lisp_lib.asm"
 	.include "lib/cons_cells.asm"
+	.include "lib/curses/curses_bindings.asm"
 
 	.data
 format_number:

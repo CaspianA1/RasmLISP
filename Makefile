@@ -1,6 +1,6 @@
 CC = clang
 OUT = test
-CFLAGS = -O0 -masm=intel lib/lib.asm -o out/$(OUT) tests/$(OUT).asm
+CFLAGS = -O0 -lncurses -masm=intel lib/lib.asm -o out/$(OUT) tests/$(OUT).asm
 DEBUGGER = lldb
 
 all: compile assemble

@@ -16,6 +16,8 @@
 - If the first argument is a list, e.g. `(define (f x) (+ x 1))`, `f` is stored as a function, or more appropriately a label, in the outputted `.asm` file.
 - Compile-time checking for argument count and unbound symbol checking has been implemented as well.
 - Recursion is up and running.
+#### `set!`
+- Modifies a variable to a given value.
 #### `if`
 - `if` statements can be nested and sequential.
 - It may be hard to follow the flow control looking at the outputted `.asm` file (as assembly flow control is essentially glorified `goto`s) but it has been tested exhaustively. Do not worry!)
@@ -52,7 +54,7 @@
 - Constructs an anonymous function with two parts: a parameter list and a body. Here's an example: `(lambda (x y) (+ x y))`
 
 #### `let`
-- These are a work in progress.
+- These are technically done; but until lambdas can capture their surrounding environment the resulting expression body cannot access other bound variables than those bound by the current `let`.
 
 #### `quote`
 - Converts a string into a compile-time constant hash that can be used for quick comparisons via `eq?`. The resulting symbol is uninterned and has no print name.

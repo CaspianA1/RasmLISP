@@ -6,7 +6,7 @@
 out/*
 __pycache__/
 scrap_code/
-lib/unused/*
+**/unused
 
 .DS_Store
 quick_push.sh
