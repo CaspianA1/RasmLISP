@@ -34,6 +34,12 @@ _main:
 	add rsp, 8  # discard 1 local argument
 	call _getch
 	add rsp, 0  # discard 0 local arguments
+	call _clear
+	add rsp, 0  # discard 0 local arguments
+	call _refresh
+	add rsp, 0  # discard 0 local arguments
+	call _getch
+	add rsp, 0  # discard 0 local arguments
 	call _endwin
 	add rsp, 0  # discard 0 local arguments
 	and rsp, -16

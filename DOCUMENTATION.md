@@ -76,6 +76,14 @@
 - I'll get to division and floating-point arithmetic, and symbol print names sometime soon.
 - If I have time I would like to implement a pattern-matching system and an ability to call C functions.
 
+### curses bindings:
+- To start using curses, call `start_curses`. Deinitialize the library with `end_curses`.
+- curses colors are based around a concept of color pairs. A pair has a foreground and background color (from 1 to 8) and is associated with a number in the same range. Initialize a pair like this:
+`(init_color 1 2 3)`. This initializes color pair 1 with a foreground color of 2 and a background color of 3.
+- To turn color pair 1 on, do this: `(activate_color 1)`. Turn it off with `deactivate_color`.
+- `readch` returns a number representing the ASCII code of the character pressed. Input is blocking for now. To print a character to the screen, call `print_char`, which takes a y-coordinate, an x-coordinate, and a character to print.
+- Call `refresh` to see whatever has been recently printed. `clear` will erase everything on the screen.
+
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.
 - Multi-line comments are done with these: `|`
