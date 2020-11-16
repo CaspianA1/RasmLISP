@@ -23,9 +23,11 @@
 			(_display_list (cdr x)))))
 
 (define (display_list x)
-	(begin
-		(display_char #\()
-		(_display_list x)))
+	(if (null? x)
+		(begin (display_char #\( ) (display_char #\) ))
+		(begin
+			(display_char #\()
+			(_display_list x))))
 ;;;;;;;;;;
 (define (_length lst counter)
 	(if (null? lst) counter

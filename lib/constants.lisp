@@ -1,6 +1,6 @@
 ; can't define pi yet (no floating point numbers)
 (define MAX_NUM 2147483647)
-(define nil #\\0)
+(define nil 408383)
 
 ; curses:
 (define KEY_UP 259)

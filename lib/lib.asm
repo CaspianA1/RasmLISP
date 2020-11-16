@@ -147,7 +147,6 @@ bool_and:
 
 bool_or:
 	enter_frame
-
 	mov rax, [rbp + 16]
 	cmp rax, 0
 	jne or_is_true

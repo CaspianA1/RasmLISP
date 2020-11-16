@@ -5,19 +5,10 @@ _main:
 	and rsp, -16  # begin garbage collector
 	call start_curses
 	add rsp, 0  # discard 0 local arguments
-	push '*'  # push argument to printscr
-	push 49  # push argument to printscr
-	push 0  # push argument to printscr
-	call printscr
-	add rsp, 24  # discard 3 local arguments
-	call _refresh
-	add rsp, 0  # discard 0 local arguments
-	call readch
-	add rsp, 0  # discard 0 local arguments
 	.global change_y  # external symbol for proper linkage
 	.global change_x  # external symbol for proper linkage
 	.global drawing_program  # external symbol for proper linkage
-	push 20  # push argument to cons
+	push 10  # push argument to cons
 	push 10  # push argument to cons
 	call cons
 	add rsp, 16  # discard 2 local arguments
@@ -111,7 +102,7 @@ change_x:
 drawing_program:
 	push rbp
 	mov rbp, rsp
-	push '\0'  # push argument to eq?
+	push 'q'  # push argument to eq?
 	push [rbp + 16]  # push argument to eq?
 	call eq?
 	add rsp, 16  # discard 2 local arguments

@@ -67,8 +67,12 @@ def eval_special_form(sexpr, program, has_caller = False):
 				program.declare_var(name, 0)
 				eval_lisp(value, program, has_caller)
 				program.emit(f"mov [{name} + rip], rax")
-			else:
+			elif number_pattern.match(value):
 				program.declare_var(name, value)  # constant value
+			else:
+				program.declare_var(name, value)  # atomic non-constant
+				eval_lisp(["id", value], program)
+				program.emit(f"mov [{name} + rip], rax")
 
 	elif form == "set!":
 		name, value = sexpr[1:]
@@ -288,7 +292,6 @@ if __name__ == "__main__":
 				extern = True
 	except IndexError:
 		print("Please provide a filename.")
-	print("Infile:", infile)
 	main(infile, outfile, extern)
 
 """
@@ -296,6 +299,7 @@ Working on right now:
 - finding a new GC or providing other flags to make it behave differently?
 - printing nil from display_list
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
+- curses extension
 
 Feasible features:
 Division

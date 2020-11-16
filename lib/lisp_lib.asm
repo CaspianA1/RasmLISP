@@ -290,6 +290,22 @@ _display_list:
 display_list:
 	push rbp
 	mov rbp, rsp
+	push [rbp + 16]  # push argument to null?
+	call null?
+	add rsp, 8  # discard 1 local argument
+	cmp rax, 1  # is true?
+	je true_25  # true branch
+	jmp false_26  # false branch
+	true_25:
+	push '('  # push argument to display_char
+	call display_char
+	add rsp, 8  # discard 1 local argument
+	push ')'  # push argument to display_char
+	call display_char
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of display_char
+	jmp end_27
+	false_26:
 	push '('  # push argument to display_char
 	call display_char
 	add rsp, 8  # discard 1 local argument
@@ -297,6 +313,8 @@ display_list:
 	call _display_list
 	add rsp, 8  # discard 1 local argument
 	push rax  # result of _display_list
+	jmp end_27
+	end_27:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -307,12 +325,12 @@ _length:
 	call null?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_25  # true branch
-	jmp false_26  # false branch
-	true_25:
+	je true_28  # true branch
+	jmp false_29  # false branch
+	true_28:
 	mov rax, [rbp + 24]
-	jmp end_27
-	false_26:
+	jmp end_30
+	false_29:
 	push [rbp + 24]  # push argument to add1
 	call add1
 	add rsp, 8  # discard 1 local argument
@@ -323,8 +341,8 @@ _length:
 	push rax  # result of cdr
 	call _length
 	add rsp, 16  # discard 2 local arguments
-	jmp end_27
-	end_27:
+	jmp end_30
+	end_30:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -344,12 +362,12 @@ _sum:
 	call null?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_28  # true branch
-	jmp false_29  # false branch
-	true_28:
+	je true_31  # true branch
+	jmp false_32  # false branch
+	true_31:
 	mov rax, [rbp + 24]
-	jmp end_30
-	false_29:
+	jmp end_33
+	false_32:
 	push [rbp + 16]  # push argument to car
 	call car
 	add rsp, 8  # discard 1 local argument
@@ -364,8 +382,8 @@ _sum:
 	push rax  # result of cdr
 	call _sum
 	add rsp, 16  # discard 2 local arguments
-	jmp end_30
-	end_30:
+	jmp end_33
+	end_33:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -385,12 +403,12 @@ _max:
 	call null?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_31  # true branch
-	jmp false_32  # false branch
-	true_31:
+	je true_34  # true branch
+	jmp false_35  # false branch
+	true_34:
 	mov rax, [rbp + 24]
-	jmp end_33
-	false_32:
+	jmp end_36
+	false_35:
 	push [rbp + 24]  # push argument to >
 	push [rbp + 16]  # push argument to car
 	call car
@@ -399,9 +417,9 @@ _max:
 	call greater
 	add rsp, 16  # discard 2 local arguments
 	cmp rax, 1  # is true?
-	je true_34  # true branch
-	jmp false_35  # false branch
-	true_34:
+	je true_37  # true branch
+	jmp false_38  # false branch
+	true_37:
 	push [rbp + 16]  # push argument to car
 	call car
 	add rsp, 8  # discard 1 local argument
@@ -412,8 +430,8 @@ _max:
 	push rax  # result of cdr
 	call _max
 	add rsp, 16  # discard 2 local arguments
-	jmp end_36
-	false_35:
+	jmp end_39
+	false_38:
 	push [rbp + 24]  # push argument to _max
 	push [rbp + 16]  # push argument to cdr
 	call cdr
@@ -421,10 +439,10 @@ _max:
 	push rax  # result of cdr
 	call _max
 	add rsp, 16  # discard 2 local arguments
+	jmp end_39
+	end_39:
 	jmp end_36
 	end_36:
-	jmp end_33
-	end_33:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -447,12 +465,12 @@ _reverse:
 	call null?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_37  # true branch
-	jmp false_38  # false branch
-	true_37:
+	je true_40  # true branch
+	jmp false_41  # false branch
+	true_40:
 	mov rax, [rbp + 24]
-	jmp end_39
-	false_38:
+	jmp end_42
+	false_41:
 	push [rbp + 24]  # push argument to cons
 	push [rbp + 16]  # push argument to car
 	call car
@@ -467,8 +485,8 @@ _reverse:
 	push rax  # result of cdr
 	call _reverse
 	add rsp, 16  # discard 2 local arguments
-	jmp end_39
-	end_39:
+	jmp end_42
+	end_42:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -488,12 +506,12 @@ append:
 	call null?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_40  # true branch
-	jmp false_41  # false branch
-	true_40:
+	je true_43  # true branch
+	jmp false_44  # false branch
+	true_43:
 	mov rax, [rbp + 24]
-	jmp end_42
-	false_41:
+	jmp end_45
+	false_44:
 	push [rbp + 24]  # push argument to append
 	push [rbp + 16]  # push argument to cdr
 	call cdr
@@ -508,8 +526,8 @@ append:
 	push rax  # result of car
 	call cons
 	add rsp, 16  # discard 2 local arguments
-	jmp end_42
-	end_42:
+	jmp end_45
+	end_45:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -520,12 +538,12 @@ flatten:
 	call null?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_43  # true branch
-	jmp false_44  # false branch
-	true_43:
+	je true_46  # true branch
+	jmp false_47  # false branch
+	true_46:
 	mov rax, [rbp + 16]
-	jmp end_45
-	false_44:
+	jmp end_48
+	false_47:
 	push [rbp + 16]  # push argument to car
 	call car
 	add rsp, 8  # discard 1 local argument
@@ -533,9 +551,9 @@ flatten:
 	call list?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_46  # true branch
-	jmp false_47  # false branch
-	true_46:
+	je true_49  # true branch
+	jmp false_50  # false branch
+	true_49:
 	push [rbp + 16]  # push argument to cdr
 	call cdr
 	add rsp, 8  # discard 1 local argument
@@ -552,8 +570,8 @@ flatten:
 	push rax  # result of append
 	call flatten
 	add rsp, 8  # discard 1 local argument
-	jmp end_48
-	false_47:
+	jmp end_51
+	false_50:
 	push [rbp + 16]  # push argument to cdr
 	call cdr
 	add rsp, 8  # discard 1 local argument
@@ -567,10 +585,10 @@ flatten:
 	push rax  # result of car
 	call cons
 	add rsp, 16  # discard 2 local arguments
+	jmp end_51
+	end_51:
 	jmp end_48
 	end_48:
-	jmp end_45
-	end_45:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -581,19 +599,19 @@ display:
 	call atom?
 	add rsp, 8  # discard 1 local argument
 	cmp rax, 1  # is true?
-	je true_49  # true branch
-	jmp false_50  # false branch
-	true_49:
+	je true_52  # true branch
+	jmp false_53  # false branch
+	true_52:
 	push [rbp + 16]  # push argument to display_num
 	call display_num
 	add rsp, 8  # discard 1 local argument
-	jmp end_51
-	false_50:
+	jmp end_54
+	false_53:
 	push [rbp + 16]  # push argument to display_list
 	call display_list
 	add rsp, 8  # discard 1 local argument
-	jmp end_51
-	end_51:
+	jmp end_54
+	end_54:
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -602,7 +620,7 @@ display:
 MAX_NUM:
 	.quad 2147483647
 nil:
-	.quad '\0'
+	.quad 408383
 KEY_UP:
 	.quad 259
 KEY_DOWN:

@@ -28,7 +28,7 @@ cons:  # r12 = pair, r13 = tail
 		and rsp, -16
 		call _malloc
 		mov [rax], r13
-		mov qword ptr [rax + 8], '\0'
+		mov qword ptr [rax + 8], 408383
 		mov [r12 + 8], rax
 
 	cons_end:

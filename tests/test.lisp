@@ -1,10 +1,5 @@
 (start_curses)
 
-(printscr 0 48 #\*)
-(refresh)
-(readch)
-
-
 (define (change_y input y_pos)
 	(cond
 		((eq? input KEY_UP) (sub1 y_pos))
@@ -18,17 +13,18 @@
 		(else x_pos)))
 
 (define (drawing_program input pos)
-	(if (eq? input #\\0) 0
+	(if (eq? input #\q) 0
 		(begin
 			(printscr (car pos) (car (cdr pos)) #\*)
-			(drawing_program (readch); changed to track down the bug
-				(cons
-					(change_y input (car pos))
-					(change_x input (car (cdr pos))))))))
+		(drawing_program (readch)
+			(cons
+				(change_y input (car pos))
+				(change_x input (car (cdr pos))))))))
 
 (drawing_program (readch) (cons 10 10))
 
-(end_curses); too much malloc
+(end_curses)
+
 ; vertical scroll fast = ok, horizontal = buggy
 ; c -i 77
 ; it stops at 48 for the horizontal position
