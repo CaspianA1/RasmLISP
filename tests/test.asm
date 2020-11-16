@@ -3,25 +3,11 @@
 _main:
 	call _begin_gc
 	and rsp, -16  # begin garbage collector
-	.global nums  # external symbol for proper linkage
-	push 3  # push argument to cons
-	push 2  # push argument to cons
-	call cons
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of cons
-	push 1  # push argument to cons
-	call cons
-	add rsp, 16  # discard 2 local arguments
-	mov [nums + rip], rax
-	.global x  # external symbol for proper linkage
-	push 1  # push argument to reduce
-	push [nums + rip]  # push global variable
-	lea rsi, [multiply + rip]  # address of procedure multiply
-	push rsi
-	call reduce
-	add rsp, 24  # discard 3 local arguments
-	mov [x + rip], rax
-	push [x + rip]  # push global variable
+	.global f  # external symbol for proper linkage
+	push 2  # push argument to f
+	call f
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of f
 	call display
 	add rsp, 8  # discard 1 local argument
 	and rsp, -16
@@ -29,9 +15,32 @@ _main:
 	xor rdi, rdi
 	mov rax, 0x2000001
 	syscall
+f:
+	push rbp
+	mov rbp, rsp
+	jmp after_anonymous_1
+	anonymous_1:
+	push rbp
+	mov rbp, rsp
+	push [rbp + 24]  # push argument to *
+	push [rbp + 16]  # push argument to *
+	call multiply
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of *
+	push [rbp + 16]  # push argument to *
+	call multiply
+	add rsp, 16  # discard 2 local arguments
+	mov rsp, rbp
+	pop rbp
+	ret
+	after_anonymous_1:
+	lea rax, [anonymous_1 + rip]
+	push 4  # push argument to rax
+	push 3  # push argument to rax
+	call rax
+	add rsp, 16  # discard 2 local arguments
+	mov rsp, rbp
+	pop rbp
+	ret
 
 	.data
-nums:
-	.quad 0
-x:
-	.quad 0

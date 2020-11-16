@@ -4,7 +4,7 @@ from re import compile as regex
 from copy import copy
 from sys import argv
 
-special_forms = "define", "define_macro", "quote", "include", "if", "cond", "lambda", "begin"
+special_forms = "define", "let", "define_macro", "quote", "include", "if", "cond", "lambda", "begin"
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = ["nil"]
@@ -67,7 +67,12 @@ def eval_special_form(sexpr, program, has_caller = False):
 				program.emit(f"mov [{name} + rip], rax")
 			else:
 				program.declare_var(name, value)  # constant value
-			
+
+	elif form == "let":
+		bound = sexpr[1]
+		as_lambda = [["lambda", [b[0] for b in bound], sexpr[2]]] + [b[1] for b in bound]
+		eval_lisp(as_lambda, program, has_caller)
+
 	elif form == "if":
 		eval_lisp(sexpr[1], program, has_caller, compiling_if = True)
 		program.emit("cmp rax, 1  # is true?")
@@ -280,6 +285,7 @@ if __name__ == "__main__":
 Working on right now:
 - finding a new GC or providing other flags to make it behave differently?
 - printing nil from display_list
+- let bindings?
 
 Function val error:
 (define nums (cons 1 (cons 2 3)))

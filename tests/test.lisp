@@ -1,3 +1,4 @@
-(define nums (cons 1 (cons 2 3)))
-(define x (reduce * nums 1))
-(display x)
+(define (f a)
+	(let ((b 3) (c 4))
+		(* a (* b c))))
+(display (f 2)); wrong result! is 36, should be 
