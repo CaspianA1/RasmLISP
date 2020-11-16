@@ -81,7 +81,7 @@
 - curses colors are based around a concept of color pairs. A pair has a foreground and background color (from 1 to 8) and is associated with a number in the same range. Initialize a pair like this:
 `(init_color 1 2 3)`. This initializes color pair 1 with a foreground color of 2 and a background color of 3.
 - To turn color pair 1 on, do this: `(activate_color 1)`. Turn it off with `deactivate_color`.
-- `readch` returns a number representing the ASCII code of the character pressed. Input is blocking for now. To print a character to the screen, call `print_char`, which takes a y-coordinate, an x-coordinate, and a character to print.
+- `readch` returns a number representing the ASCII code of the character pressed. To print a character to the screen, call `printscr`, which takes a y-coordinate, an x-coordinate, and a character to print.
 - Call `refresh` to see whatever has been recently printed. `clear` will erase everything on the screen.
 
 ### Miscellaneous:

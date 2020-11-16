@@ -1,4 +1,4 @@
-	.global start_curses, init_color, activate_color, deactivate_color, print_char
+	.global start_curses, init_color, activate_color, deactivate_color, printscr, readch
 
 start_curses:
 	push rbp
@@ -9,6 +9,12 @@ start_curses:
 	call _noecho
 	call _start_color
 	call _use_default_colors
+
+	mov	rax, qword ptr [rip + _stdscr@GOTPCREL]
+	mov	rdi, qword ptr [rax]
+	mov	esi, 1
+	call _keypad
+
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -44,7 +50,7 @@ init_color:
 activate_color: color_activation _wattr_on
 deactivate_color: color_activation _wattr_off
 
-print_char:
+printscr:
 	push rbp
 	mov	rbp, rsp
 	mov edi, [rbp + 16]
@@ -57,6 +63,15 @@ print_char:
 	call _mvprintw
 	mov rsp, rbp
 	pop	rbp
+	ret
+
+readch:
+	push rbp
+	mov rbp, rsp
+	and rsp, -16
+	call _getch
+	mov rsp, rbp
+	pop rbp
 	ret
 
 /*

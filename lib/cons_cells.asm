@@ -8,7 +8,7 @@ cons:  # r12 = pair, r13 = tail
 	mov rdi, 16  # check that this is for the number of bytes (and that it is passed correctly)
 
 	and rsp, -16
-	call _malloc  # (does the way to pass the byte count change with the optimization level?)
+	call _malloc # (does the way to pass the byte count change with the optimization level?)
 	mov r12, rax
 
 	mov rsi, [rbp + 16]

@@ -1,8 +1,11 @@
 	.text
-	call _begin_gc
-	and rsp, -16  # begin garbage collector
 	.global MAX_NUM  # external symbol for proper linkage
 	.global nil  # external symbol for proper linkage
+	.global KEY_UP  # external symbol for proper linkage
+	.global KEY_DOWN  # external symbol for proper linkage
+	.global KEY_LEFT  # external symbol for proper linkage
+	.global KEY_RIGHT  # external symbol for proper linkage
+	.global KEY_ENTER  # external symbol for proper linkage
 	.global null?  # external symbol for proper linkage
 	.global atom?  # external symbol for proper linkage
 	.global list?  # external symbol for proper linkage
@@ -18,11 +21,6 @@
 	.global append  # external symbol for proper linkage
 	.global flatten  # external symbol for proper linkage
 	.global display  # external symbol for proper linkage
-	and rsp, -16
-	call _end_gc  # end garbage collector
-	xor rdi, rdi
-	mov rax, 0x2000001
-	syscall
 null?:
 	push rbp
 	mov rbp, rsp
@@ -605,3 +603,13 @@ MAX_NUM:
 	.quad 2147483647
 nil:
 	.quad '\0'
+KEY_UP:
+	.quad 259
+KEY_DOWN:
+	.quad 258
+KEY_LEFT:
+	.quad 260
+KEY_RIGHT:
+	.quad 261
+KEY_ENTER:
+	.quad 343

@@ -8,7 +8,7 @@ special_forms = ("define", "set!", "let", "define_macro",
 				"quote", "include", "if", "cond", "lambda", "begin")
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
-global_vars = ["nil"]
+global_vars = ["nil", "MAX_NUM", "KEY_UP", "KEY_DOWN", "KEY_LEFT", "KEY_RIGHT", "KEY_ENTER"]
 macros = {}
 
 def expand_macro(macro, param_arg_map):
@@ -23,6 +23,7 @@ def expand_macro(macro, param_arg_map):
 		return macro
 
 def check_for_unbound_vars(ast: list):
+	return
 	if ast[0] not in special_forms:
 		for node in ast[1:]:
 			if isinstance(node, list):
@@ -261,14 +262,16 @@ def eval_lisp(sexpr, program,
 def main(infile, outfile, extern):
 	program = Program(extern)
 
-	program.emit("call _begin_gc", "and rsp, -16  # begin garbage collector")
+	if not extern:
+		program.emit("call _begin_gc", "and rsp, -16  # begin garbage collector")
 
 	tokens = list(parser.tokenize(infile))
 	while (tree := parser.parse(tokens)) is not None:
 		eval_lisp(parser.replace_chars(tree), program)
 
-	program.emit("and rsp, -16", "call _end_gc  # end garbage collector")
-	program.emit("xor rdi, rdi", "mov rax, 0x2000001", "syscall")
+	if not extern:
+		program.emit("and rsp, -16", "call _end_gc  # end garbage collector")
+		program.emit("xor rdi, rdi", "mov rax, 0x2000001", "syscall")
 	program.export(outfile)
 
 if __name__ == "__main__":
@@ -285,6 +288,7 @@ if __name__ == "__main__":
 				extern = True
 	except IndexError:
 		print("Please provide a filename.")
+	print("Infile:", infile)
 	main(infile, outfile, extern)
 
 """
