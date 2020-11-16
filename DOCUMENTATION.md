@@ -83,6 +83,8 @@
 - To turn color pair 1 on, do this: `(activate_color 1)`. Turn it off with `deactivate_color`.
 - `readch` returns a number representing the ASCII code of the character pressed. To print a character to the screen, call `printscr`, which takes a y-coordinate, an x-coordinate, and a character to print.
 - Call `refresh` to see whatever has been recently printed. `clear` will erase everything on the screen.
+- Special keys: `KEY_UP`, `KEY_DOWN`, `KEY_LEFT`, `KEY_RIGHT`, `KEY_ENTER`
+- These may be returned by `readch`.
 
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.
