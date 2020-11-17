@@ -7,7 +7,7 @@
 ### Tools:
 - I am using the LLVM backend for assembling and debugging, specifically `clang` and `lldb`.
 - The outputted `.asm` file is in `x86-64` assembly, with `intel` syntax, and made for MacOS; but a few small changes should make it compatible with Linux as well.
-- I am using [this](https://github.com/orangeduck/tgc) garbage collector for lists (they are the only data structure allocated on the heap).
+- I am using [this](https://github.com/jserv/ogc) garbage collector for lists (they are the only data structure allocated on the heap).
 
 ### Special forms implemented so far:
 #### `define`

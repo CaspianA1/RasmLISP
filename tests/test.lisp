@@ -1,6 +1,6 @@
-(define (g a) (let ((b 3)) (* a b)))
-(display (g 2))
+(display (cons 1 2))
 (newline)
-
-(define (f a) ((lambda (b) (* a b)) 3))
-(display (f 2))
+(define lst1 (cons 1 (cons 2 (cons 3 4))))
+(display (cons (cons (cons 2 3) 4) 5))
+(newline)
+(display lst1)

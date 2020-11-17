@@ -267,14 +267,13 @@ def main(infile, outfile, extern):
 	program = Program(extern)
 
 	if not extern:
-		program.emit("call _begin_gc", "and rsp, -16  # begin garbage collector")
+		program.emit("mov rdi, rbp", "mov esi, 16", "and rsp, -16", "call _gc_init")
 
 	tokens = list(parser.tokenize(infile))
 	while (tree := parser.parse(tokens)) is not None:
 		eval_lisp(parser.replace_chars(tree), program)
 
 	if not extern:
-		program.emit("and rsp, -16", "call _end_gc  # end garbage collector")
 		program.emit("xor rdi, rdi", "mov rax, 0x2000001", "syscall")
 	program.export(outfile)
 
@@ -312,9 +311,6 @@ Custom syntax highlighting
 One-day features:
 pmatch
 case
-curses bindings
-user-level empty lists
-set!
 
 Compiler name:
 RasmusLisp or rASMlisp

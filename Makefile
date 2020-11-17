@@ -9,7 +9,7 @@ compile:
 assemble: compile_gc compile_lisp_lib
 	$(CC) $(CFLAGS)
 compile_gc:  # the garbage collector
-	$(CC) -O0 -S -masm=intel -o lib/GC/gc_wrapper.asm lib/GC/gc_wrapper.c
+	$(CC) -O0 -S -masm=intel -o lib/GC/gc.asm lib/GC/gc.c
 compile_lisp_lib:
 	python3 src/compiler.py lib/lisp_lib.lisp extern
 debug:
