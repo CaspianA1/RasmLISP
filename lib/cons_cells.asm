@@ -54,38 +54,44 @@ cdr:
 	pop rbp
 	ret
 
-/*
-null?:
-	push rbp
-	mov rbp, rsp
-	mov rax, [rbp + 16]
-	cmp rax, '\0'
-	je null_true
-	xor rax, rax
-	jmp null_end
-	null_true:
-		mov rax, 1
-	null_end:
-		mov rsp, rbp
-		pop rbp
-		ret
-*/
-
+# r12 = index, r13 = length, r14 = prev tail, r15 = saved beginning
 list:
 	push rbp
 	mov rbp, rsp
-	xor r14, r14
+	and rsp, -16
 
-	# rbx, r14 and 15 are safe to use
-	# r14 = argument count
-	# r15 = index
-	# rbx = result
-	# need one more for current memory block
+	mov r12, 1
 
-	# hm, this is tricky
+	mov rdi, 16
+	call _gc_alloc
+	mov r15, rax
+	
+	mov rsi, [rbp + 16]
+	mov [rax], rsi
+
+	cmp r13, 1
+	je end_list
+
+	lea r14, [rax + 8]
+	
+	make_list:
+		mov rdi, 16
+		call _gc_alloc
+		mov rsi, [rbp + (r12 * 8) + 16]
+		mov [rax], rsi
+
+		inc r12
+
+		mov [r14], rax
+		lea r14, [rax + 8]
+
+		cmp r12, r13
+		je end_list
+		jmp make_list
 
 	end_list:
-		mov rax, rbx
+		mov qword ptr [rax + 8], 408383
+		mov rax, r15
 		mov rsp, rbp
 		pop rbp
 		ret

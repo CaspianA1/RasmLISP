@@ -229,7 +229,6 @@ def eval_lisp(sexpr, program,
 		if isinstance(arg, list):
 			eval_lisp(arg, program, True)
 		else:
-
 			if arg in global_vars:
 				program.emit(f"push [{arg} + rip]  # push global variable")
 			elif arg in procedures:
@@ -239,7 +238,7 @@ def eval_lisp(sexpr, program,
 				program.emit(f"push {arg}  # push argument to {procedure}")
 
 	if procedure == "list":
-		program.emit(f"mov r14, {(l := len(args))}  # list of length {l}")
+		program.emit(f"mov r13, {(l := len(args))}  # list of length {l}")
 
 	if register_call:
 		to_call = procedure
@@ -298,7 +297,7 @@ Working on right now:
 - finding a new GC or providing other flags to make it behave differently?
 - printing nil from display_list
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
-- curses extension
+- list function
 
 Feasible features:
 Division
@@ -306,7 +305,6 @@ Floating-point math
 -- Print names for symbols
 Custom syntax highlighting
 -- Comparing lists via equal?
--- list function
 
 One-day features:
 pmatch

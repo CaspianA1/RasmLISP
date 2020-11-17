@@ -61,7 +61,7 @@
 
 ### Built-in procedures:
 #### List primitives:
-- `car`, `cdr`, `cons`
+- `car`, `cdr`, `cons`, `list`
 #### Operators, two arguments:
 - `+`, `-`, `*`, `eq?`, `and`, `or`, `>`, `>=`, `<`, `<=`
 #### Operators, one argument:
