@@ -1,3 +1,0 @@
-[submodule "lib/GC/ogc"]
-	path = lib/GC/ogc
-	url = https://github.com/jserv/ogc

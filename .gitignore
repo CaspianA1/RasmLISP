@@ -3,10 +3,9 @@
 *.dSYM
 *.pyc
 
+lib/GC/*
 out/*
 __pycache__/
-scrap_code/
-**/unused
 
 .DS_Store
 quick_push.sh

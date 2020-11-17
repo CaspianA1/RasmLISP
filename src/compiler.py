@@ -265,9 +265,6 @@ def eval_lisp(sexpr, program,
 def main(infile, outfile, extern):
 	program = Program(extern)
 
-	if not extern:
-		program.emit("mov rdi, rbp", "mov esi, 16", "and rsp, -16", "call _gc_init")
-
 	tokens = list(parser.tokenize(infile))
 	while (tree := parser.parse(tokens)) is not None:
 		eval_lisp(parser.replace_chars(tree), program)
@@ -297,7 +294,7 @@ Working on right now:
 - finding a new GC or providing other flags to make it behave differently?
 - printing nil from display_list
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
-- list function
+- using the Boehm GC (find an online guide). Having tried so many broken garbage collectors this one has to work.
 
 Feasible features:
 Division

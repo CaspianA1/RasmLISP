@@ -1,5 +1,4 @@
 	.global cons, car, cdr, list
-	.include "lib/GC/gc.asm"
 	.text
 
 cons:  # r12 = pair, r13 = tail
@@ -7,7 +6,7 @@ cons:  # r12 = pair, r13 = tail
 	mov rbp, rsp
 	mov rdi, 16
 	and rsp, -16
-	call _malloc
+	call _GC_malloc
 	mov r12, rax
 
 	mov rsi, [rbp + 16]
@@ -25,7 +24,7 @@ cons:  # r12 = pair, r13 = tail
 	tail_null:
 		mov rdi, 16
 		and rsp, -16
-		call _malloc
+		call _GC_malloc
 		mov [rax], r13
 		mov qword ptr [rax + 8], 408383
 		mov [r12 + 8], rax
@@ -63,7 +62,7 @@ list:
 	mov r12, 1
 
 	mov rdi, 16
-	call _malloc
+	call _GC_malloc
 	mov r15, rax
 	
 	mov rsi, [rbp + 16]
@@ -76,7 +75,7 @@ list:
 	
 	make_list:
 		mov rdi, 16
-		call _malloc
+		call _GC_malloc
 		mov rsi, [rbp + (r12 * 8) + 16]
 		mov [rax], rsi
 

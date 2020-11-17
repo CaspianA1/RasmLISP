@@ -1,6 +1,7 @@
 CC = clang
 OUT = test
-CFLAGS = -O0 -lncurses -masm=intel lib/lib.asm -o out/$(OUT) tests/$(OUT).asm
+LINK_WITH = lib/lib.asm /usr/local/bin/lib/libgc.dylib
+CFLAGS = -O0 -lncurses -masm=intel $(LINK_WITH) -o out/$(OUT) tests/$(OUT).asm
 DEBUGGER = lldb
 
 all: compile assemble
@@ -9,7 +10,7 @@ compile:
 assemble: compile_gc compile_lisp_lib
 	$(CC) $(CFLAGS)
 compile_gc:  # the garbage collector
-	$(CC) -O0 -S -masm=intel -o lib/GC/gc.asm lib/GC/gc.c
+	# $(CC) -O0 -S -masm=intel -o lib/GC/gc.asm lib/GC/gc.c
 compile_lisp_lib:
 	python3 src/compiler.py lib/lisp_lib.lisp extern
 debug:
@@ -20,5 +21,7 @@ run:
 clean:
 	rm -r out/*
 install:
-	brew install python || echo Please install Homebrew first.
-	xcode-select --install  # clang + lldb
+	# brew install python || echo Please install Homebrew first.
+	# xcode-select --install  # clang + lldb
+	# sh install_boehm.sh
+	# $(CC) -O0 /usr/local/bin/lib/libgc.dylib -o lib/GC/gc_wrapper.asm -S -masm=intel lib/GC/gc_wrapper.c  # test

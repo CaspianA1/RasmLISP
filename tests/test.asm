@@ -1,10 +1,8 @@
 	.global _main
 	.text
 _main:
-	mov rdi, rbp
-	mov esi, 16
-	and rsp, -16
-	call _gc_init
+	call start_curses
+	add rsp, 0  # discard 0 local arguments
 	.global change_y  # external symbol for proper linkage
 	.global change_x  # external symbol for proper linkage
 	.global drawing_program  # external symbol for proper linkage
@@ -16,6 +14,8 @@ _main:
 	push [KEY_RIGHT + rip]  # push global variable
 	call drawing_program
 	add rsp, 16  # discard 2 local arguments
+	call _endwin
+	add rsp, 0  # discard 0 local arguments
 	xor rdi, rdi
 	mov rax, 0x2000001
 	syscall
@@ -107,6 +107,20 @@ drawing_program:
 	mov rax, 0
 	jmp end_15
 	false_14:
+	push '*'  # push argument to printscr
+	push [rbp + 24]  # push argument to cdr
+	call cdr
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of cdr
+	call car
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of car
+	push [rbp + 24]  # push argument to car
+	call car
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of car
+	call printscr
+	add rsp, 24  # discard 3 local arguments
 	push [rbp + 24]  # push argument to cdr
 	call cdr
 	add rsp, 8  # discard 1 local argument
@@ -129,9 +143,12 @@ drawing_program:
 	call cons
 	add rsp, 16  # discard 2 local arguments
 	push rax  # result of cons
-	push [KEY_RIGHT + rip]  # push global variable
+	call readch
+	add rsp, 0  # discard 0 local arguments
+	push rax  # result of readch
 	call drawing_program
 	add rsp, 16  # discard 2 local arguments
+	push rax  # result of drawing_program
 	jmp end_15
 	end_15:
 	mov rsp, rbp

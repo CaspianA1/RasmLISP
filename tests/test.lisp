@@ -1,4 +1,4 @@
-; (start_curses)
+(start_curses)
 
 (define (change_y input y_pos)
 	(cond
@@ -14,11 +14,13 @@
 
 (define (drawing_program input pos)
 	(if (eq? input #\q) 0
-		(drawing_program KEY_RIGHT
-			(cons
-				(change_y input (car pos))
-				(change_x input (car (cdr pos))))))); what if pos x is 48?
+		(begin
+			(printscr (car pos) (car (cdr pos)) #\*)
+			(drawing_program (readch)
+				(cons
+					(change_y input (car pos))
+					(change_x input (car (cdr pos))))))))
 
 (drawing_program KEY_RIGHT (cons 10 10))
 
-; (end_curses)
+(end_curses)
