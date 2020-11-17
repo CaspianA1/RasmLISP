@@ -1,3 +1,5 @@
+(display (list 10 10))
+|
 (start_curses)
 
 (define (change_y input y_pos)
@@ -24,3 +26,4 @@
 (drawing_program KEY_RIGHT (cons 10 10))
 
 (end_curses)
+|

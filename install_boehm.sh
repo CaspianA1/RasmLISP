@@ -1,4 +1,4 @@
-echo "Install the newest archive here: " https://github.com/ivmai/bdwgc/releases
+echo Install the newest archive here: https://github.com/ivmai/bdwgc/releases
 echo "Once you're done put it in the lib/GC directory."
 read delay
 cd lib/GC

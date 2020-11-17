@@ -74,51 +74,7 @@ readch:
 	pop rbp
 	ret
 
-/*
-_main:
-	call start_curses
-	and rsp, -16
-
-	push 1
-	push 3
-	push 2
-	call init_color
-	add rsp, 24
-
-	push 2
-	call activate_color
-	add rsp, 8
-	
-	push 99
-	push 2
-	push 3
-	call print_char
-	add rsp, 24
-
-	push 2
-	call deactivate_color
-	add rsp, 8
-
-	call _getch
-
-	call _endwin
-	xor rdi, rdi
-	mov rax, 0x2000001
-	syscall
-*/
-
 	.data
 
 char_frm:
 	.asciz "%c"
-
-/*
-Completed:
-start_curses
-init_color
-activate_color
-deactivate_color
-print_char
-_getch
-_endwin
-*/
