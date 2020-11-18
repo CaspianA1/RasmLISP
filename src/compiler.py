@@ -291,10 +291,8 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-- finding a new GC or providing other flags to make it behave differently?
 - printing nil from display_list
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
-- using the Boehm GC (find an online guide). Having tried so many broken garbage collectors this one has to work.
 
 Feasible features:
 Division

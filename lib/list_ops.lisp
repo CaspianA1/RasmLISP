@@ -33,6 +33,10 @@
 	(if (null? lst) counter
 		(_length (cdr lst) (add1 counter))))
 (define (length lst) (_length lst 0))
+
+(define (index lst counter)
+	(if (eq? counter 0) (car lst)
+		(index (cdr lst) (sub1 counter))))
 ;;;;;;;;;;
 (define (_sum lst accum)
 	(if (null? lst) accum

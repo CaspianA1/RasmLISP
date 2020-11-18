@@ -1,4 +1,6 @@
-	.global start_curses, init_color, activate_color, deactivate_color, printscr, readch
+	.global start_curses, end_curses
+	.global init_color, activate_color, deactivate_color
+	.global printscr, readch, getmaxy, getmaxx
 
 start_curses:
 	push rbp
@@ -10,11 +12,20 @@ start_curses:
 	call _start_color
 	call _use_default_colors
 
-	mov	rax, qword ptr [rip + _stdscr@GOTPCREL]
+	mov	rax, qword ptr [_stdscr@GOTPCREL + rip]
 	mov	rdi, qword ptr [rax]
 	mov	esi, 1
 	call _keypad
 
+	mov rsp, rbp
+	pop rbp
+	ret
+
+end_curses:
+	push rbp
+	mov rbp, rsp
+	and rsp, -16
+	call _endwin
 	mov rsp, rbp
 	pop rbp
 	ret
@@ -36,7 +47,7 @@ init_color:
 	mov	rbp, rsp
 	mov edi, [rbp + 16]
 	mov	esi, edi
-	mov	rax, qword ptr [rip + _stdscr@GOTPCREL]
+	mov	rax, qword ptr [_stdscr@GOTPCREL + rip]
 	mov	rdi, qword ptr [rax]
 	shl	esi, 8
 	xor	edx, edx
@@ -57,7 +68,7 @@ printscr:
 	mov esi, [rbp + 24]
 	mov edx, [rbp + 32]
 	mov	ecx, edx
-	lea	rdx, [rip + char_frm]
+	lea	rdx, [char_frm + rip]
 	xor	eax, eax
 	and rsp, -16
 	call _mvprintw
@@ -73,6 +84,21 @@ readch:
 	mov rsp, rbp
 	pop rbp
 	ret
+
+.macro max_coord function
+push rbp
+mov rbp, rsp
+mov	rax, qword ptr [_stdscr@GOTPCREL + rip]
+mov	rdi, qword ptr [rax]
+and rsp, -16
+call \function
+mov rsp, rbp
+pop rbp
+ret
+.endm
+
+getmaxy: max_coord _getmaxy
+getmaxx: max_coord _getmaxx
 
 	.data
 

@@ -1,29 +1,23 @@
-(display (list 10 10))
 |
+(define terrain (list #\_ #\_ #\_ #\. #\, #\hline #\/))
+(define (_progress_terrain terrain shifted)
+	(if (null? terrain) shifted
+		(cons (car terrain) (_progress_terrain (cdr terrain) shifted))))
+(define (progress_terrain lst) (_progress_terrain (cdr lst) (car lst)))
+(display (progress_terrain (list 1 2 3 4 5)))
+|
+
+(define MAX_Y (getmaxy))
+
+; (define (display_terrain across)
+		; (begin
+			; (printscr (sub1 MAX_Y) across #\a))
+			; (display_terrain (cdr terrain) (add1 across)))))
+
 (start_curses)
 
-(define (change_y input y_pos)
-	(cond
-		((eq? input KEY_UP) (sub1 y_pos))
-		((eq? input KEY_DOWN) (add1 y_pos))
-		(else y_pos)))
-
-(define (change_x input x_pos)
-	(cond
-		((eq? input KEY_LEFT) (sub1 x_pos))
-		((eq? input KEY_RIGHT) (add1 x_pos))
-		(else x_pos)))
-
-(define (drawing_program input pos)
-	(if (eq? input #\q) 0
-		(begin
-			(printscr (car pos) (car (cdr pos)) #\*)
-			(drawing_program (readch)
-				(cons
-					(change_y input (car pos))
-					(change_x input (car (cdr pos))))))))
-
-(drawing_program KEY_RIGHT (cons 10 10))
-
+; can't do anything related to maxy here
+(printscr (- MAX_Y 2) 1 #\a)
+(readch)
 (end_curses)
-|
+; a scrolling desert will be my second demo

@@ -30,7 +30,7 @@ class Procedure:
 
 procedures = {}
 
-##########
+########## These are for the standard library
 def make_procedure(name, args):
 	procedures[name] = Procedure(name, args)
 
@@ -42,7 +42,7 @@ for one_arg_proc in ("display", "display_num", "display_list", "display_char",
 	"type_exception", "value_exception", "length", "sum", "max", "reverse", "flatten"):
 	make_procedure(one_arg_proc, 1)
 
-for two_arg_proc in ("cons", "eq?", "map", "filter", "append"):
+for two_arg_proc in ("cons", "eq?", "map", "filter", "append", "index"):
 	make_procedure(two_arg_proc, 2)
 
 make_procedure("reduce", 3)
@@ -63,6 +63,9 @@ make_operator("<", "smaller")
 make_operator("<=", "smaller_eq")
 ##########
 make_procedure("start_curses", 0)
+make_procedure("getmaxy", 0)
+make_procedure("getmaxx", 0)
+make_procedure("end_curses", 0)
 
 for curses_no_args in ("clear", "refresh"):
 	procedures[curses_no_args] = Procedure(f"_{curses_no_args}", 0)
@@ -72,5 +75,4 @@ make_procedure("init_color", 3)
 make_procedure("activate_color", 1)
 make_procedure("deactivate_color", 1)
 make_procedure("readch", 0)
-procedures["end_curses"] = Procedure("_endwin", 0)
 ##########

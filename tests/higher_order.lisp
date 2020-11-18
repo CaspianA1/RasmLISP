@@ -1,0 +1,5 @@
+(display (map add1 (list 1 2 3 4 5)))
+(newline)
+(display (filter atom? (list 1 2 (cons 3 4) 5)))
+(newline)
+(display (reduce * (list 4 5 6) 1))

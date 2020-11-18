@@ -71,7 +71,7 @@
 #### Error handling:
 - You can throw an error by calling `type_exception` or `value_exception`. Pass either function a unique number to help you find out who threw the error.
 #### Other:
-- `length`, `sum`, `max`, `reverse`, `append`, `flatten`, `map`, `filter`, `reduce`, `lat?`
+- `length`, `index`, `sum`, `max`, `reverse`, `append`, `flatten`, `map`, `filter`, `reduce`, `lat?`
 #### Eventual features:
 - I'll get to division and floating-point arithmetic, and symbol print names sometime soon.
 - If I have time I would like to implement a pattern-matching system and an ability to call C functions.
@@ -85,6 +85,7 @@
 - Call `refresh` to see whatever has been recently printed. `clear` will erase everything on the screen.
 - Special keys: `KEY_UP`, `KEY_DOWN`, `KEY_LEFT`, `KEY_RIGHT`, `KEY_ENTER`
 - These may be returned by `readch`.
+- Other functions: `getmaxy`, `getmaxx`
 
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.
