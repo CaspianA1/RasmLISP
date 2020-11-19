@@ -1,6 +1,6 @@
 	.global start_curses, end_curses
 	.global init_color, activate_color, deactivate_color
-	.global printscr, readch, getmaxy, getmaxx
+	.global printscr, readch, getmaxy, getmaxx, nap, clear, refresh
 
 start_curses:
 	push rbp
@@ -99,6 +99,34 @@ ret
 
 getmaxy: max_coord _getmaxy
 getmaxx: max_coord _getmaxx
+
+nap:
+	push rbp
+	mov rbp, rsp
+	mov rdi, [rbp + 16]
+	and rsp, -16
+	call _napms
+	mov rsp, rbp
+	pop rbp
+	ret
+
+clear:
+	push rbp
+	mov rbp, rsp
+	and rsp, -16
+	call _clear
+	mov rsp, rbp
+	pop rbp
+	ret
+
+refresh:
+	push rbp
+	mov rbp, rsp
+	and rsp, -16
+	call _refresh
+	mov rsp, rbp
+	pop rbp
+	ret
 
 	.data
 

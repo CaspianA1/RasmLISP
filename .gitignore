@@ -9,3 +9,4 @@ __pycache__/
 
 .DS_Store
 quick_push.sh
+tests/scrap_code.lisp

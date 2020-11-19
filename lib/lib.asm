@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	.global display_num, display_char, newline
-	.global plus, minus, multiply, add1, sub1, id, eq?
+	.global plus, minus, multiply, divide, add1, sub1, id, eq?
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
 	.global type_exception, value_exception
@@ -67,6 +67,13 @@ exit_frame
 plus: operator add
 minus: operator sub
 multiply: operator imul
+divide:
+	enter_frame
+	mov rax, [rbp + 16]
+	xor rdx, rdx
+	mov rbx, [rbp + 24]
+	idiv rbx
+	exit_frame
 
 add1:
 	enter_frame

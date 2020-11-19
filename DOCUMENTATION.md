@@ -63,7 +63,7 @@
 #### List primitives:
 - `car`, `cdr`, `cons`, `list`
 #### Operators, two arguments:
-- `+`, `-`, `*`, `eq?`, `and`, `or`, `>`, `>=`, `<`, `<=`
+- `+`, `-`, `*`, `/`, `eq?`, `and`, `or`, `>`, `>=`, `<`, `<=`
 #### Operators, one argument:
 - `not`, `atom?`, `list?`, `null?`, `add1`, `sub1`, `id`
 #### Impure procedures:
@@ -85,7 +85,7 @@
 - Call `refresh` to see whatever has been recently printed. `clear` will erase everything on the screen.
 - Special keys: `KEY_UP`, `KEY_DOWN`, `KEY_LEFT`, `KEY_RIGHT`, `KEY_ENTER`
 - These may be returned by `readch`.
-- Other functions: `getmaxy`, `getmaxx`
+- Other functions: `getmaxy`, `getmaxx`, `nap` (in milliseconds)
 
 ### Miscellaneous:
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.

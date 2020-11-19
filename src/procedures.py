@@ -54,6 +54,7 @@ def make_operator(lisp_name, asm_name):
 make_operator("+", "plus")
 make_operator("-", "minus")
 make_operator("*", "multiply")
+make_operator("/", "divide")
 make_operator("and", "bool_and")
 make_operator("or", "bool_or")
 procedures["not"] = Procedure("bool_not", 1)
@@ -67,12 +68,13 @@ make_procedure("getmaxy", 0)
 make_procedure("getmaxx", 0)
 make_procedure("end_curses", 0)
 
-for curses_no_args in ("clear", "refresh"):
-	procedures[curses_no_args] = Procedure(f"_{curses_no_args}", 0)
+make_procedure("clear", 0)
+make_procedure("refresh", 0)
 
 make_procedure("printscr", 3)
 make_procedure("init_color", 3)
 make_procedure("activate_color", 1)
 make_procedure("deactivate_color", 1)
 make_procedure("readch", 0)
+make_procedure("nap", 1)
 ##########
