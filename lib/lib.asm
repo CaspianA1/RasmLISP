@@ -3,7 +3,7 @@
 	.global plus, minus, multiply, divide, add1, sub1, id, eq?
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
-	.global type_exception, value_exception
+	.global type_exception, value_exception, car_exception
 	.extern _printf, _fflush
 	.include "lib/lisp_lib.asm"
 	.include "lib/cons_cells.asm"
@@ -21,6 +21,8 @@ type_exception_msg:
 	.asciz "Type exception thrown: %d\n" 
 value_exception_msg:
 	.asciz "Value exception thrown: %d\n"
+car_exception_msg:
+	.asciz "Error: cannot get the car of an empty list\n"
 
 	.text
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -197,4 +199,14 @@ syscall
 
 type_exception: exception_template type_exception_msg
 value_exception: exception_template value_exception_msg
+
+car_exception:
+	enter_frame
+	lea rdi, [car_exception_msg + rip]
+	xor rax, rax
+	and rsp, -16
+	call _printf
+	xor rdi, rdi
+	mov rax, 0x2000001
+	syscall
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
