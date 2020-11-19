@@ -221,7 +221,7 @@ def eval_lisp(sexpr, program,
 	try:
 		proc_obj = procedures[procedure]
 		if len(args) != proc_obj.arg_length and proc_obj.name != "list":
-			raise TypeError(f"Wrong argument count to procedure <{procedure}>")
+			raise TypeError(f"Wrong argument count to procedure <{procedure}>: {sexpr}")
 	except KeyError:
 		anonymous_f = True
 
