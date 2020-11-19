@@ -1,6 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	.global display_num, display_char, newline
-	.global plus, minus, multiply, divide, rand32, add1, sub1, id, eq?
+	.global plus, minus, multiply, divide, rand32, rand_bounded
+	.global add1, sub1, id, eq?
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
 	.global type_exception, value_exception, car_exception
@@ -23,6 +24,8 @@ value_exception_msg:
 	.asciz "Value exception thrown: %d\n"
 car_exception_msg:
 	.asciz "Error: cannot get the car of an empty list\n"
+float_storage_32:
+	.quad 0
 
 	.text
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -45,7 +48,7 @@ ret
 	xor rax, rax
 	and rsp, -16  # recently added
 	call _printf
-	mov rdi, 0
+	xor rdi, rdi
 	call _fflush
 	exit_frame
 .endm
@@ -91,8 +94,23 @@ sub1:
 
 rand32:
 	enter_frame
-	rdrand eax
-	dec eax
+	rdrand eax  # eax guarantees no more than 32 bits
+	exit_frame
+
+rand_bounded:
+	enter_frame
+	mov rsi, [rbp + 16]  # start
+	mov rbx, [rbp + 24]  # stop
+
+	sub rbx, rsi
+	inc rbx
+
+	rdrand rax
+	xor rdx, rdx
+	div rbx
+
+	add rdx, rsi
+	mov rax, rdx
 	exit_frame
 
 eq?:

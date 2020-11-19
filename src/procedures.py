@@ -42,7 +42,7 @@ for one_arg_proc in ("display", "display_num", "display_list", "display_char",
 	"type_exception", "value_exception", "length", "sum", "max", "reverse", "flatten"):
 	make_procedure(one_arg_proc, 1)
 
-for two_arg_proc in ("cons", "eq?", "map", "filter", "append", "index"):
+for two_arg_proc in ("cons", "eq?", "map", "filter", "append", "index", "rand_bounded"):
 	make_procedure(two_arg_proc, 2)
 
 make_procedure("reduce", 3)

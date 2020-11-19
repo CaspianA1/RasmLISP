@@ -91,4 +91,4 @@
 - The maximum integer size is 2,147,483,647. Anything larger used is susceptible to undefined behavior.
 - Multi-line comments are done with these: `|`
 - Characters are a bit different in Lisp. Instead of `a` looking like `'a'`, it would look like `#\a`. Special characters, like `'\n'`, look like this: `#\newline`.
-- To get a random 32-bit number use the function `rand32`.
+- To generate a random 32-bit number use the function `rand32`. Generate a number within a range, inclusive of start and end, with `rand_bounded`.
