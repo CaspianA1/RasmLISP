@@ -16,6 +16,8 @@ debug:
 	$(DEBUGGER) out/$(OUT) || echo Please install $(DEBUGGER) before debugging.
 run:
 	./out/$(OUT)
+r:
+	clear && printf '\e[3J'; make && (make run || (reset; echo "A crash occured."))
 clean:
 	rm -r out/*
 install:
