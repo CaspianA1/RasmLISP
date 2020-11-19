@@ -39,7 +39,7 @@ for zero_arg_proc in ("newline", "list", "rand32"):
 
 for one_arg_proc in ("display", "display_num", "display_list", "display_char",
 	"car", "cdr", "atom?", "list?", "null?", "lat?", "id", "add1", "sub1",
-	"type_exception", "value_exception", "length", "sum", "max", "reverse", "flatten"):
+	"type_exception", "value_exception", "length", "choice", "sum", "max", "reverse", "flatten"):
 	make_procedure(one_arg_proc, 1)
 
 for two_arg_proc in ("cons", "eq?", "map", "filter", "append", "index", "rand_bounded"):

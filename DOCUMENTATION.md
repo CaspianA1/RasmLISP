@@ -71,7 +71,7 @@
 #### Error handling:
 - You can throw an error by calling `type_exception` or `value_exception`. Pass either function a unique number to help you find out who threw the error.
 #### Other:
-- `length`, `index`, `sum`, `max`, `reverse`, `append`, `flatten`, `map`, `filter`, `reduce`, `lat?`
+- `length`, `index`, `choice`, `sum`, `max`, `reverse`, `append`, `flatten`, `map`, `filter`, `reduce`, `lat?`
 #### Eventual features:
 - I'll get to division and floating-point arithmetic, and symbol print names sometime soon.
 - If I have time I would like to implement a pattern-matching system and an ability to call C functions.
