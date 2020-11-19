@@ -94,7 +94,7 @@
 
 (display updated)
 
-; (display_grid updated 0); fuck, segfault
+; (display_grid updated 0); damn, segfault
 ; (readch)
 ; (end_curses)
 
