@@ -16,6 +16,7 @@
 	.global display_list  # external symbol for proper linkage
 	.global length  # external symbol for proper linkage
 	.global index  # external symbol for proper linkage
+	.global choice  # external symbol for proper linkage
 	.global sum  # external symbol for proper linkage
 	.global max  # external symbol for proper linkage
 	.global reverse  # external symbol for proper linkage
@@ -384,6 +385,25 @@ index:
 	add rsp, 16  # discard 2 local arguments
 	jmp end_33
 	end_33:
+	mov rsp, rbp
+	pop rbp
+	ret
+choice:
+	push rbp
+	mov rbp, rsp
+	push [rbp + 16]  # push argument to length
+	call length
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of length
+	call sub1
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of sub1
+	push 0  # push argument to rand_bounded
+	call rand_bounded
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of rand_bounded
+	push [rbp + 16]  # push argument to index
+	call index
 	mov rsp, rbp
 	pop rbp
 	ret
