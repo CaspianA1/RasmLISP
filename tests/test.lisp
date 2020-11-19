@@ -1,4 +1,4 @@
-(define MAX_Y 4)
+(define MAX_Y 5)
 (define MAX_X 5)
 (define ALIVE #\*)
 (define DEAD #\space)
@@ -13,6 +13,7 @@
 (define grid
 	(list
 		(list ALIVE DEAD ALIVE DEAD ALIVE)
+		(list ALIVE ALIVE DEAD ALIVE DEAD)
 		(list ALIVE ALIVE DEAD ALIVE DEAD)
 		(list ALIVE DEAD DEAD DEAD ALIVE)
 		(list ALIVE ALIVE ALIVE ALIVE DEAD)))
@@ -76,8 +77,8 @@
 					(cdr (car grid)))
 				(update_grid (cdr grid) y (add1 x))))))
 
+|
 (start_curses)
-
 (define (main changing_grid)
 	(begin
 		(display_grid changing_grid 0)
@@ -86,8 +87,13 @@
 		(main (update_grid changing_grid 0 0))))
 
 (main grid)
-
 (end_curses)
+|
+
+(define grid2 (update_grid grid 0 0)); updating the grid for height > 4 = segfault
+
+| A stack trace:
+
+|
 
 ; (define empty_grid (make_empty_row MAX_Y nil (make_empty_row MAX_X nil #\.)))
-; instead of random number generation, let the user make

@@ -39,10 +39,14 @@ car:
 	push rbp
 	mov rbp, rsp
 	mov rax, [rbp + 16]
-	mov rax, [rax]
-	mov rsp, rbp
-	pop rbp
-	ret
+	cmp rax, 408383
+	jne car_success
+	call car_exception
+	car_success:
+		mov rax, [rax]
+		mov rsp, rbp
+		pop rbp
+		ret
 
 cdr:
 	push rbp
