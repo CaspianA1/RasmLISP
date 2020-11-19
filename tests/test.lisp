@@ -1,12 +1,21 @@
+(define MAX_Y 4)
+(define MAX_X 5)
+(define ALIVE #\*)
+(define DEAD #\space)
+
 |
-(start_curses)
-(define MAX_Y (getmaxy))
-(define MAX_X (getmaxx))
-(end_curses)
+3 things:
+1. Why does a list height of over 4 result in a crash?
+3. Why do generated screens not seem to follow Conway's rules? (I might be wrong on this.)
+3. Once those bugs are resolved try making bigger grids.
 |
 
-(define MAX_Y 5)
-(define MAX_X 10)
+(define grid
+	(list
+		(list ALIVE DEAD ALIVE DEAD ALIVE)
+		(list ALIVE ALIVE DEAD ALIVE DEAD)
+		(list ALIVE DEAD DEAD DEAD ALIVE)
+		(list ALIVE ALIVE ALIVE ALIVE DEAD)))
 
 ;;;;;;;;;;
 (define (make_empty_row width buffer init)
@@ -37,67 +46,48 @@
 		(cons (add1 y) (add1 x))))
 
 (define (valid_coord? y x)
-		(not (or (or (< y 0) (> y MAX_Y))
+		(not (or
+			(or (< y 0) (> y MAX_Y))
 			(or (< x 0) (> x MAX_X)))))
 
-(define (get_cell grid y x) (index (index grid y) x))
-
-| Segfaulting:
-(define (neighbor_count grid y x)
-	(length 
+(define (get_neighbors y x)
+	(filter
+		(lambda (p)
+			(eq? (index (index grid (car p)) (car (cdr p))) ALIVE))
 		(filter
-			(lambda (coord) (eq? (get_cell grid y x) #\,))
-				(filter
-					(lambda (pair) (valid_coord? (car pair) (car (cdr pair))))
-					(get_neighboring_coords y x)))))
-|
-
-
-(define (neighbor_count grid y x)
-	(length
-		(filter
-			(lambda (pair) (valid_coord? (car pair) (car (cdr pair))))
-		(get_neighboring_coords y x))))
+			(lambda (p) (valid_coord? (car p) (car (cdr p))))
+			(get_neighboring_coords y x))))
 
 ;;;;;;;;;;
-
 (define (update_cell cell num_neighbors)
-	(if (eq? cell #\,)
-		(if (or (< num_neighbors 2) (> num_neighbors 3)) #\. #\,)
-		(if (eq? num_neighbors 3) #\, #\.)))
+	(if (eq? cell ALIVE)
+		(if (or (< num_neighbors 2) (> num_neighbors 3)) DEAD ALIVE)
+		(if (eq? num_neighbors 3) ALIVE DEAD)))
+
 
 (define (update_grid grid y x)
-	(cond 
+	(cond
 		((null? grid) grid)
 		((null? (car grid)) (update_grid (cdr grid) (add1 y) 0))
 		(else
 			(cons
-				(update_cell
-					(car (car grid))
-					(neighbor_count grid y x))
-				(update_grid
-					(cons
-						(cdr (car grid))
-						(cdr grid))
-						y (add1 x))
-			)
-		)
-	)
-)
+				(cons
+					(update_cell (car (car grid)) (length (get_neighbors y x)))
+					(cdr (car grid)))
+				(update_grid (cdr grid) y (add1 x))))))
 
-(define empty_grid (make_empty_row MAX_Y nil (make_empty_row MAX_X nil #\.)))
-(define updated (update_grid empty_grid 0 0))
-; examine the updated grid
-; it is wrong
-; check what is going wrong through a slow hand-trace
-; test each function individually to see that it's working as expected
+(start_curses)
 
-(display updated)
+(define (main changing_grid)
+	(begin
+		(display_grid changing_grid 0)
+		(refresh)
+		(nap 500)
+		(main (update_grid changing_grid 0 0))))
 
-; (display_grid updated 0); damn, segfault
-; (readch)
-; (end_curses)
+(main grid)
 
-; (define empty_grid (make_empty_row MAX_Y nil (make_empty_row MAX_X nil #\-)))
-; instead of random number generation, let the user make one
-; alive = comma, dead = dot
+(end_curses)
+
+; (define empty_grid (make_empty_row MAX_Y nil (make_empty_row MAX_X nil #\.)))
+; instead of random number generation, let the user make
