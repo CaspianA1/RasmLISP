@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	.global display_num, display_char, newline
-	.global plus, minus, multiply, divide, add1, sub1, id, eq?
+	.global plus, minus, multiply, divide, rand32, add1, sub1, id, eq?
 	.global greater, greater_eq, smaller, smaller_eq
 	.global bool_not, bool_and, bool_or
 	.global type_exception, value_exception, car_exception
@@ -11,7 +11,7 @@
 
 	.data
 format_number:
-	.asciz "%d"
+	.asciz "%ld"  # print a signed long (64 bits max)
 format_char:
 	.asciz "%c"
 newline_str:
@@ -89,6 +89,12 @@ sub1:
 	dec rax
 	exit_frame
 
+rand32:
+	enter_frame
+	rdrand eax
+	dec eax
+	exit_frame
+
 eq?:
 	enter_frame
 	mov rsi, [rbp + 16]
@@ -125,7 +131,6 @@ greater: compare jg, g_t, g_f, g_e
 greater_eq: compare jge, ge_t, ge_f, ge_e
 smaller: compare jl, s_t, s_f, s_e
 smaller_eq: compare jle, se_t, se_f, se_e
-# do rest
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 bool_not:
 	enter_frame

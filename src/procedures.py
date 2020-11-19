@@ -34,7 +34,7 @@ procedures = {}
 def make_procedure(name, args):
 	procedures[name] = Procedure(name, args)
 
-for zero_arg_proc in ("newline", "list"):
+for zero_arg_proc in ("newline", "list", "rand32"):
 	make_procedure(zero_arg_proc, 0)
 
 for one_arg_proc in ("display", "display_num", "display_list", "display_char",
