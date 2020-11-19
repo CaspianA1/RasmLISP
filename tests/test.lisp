@@ -5,12 +5,13 @@
 
 |
 3 things:
-1. Why does a list height of over 4 result in a crash?
+1. Why does a list height of over 4 result in a crash? Use Chez Scheme to find out why.
+(Make sure that my code works fully in Chez Scheme before running it with my compiler.)
 3. Why do generated screens not seem to follow Conway's rules? (I might be wrong on this.)
 3. Once those bugs are resolved try making bigger grids.
 |
 
-(define grid
+(define screen
 	(list
 		(list ALIVE DEAD ALIVE DEAD ALIVE)
 		(list ALIVE ALIVE DEAD ALIVE DEAD)
@@ -51,6 +52,7 @@
 			(or (< y 0) (> y MAX_Y))
 			(or (< x 0) (> x MAX_X)))))
 
+|
 (define (get_neighbors y x)
 	(filter
 		(lambda (p)
@@ -58,6 +60,18 @@
 		(filter
 			(lambda (p) (valid_coord? (car p) (car (cdr p))))
 			(get_neighboring_coords y x))))
+|
+
+(define (get_all_neighbors y x)
+	(filter
+		(lambda (p) (valid_coord? (car p) (car (cdr p))))
+		(get_neighboring_coords y x)))
+
+(define (cell_coords_valid? pair)
+	(valid_coord? (car pair) (car (cdr pair))))
+
+(define (get_neighbors grid y x)
+	(filter cell_coords_valid? (get_all_neighbors y x)))
 
 ;;;;;;;;;;
 (define (update_cell cell num_neighbors)
@@ -73,11 +87,11 @@
 		(else
 			(cons
 				(cons
-					(update_cell (car (car grid)) (length (get_neighbors y x)))
+					(update_cell (car (car grid)) (length (get_neighbors grid y x)))
 					(cdr (car grid)))
 				(update_grid (cdr grid) y (add1 x))))))
 
-|
+
 (start_curses)
 (define (main changing_grid)
 	(begin
@@ -86,14 +100,10 @@
 		(nap 500)
 		(main (update_grid changing_grid 0 0))))
 
-(main grid)
+(main screen)
 (end_curses)
-|
 
-(define grid2 (update_grid grid 0 0)); updating the grid for height > 4 = segfault
 
-| A stack trace:
-
-|
+; (define grid2 (update_grid grid 0 0)); updating the grid for height > 4 = segfault
 
 ; (define empty_grid (make_empty_row MAX_Y nil (make_empty_row MAX_X nil #\.)))

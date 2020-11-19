@@ -13,7 +13,7 @@ _main:
 	call id
 	add rsp, 8  # discard 1 local argument
 	mov [DEAD + rip], rax
-	.global grid  # external symbol for proper linkage
+	.global screen  # external symbol for proper linkage
 	push [DEAD + rip]  # push global variable
 	push [ALIVE + rip]  # push global variable
 	push [ALIVE + rip]  # push global variable
@@ -50,25 +50,37 @@ _main:
 	call list
 	add rsp, 40  # discard 5 local arguments
 	push rax  # result of list
-	mov r13, 4  # list of length 4
+	push [ALIVE + rip]  # push global variable
+	push [DEAD + rip]  # push global variable
+	push [ALIVE + rip]  # push global variable
+	push [DEAD + rip]  # push global variable
+	push [ALIVE + rip]  # push global variable
+	mov r13, 5  # list of length 5
 	call list
-	add rsp, 32  # discard 4 local arguments
-	mov [grid + rip], rax
+	add rsp, 40  # discard 5 local arguments
+	push rax  # result of list
+	mov r13, 5  # list of length 5
+	call list
+	add rsp, 40  # discard 5 local arguments
+	mov [screen + rip], rax
 	.global make_empty_row  # external symbol for proper linkage
 	.global display_row  # external symbol for proper linkage
 	.global display_grid  # external symbol for proper linkage
 	.global get_neighboring_coords  # external symbol for proper linkage
 	.global valid_coord?  # external symbol for proper linkage
+	.global get_all_neighbors  # external symbol for proper linkage
+	.global cell_coords_valid?  # external symbol for proper linkage
 	.global get_neighbors  # external symbol for proper linkage
 	.global update_cell  # external symbol for proper linkage
 	.global update_grid  # external symbol for proper linkage
-	.global grid2  # external symbol for proper linkage
-	push 0  # push argument to update_grid
-	push 0  # push argument to update_grid
-	push [grid + rip]  # push global variable
-	call update_grid
-	add rsp, 24  # discard 3 local arguments
-	mov [grid2 + rip], rax
+	call start_curses
+	add rsp, 0  # discard 0 local arguments
+	.global main  # external symbol for proper linkage
+	push [screen + rip]  # push global variable
+	call main
+	add rsp, 8  # discard 1 local argument
+	call end_curses
+	add rsp, 0  # discard 0 local arguments
 	xor rdi, rdi
 	mov rax, 0x2000001
 	syscall
@@ -298,7 +310,7 @@ valid_coord?:
 	mov rsp, rbp
 	pop rbp
 	ret
-get_neighbors:
+get_all_neighbors:
 	push rbp
 	mov rbp, rsp
 	push [rbp + 24]  # push argument to get_neighboring_coords
@@ -330,13 +342,12 @@ get_neighbors:
 	lea rax, [anonymous_1 + rip]
 	push rax
 	call filter
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of filter
-	jmp after_anonymous_2
-	anonymous_2:
+	mov rsp, rbp
+	pop rbp
+	ret
+cell_coords_valid?:
 	push rbp
 	mov rbp, rsp
-	push [ALIVE + rip]  # push global variable
 	push [rbp + 16]  # push argument to cdr
 	call cdr
 	add rsp, 8  # discard 1 local argument
@@ -348,21 +359,20 @@ get_neighbors:
 	call car
 	add rsp, 8  # discard 1 local argument
 	push rax  # result of car
-	push [grid + rip]  # push global variable
-	call index
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of index
-	call index
-	add rsp, 16  # discard 2 local arguments
-	push rax  # result of index
-	call eq?
-	add rsp, 16  # discard 2 local arguments
+	call valid_coord?
 	mov rsp, rbp
 	pop rbp
 	ret
-	after_anonymous_2:
-	lea rax, [anonymous_2 + rip]
-	push rax
+get_neighbors:
+	push rbp
+	mov rbp, rsp
+	push [rbp + 32]  # push argument to get_all_neighbors
+	push [rbp + 24]  # push argument to get_all_neighbors
+	call get_all_neighbors
+	add rsp, 16  # discard 2 local arguments
+	push rax  # result of get_all_neighbors
+	lea rsi, [cell_coords_valid? + rip]  # address of procedure cell_coords_valid?
+	push rsi
 	call filter
 	mov rsp, rbp
 	pop rbp
@@ -478,8 +488,9 @@ update_grid:
 	push rax  # result of cdr
 	push [rbp + 32]  # push argument to get_neighbors
 	push [rbp + 24]  # push argument to get_neighbors
+	push [rbp + 16]  # push argument to get_neighbors
 	call get_neighbors
-	add rsp, 16  # discard 2 local arguments
+	add rsp, 24  # discard 3 local arguments
 	push rax  # result of get_neighbors
 	call length
 	add rsp, 8  # discard 1 local argument
@@ -506,17 +517,39 @@ update_grid:
 	mov rsp, rbp
 	pop rbp
 	ret
+main:
+	push rbp
+	mov rbp, rsp
+	push 0  # push argument to display_grid
+	push [rbp + 16]  # push argument to display_grid
+	call display_grid
+	add rsp, 16  # discard 2 local arguments
+	call refresh
+	add rsp, 0  # discard 0 local arguments
+	push 500  # push argument to nap
+	call nap
+	add rsp, 8  # discard 1 local argument
+	push 0  # push argument to update_grid
+	push 0  # push argument to update_grid
+	push [rbp + 16]  # push argument to update_grid
+	call update_grid
+	add rsp, 24  # discard 3 local arguments
+	push rax  # result of update_grid
+	call main
+	add rsp, 8  # discard 1 local argument
+	push rax  # result of main
+	mov rsp, rbp
+	pop rbp
+	ret
 
 	.data
 MAX_Y:
-	.quad 4
+	.quad 5
 MAX_X:
 	.quad 5
 ALIVE:
 	.quad '*'
 DEAD:
 	.quad ' '
-grid:
-	.quad 0
-grid2:
+screen:
 	.quad 0
