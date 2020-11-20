@@ -94,7 +94,10 @@ sub1:
 
 rand32:
 	enter_frame
-	rdrand eax  # eax guarantees no more than 32 bits
+	rdrand rax
+	xor rdx, rdx
+	mov rbx, 8589934596  # max_64 / max_32
+	div rbx
 	exit_frame
 
 rand_bounded:
@@ -105,7 +108,7 @@ rand_bounded:
 	sub rbx, rsi
 	inc rbx
 
-	rdrand rax
+	rdrand eax
 	xor rdx, rdx
 	div rbx
 
