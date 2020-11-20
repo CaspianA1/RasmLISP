@@ -17,7 +17,10 @@ debug:
 run:
 	./out/$(OUT)
 r:
-	clear && printf '\e[3J'; make && (make run || (reset; echo "A crash occured."))
+	# First, clear the screen. Build tests/test.asm.
+	# Try to run it. If that succeeds, exit.
+	# If that fails, run `reset`, alert the user of an error, and enter the debugger.
+	clear && printf '\e[3J'; make && (make run || (reset; echo "A crash occured."; make debug))
 clean:
 	rm -r out/*
 install:
