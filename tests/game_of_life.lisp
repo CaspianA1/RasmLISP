@@ -84,7 +84,7 @@
 	(begin
 		(display_grid grid 0)
 		(refresh)
-		(nap 50)
+		(nap 200)
 		(set! board grid)
 		(conway (update_grid grid 0))))
 
