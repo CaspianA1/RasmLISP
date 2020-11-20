@@ -116,7 +116,7 @@ rand_bounded:
 eq?:
 	enter_frame
 	mov rsi, [rbp + 16]
-	cmp rsi, [rbp + 24]  # qword ptr before
+	cmp rsi, [rbp + 24]
 	je eq?_true
 	mov rax, 0
 	jmp eq?_end
