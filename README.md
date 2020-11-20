@@ -13,3 +13,5 @@ Here is how to try out RasmLISP (when using the build system that provides easy 
 - `parser.py` tokenizes and parses the code. Each s-expression is fed into the main function `eval_lisp` in `compiler.py`. You can take a peek at that if you want to see how it works.
 - Once compilation is done the output file is `tests/test.asm`. The proper library files will have been linked with that.
 - To run your output file just type `make run`.
+
+If you want to try out a pre-written program, I have a demo of Conway's Game of Life in the _tests_ directory. It uses the curses library (you can read more about the curses bindings in _DOCUMENTATION.md_). Simply copy its contents into _tests/test.asm_, and follow the steps above to run the code.
