@@ -17,4 +17,6 @@
 ; For this to work, that lambda has to be able to capture its surrounding environment.
 ; 1. How would it do that?
 ; 2. What is making it behave not as expected right now? (or why is it squaring the first argument?)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Can't print results from rand32 (segfault)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Can't print results from rand32 (segfault)
+; _GC_malloc doesn't seem to free memory (memory just seems to be endlessly allocated)
