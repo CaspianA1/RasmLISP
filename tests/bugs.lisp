@@ -20,3 +20,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Can't print results from rand32 (segfault)
 ; _GC_malloc doesn't seem to free memory (memory just seems to be endlessly allocated)
+; Research if the Boehm GC can handle pointers to pointers
+; Use the ALL_INTERIOR_POINTERS flag?
+; Or print out stats with one of the other flags?
+
+|
+_GC_malloc, one minute, allocated memory:
+184.7 MB
+
+_malloc, one minute, allocated memory:
+2.04 GB
+|
