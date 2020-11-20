@@ -141,7 +141,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 		eval_lisp(w_offsets, program, False)
 		program.emit("mov rsp, rbp", "pop rbp", "ret")
 		program.emit(f"after_anonymous_{its_id}:", f"lea rbx, [anonymous_{its_id} + rip]")
-		if has_caller: program.emit(f"push rbx  # push lambda #{lambda_id}")
+		if has_caller: program.emit(f"push rbx  # push lambda #{lambda_id}")  # preserve rbx from division in the future
 
 	elif form == "quote":
 		p, m = 61, pow(10, 9) + 9
