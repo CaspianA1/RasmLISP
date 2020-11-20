@@ -140,8 +140,8 @@ def eval_special_form(sexpr, program, has_caller = False):
 		w_offsets = params_as_offsets(sexpr[2], sexpr[1])
 		eval_lisp(w_offsets, program, False)
 		program.emit("mov rsp, rbp", "pop rbp", "ret")
-		program.emit(f"after_anonymous_{its_id}:", f"lea rax, [anonymous_{its_id} + rip]")
-		if has_caller: program.emit("push rax")
+		program.emit(f"after_anonymous_{its_id}:", f"lea rbx, [anonymous_{its_id} + rip]")
+		if has_caller: program.emit(f"push rbx  # push lambda #{lambda_id}")
 
 	elif form == "quote":
 		p, m = 61, pow(10, 9) + 9
@@ -197,7 +197,7 @@ def eval_lisp(sexpr, program,
 
 	if isinstance(procedure, list):
 		eval_lisp(procedure, program)
-		eval_lisp(["rax"] + args, program, has_caller, register_call = True)
+		eval_lisp(["rbx"] + args, program, has_caller, register_call = True)
 		return
 
 	elif procedure in special_forms:
@@ -293,6 +293,7 @@ if __name__ == "__main__":
 Working on right now:
 - printing nil from display_list
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
+- Preserve rbx when used for lambdas regarding division and random number generation
 
 Feasible features:
 Division
