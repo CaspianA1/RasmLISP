@@ -74,10 +74,14 @@ minus: operator sub
 multiply: operator imul
 divide:
 	enter_frame
+	mov rsi, rbx  # save rbx (preserved for function addresses)
+
 	mov rax, [rbp + 16]
 	xor rdx, rdx
 	mov rbx, [rbp + 24]
 	idiv rbx
+
+	mov rbx, rsi
 	exit_frame
 
 add1:
@@ -94,10 +98,14 @@ sub1:
 
 rand32:
 	enter_frame
+	mov rsi, rbx
+
 	rdrand rax
 	xor rdx, rdx
 	mov rbx, 8589934596  # max_64 / max_32
 	div rbx
+
+	mov rbx, rsi
 	exit_frame
 
 rand_bounded:

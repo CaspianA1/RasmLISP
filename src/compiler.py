@@ -1,7 +1,6 @@
 import parser
 from procedures import *
 from re import compile as regex
-from copy import copy
 from sys import argv
 
 special_forms = ("define", "set!", "let", "define_macro",
@@ -265,6 +264,9 @@ def eval_lisp(sexpr, program,
 def main(infile, outfile, extern):
 	program = Program(extern)
 
+	if not extern:
+		program.emit("and rsp, -16")  # call _GC_enable_incremental
+
 	tokens = list(parser.tokenize(infile))
 	while (tree := parser.parse(tokens)) is not None:
 		eval_lisp(parser.replace_chars(tree), program)
@@ -291,9 +293,9 @@ if __name__ == "__main__":
 
 """
 Working on right now:
-- printing nil from display_list
+-- printing nil from display_list
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
-- Preserve rbx when used for lambdas regarding division and random number generation
+- a more elegant random number generator
 
 Feasible features:
 Division
@@ -301,6 +303,7 @@ Floating-point math
 -- Print names for symbols
 Custom syntax highlighting
 -- Comparing lists via equal?
+-- Proper symbol interning (will yield uniqueness and print names)
 
 One-day features:
 pmatch
