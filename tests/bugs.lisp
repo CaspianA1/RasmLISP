@@ -17,17 +17,30 @@
 ; For this to work, that lambda has to be able to capture its surrounding environment.
 ; 1. How would it do that?
 ; 2. What is making it behave not as expected right now? (or why is it squaring the first argument?)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; Can't print results from rand32 (segfault)
-; _GC_malloc doesn't seem to free memory (memory just seems to be endlessly allocated)
-; Research if the Boehm GC can handle pointers to pointers
-; Use the ALL_INTERIOR_POINTERS flag?
-; Or print out stats with one of the other flags?
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GC problems:
 |
-_GC_malloc, one minute, allocated memory:
-184.7 MB
+Overall, I just need faster and more agressive garbage collection
+Important flag: ALL_INTERIOR_POINTERS, GC_PRINT_VERBOSE_STATS
+How do I enable them?
+Can the GC can handle pointers to pointers?
 
-_malloc, one minute, allocated memory:
+If there is a memory leak:
+
+1. Run the GC for, say, 1000 cycles
+2. Then do something else that doesn't utilize the heap, and see if that memory gets freed meanwhile
+
+One-minute memory usage benchmarks:
+
+_GC_malloc, no flags:
+267.1 MB
+
+_GC_malloc, ALL_INTERIOR_POINTERS:
+423.0 MB
+
+_GC_malloc, no flags, calling GC_enable_incremental in the beginning:
+Approximately 200.1 MB
+Overall, the program ran a lot slower over time, and there was a lot more heap usage
+
+_malloc:
 2.04 GB
 |
