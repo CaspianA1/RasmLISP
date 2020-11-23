@@ -59,6 +59,28 @@
 #### `quote`
 - Converts a string into a compile-time constant hash that can be used for quick comparisons via `eq?`. The resulting symbol is uninterned and has no print name.
 
+#### `asm`
+- Takes any number of assembly mnemonics and joins them to create one assembly instruction.
+
+```scheme
+(asm "mov" "rax," "r15")
+```
+
+Will generate an output file like this:
+
+```asm
+	.global _main
+	.text
+_main:
+	and rsp, -16
+	mov rax, r15  # Inline assembly insert
+	xor rdi, rdi
+	mov rax, 0x2000001
+	syscall
+
+	.data
+```
+
 ### Built-in procedures:
 #### List primitives:
 - `car`, `cdr`, `cons`, `list`

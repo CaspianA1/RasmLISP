@@ -4,7 +4,7 @@ from re import compile as regex
 from sys import argv
 
 special_forms = ("define", "set!", "let", "define_macro",
-				"quote", "include", "if", "cond", "lambda", "begin")
+				"quote", "include", "if", "cond", "lambda", "begin", "asm")
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = ["nil", "MAX_NUM", "KEY_UP", "KEY_DOWN", "KEY_LEFT", "KEY_RIGHT", "KEY_ENTER"]
@@ -168,6 +168,10 @@ def eval_special_form(sexpr, program, has_caller = False):
 			push_atomic_result(to_return, program, has_caller)
 		else:
 			eval_lisp(to_return, program, True)
+
+	elif form == "asm":
+		instructions = " ".join(sexpr[1:]).replace("\"", "").replace("'", "")
+		program.emit(instructions + "  # Inline assembly insert")
 
 def params_as_offsets(sexpr, params):
 	for index, arg in enumerate(sexpr):

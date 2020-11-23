@@ -1,2 +1,1 @@
-(define testing +)
-(display (testing 2 3))
+(asm "mov" "rax," "r15")
