@@ -68,6 +68,8 @@ def eval_special_form(sexpr, program, has_caller = False):
 				program.emit(f"mov [{name} + rip], rax")
 			elif number_pattern.match(value):
 				program.declare_var(name, value)  # constant value
+			elif value in procedures:  # alias of predefined asm function
+				program.declare_var(name, procedures[value].name)
 			else:
 				program.declare_var(name, value)  # atomic non-constant
 				eval_lisp(["id", value], program)
