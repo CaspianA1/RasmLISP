@@ -299,8 +299,8 @@ if __name__ == "__main__":
 
 """
 Working on right now:
--- printing nil from display_list
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
+- proper string interning
 - a more elegant random number generator
 
 Feasible features:
