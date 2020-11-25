@@ -1,7 +1,5 @@
 ; Bugs:
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Can't assign a function to another one:
-(define subtract -)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Only prints 1 paren:
 (define_macro (display_list x)
 	(begin
@@ -17,6 +15,7 @@
 ; For this to work, that lambda has to be able to capture its surrounding environment.
 ; 1. How would it do that?
 ; 2. What is making it behave not as expected right now? (or why is it squaring the first argument?)
+; This is the funarg problem. Can I find a solution that uses the stack?
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; GC problems:
 |
 Overall, I just need faster and more agressive garbage collection
