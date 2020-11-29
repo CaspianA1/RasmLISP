@@ -1,3 +1,2 @@
-; (quote 0)
-; (quote (1 2 3)) -> (list (quote 1) (quote 2) (quote 3))
-(display (quote (1 (quote (2 3)))))
+(define (factorial x) (if (eq? x 0) 1 (* x (factorial (sub1 x)))))
+(display (factorial 10)) (newline)

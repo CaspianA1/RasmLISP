@@ -145,19 +145,27 @@ def eval_special_form(sexpr, program, has_caller = False):
 		if has_caller: program.emit(f"push rbx  # push lambda #{lambda_id}")  # preserve rbx from division in the future
 
 	elif form == "quote":
-		if (l := len(sexpr)) > 2:
-			raise SyntaxError(f"<quote> expects 1 argument, not {l}.")
+		""" Symbols cannot be printed at the moment because the `display` function
+		only supports non-symbolic atoms and lists to be printed. """
+		if (l := len(symbol := sexpr[1:])) > 1:
+			raise SyntaxError(f"<quote> expects 1 argument, not {l}: {sexpr}")
 
 		if not isinstance(symbol := sexpr[1], list):
 			if symbol not in symbols:
 				symbols.append(symbol)
-			symbol_id = symbols.index(symbol) + 1
-			program.declare_var(f"symbol_{symbol_id}", f"\"{symbol}\"")
+				symbol_id = symbols.index(symbol) + 1
+				program.declare_var(f"symbol_{symbol_id}", f"\"{symbol}\"", ".asciz")
+			else:
+				symbol_id = symbols.index(symbol) + 1
 			program.emit(("push " if has_caller else "mov rax, ") + f"[symbol_{symbol_id} + rip]")
 		else:
-			# to print symbols out, I need a tag system.
-			def quote_list(quoted_list):
-				return ["list"] + [["quote", q] for q in quoted_list]
+			def quote_list(symbol):
+				for index, item in enumerate(symbol):
+					if not isinstance(item, list):
+						symbol[index] = ["quote", item]
+					else:
+						symbol[index] = quote_list(item)
+				return ["list"] + symbol
 
 			eval_lisp(quote_list(symbol), program)
 

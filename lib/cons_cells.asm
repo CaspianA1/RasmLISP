@@ -1,6 +1,17 @@
 	.global cons, car, cdr, list
 	.text
 
+/*
+
+|objekt, pekare till nasta |
+
+408383
+
+string_hash(nil)
+
+Tag on cells, to see if it is a cons
+*/
+
 cons:  # r12 = pair, r13 = tail
 	push rbp
 	mov rbp, rsp

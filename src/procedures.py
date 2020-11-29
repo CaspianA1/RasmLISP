@@ -15,8 +15,8 @@ class Program:
 		section = self.procedures if self.defining_proc else self.main
 		for i in instructions:
 			section.append("\t" * tab + i)
-	def declare_var(self, name, val):
-		self.variables.append(f"{name}:\n\t.quad {val}")
+	def declare_var(self, name, val, datatype = ".quad"):
+		self.variables.append(f"{name}:\n\t{datatype} {val}")
 	def export(self, filename):
 		with open(filename, "w") as outfile:
 			for section in self.main, self.procedures, self.variables:
