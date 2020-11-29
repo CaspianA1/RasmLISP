@@ -152,7 +152,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 			if symbol not in symbols:
 				symbols.append(symbol)
 			symbol_id = symbols.index(symbol) + 1
-			program.declare_var(f"symbol_{symbol_id}", f"\"{symbol}\"", ".asciz")
+			program.declare_var(f"symbol_{symbol_id}", f"\"{symbol}\"")
 			program.emit(("push " if has_caller else "mov rax, ") + f"[symbol_{symbol_id} + rip]")
 		else:
 			# to print symbols out, I need a tag system.
