@@ -57,7 +57,12 @@
 - These are technically done; but until lambdas can capture their surrounding environment the resulting expression body cannot access other bound variables than those bound by the current `let`.
 
 #### `quote`
-- Converts a string into a compile-time constant hash that can be used for quick comparisons via `eq?`. The resulting symbol is uninterned and has no print name.
+- If its argument is atomic, it will turn that into an interned string. If it is a list it will undergo the following transformation:
+
+```scheme
+(quote (1 2 3)) -> (list (quote 1) (quote 2) (quote 3))
+```
+- Once I have added a datatype tag system, symbols will have print names.
 
 #### `asm`
 - Takes any number of assembly mnemonics and joins them to create one assembly instruction.

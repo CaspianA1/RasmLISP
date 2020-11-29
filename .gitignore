@@ -12,3 +12,4 @@ __pycache__/
 quick_push.sh
 tests/scrap_code.lisp
 tests/old_conway.lisp
+notes.lisp

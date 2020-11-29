@@ -8,7 +8,7 @@ special_forms = ("define", "set!", "let", "define_macro",
 branch_id, lambda_id = 0, 0
 number_pattern = regex("^-?\d*(\.\d+)?$")
 global_vars = ["nil", "MAX_NUM", "KEY_UP", "KEY_DOWN", "KEY_LEFT", "KEY_RIGHT", "KEY_ENTER"]
-macros = {}
+macros, symbols = {}, []
 
 def expand_macro(macro, param_arg_map):
 	if isinstance(macro, str):
@@ -77,7 +77,7 @@ def eval_special_form(sexpr, program, has_caller = False):
 
 	elif form == "set!":
 		name, value = sexpr[1:]
-		eval_lisp(["id", value], program)
+		eval_lisp(value, program)
 		program.emit(f"mov [{name} + rip], rax")
 
 	elif form == "let":
@@ -145,18 +145,21 @@ def eval_special_form(sexpr, program, has_caller = False):
 		if has_caller: program.emit(f"push rbx  # push lambda #{lambda_id}")  # preserve rbx from division in the future
 
 	elif form == "quote":
-		p, m = 61, pow(10, 9) + 9
-		accum = 0
+		if (l := len(sexpr)) > 2:
+			raise SyntaxError(f"<quote> expects 1 argument, not {l}.")
 
-		for index, char in enumerate(sexpr[1]):
-			accum += ord(char) * pow(p, index)
-
-		its_hash = accum % m
-
-		if has_caller:
-			program.emit(f"push {its_hash}")
+		if not isinstance(symbol := sexpr[1], list):
+			if symbol not in symbols:
+				symbols.append(symbol)
+			symbol_id = symbols.index(symbol) + 1
+			program.declare_var(f"symbol_{symbol_id}", f"\"{symbol}\"", ".asciz")
+			program.emit(("push " if has_caller else "mov rax, ") + f"[symbol_{symbol_id} + rip]")
 		else:
-			program.emit(f"mov rax, {its_hash}")
+			# to print symbols out, I need a tag system.
+			def quote_list(quoted_list):
+				return ["list"] + [["quote", q] for q in quoted_list]
+
+			eval_lisp(quote_list(symbol), program)
 
 	elif form == "begin":
 		to_return = sexpr.pop()
@@ -300,7 +303,7 @@ if __name__ == "__main__":
 """
 Working on right now:
 - let bindings: https://en.wikipedia.org/wiki/Closure_(computer_programming)
-- proper string interning
+- real symbols
 - a more elegant random number generator
 
 Feasible features:
