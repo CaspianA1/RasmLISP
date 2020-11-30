@@ -160,11 +160,8 @@ def eval_special_form(sexpr, program, has_caller = False):
 			program.emit(("push " if has_caller else "mov rax, ") + f"[symbol_{symbol_id} + rip]")
 		else:
 			def quote_list(symbol):
-				for index, item in enumerate(symbol):
-					if not isinstance(item, list):
-						symbol[index] = ["quote", item]
-					else:
-						symbol[index] = quote_list(item)
+				for i, q in enumerate(symbol):
+					symbol[i] = quote_list(q) if isinstance(q, list) else ["quote", q]
 				return ["list"] + symbol
 
 			eval_lisp(quote_list(symbol), program)
