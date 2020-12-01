@@ -4,6 +4,7 @@
 *.pyc
 
 lib/GC/*
+lib/env
 out/test
 out/test.dSYM
 __pycache__/
