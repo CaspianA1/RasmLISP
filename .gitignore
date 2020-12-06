@@ -2,6 +2,7 @@
 *.out
 *.dSYM
 *.pyc
+*.s
 
 lib/GC/*
 lib/unused
