@@ -6,7 +6,7 @@
 
 Here is how to try out RasmLISP (when using the build system that provides easy linking with the standard library):
 
-- Install dependencies via `make install`.
+- Install dependencies via `make install`. (If you want to change the GC version or its installation directory, just edit _install_boehm.sh_ as needed.)
 - Type `make` into your terminal. That will use the _test.lisp_ file in the _tests_ directory.
 - The garbage collector and the lisp runtime library are compiled properly.
 - The compiler is run in debug mode, meaning that the input file (the first argument to it) will be in _tests_. It can also be run in _extern_ mode (the second flag) to avoid an entry point (`_main`).
