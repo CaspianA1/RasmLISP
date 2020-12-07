@@ -1,6 +1,7 @@
 CC = clang
 OUT = test
-LINK_WITH = lib/lib.asm /usr/local/bin/lib/libgc.dylib
+BOEHM_DIR = /usr/local/bin
+LINK_WITH = lib/lib.asm $(BOEHM_DIR)/lib/libgc.dylib
 CFLAGS = -O0 -lncurses -masm=intel $(LINK_WITH) -o out/$(OUT) tests/$(OUT).asm
 DEBUGGER = lldb
 
